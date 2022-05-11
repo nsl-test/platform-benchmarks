@@ -393,56 +393,6 @@
         }
       },
       "response": []
-    },
-    {
-      "name": "Save IRDR Copy",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){\r",
-              "    pm.expect(pm.response.code).to.eq(200);\r",
-              "});\r",
-              "pm.test(\"Check response\", function(){\r",
-              "    pm.expect(pm.response.json().message).to.eq(\"IRDRs Successfully Saved\");\r",
-              "})"
-            ],
-            "type": "text/javascript",
-            "id": "2acb4d36-0023-4d47-b542-b5164c04066e"
-          }
-        }
-      ],
-      "id": "7e81a9a5-064a-45b0-bfd3-d825a139cbf8",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "{{BearerToken}}",
-            "type": "text"
-          },
-          {
-            "key": "Accept-Language",
-            "value": "en",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "[\r\n    {\r\n        \"bookId\": {{BookId}},\r\n        \"design\": true,\r\n        \"gsiId\": \"{{SolutionId}}\",\r\n        \"irdr\": {\r\n            \"decisionRight\": true,\r\n            \"disableParentRoleAccess\": false,\r\n            \"executionRight\": false,\r\n            \"informationRight\": true,\r\n            \"rightHolderId\": {{CCORoleId}},\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    },\r\n    {\r\n        \"bookId\": {{BookId}},\r\n        \"design\": false,\r\n        \"gsiId\": \"{{SolutionId}}\",\r\n        \"irdr\": {\r\n            \"decisionRight\": false,\r\n            \"disableParentRoleAccess\": false,\r\n            \"executionRight\": true,\r\n            \"informationRight\": true,\r\n            \"rightHolderId\": {{CCORoleId}},\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    }\r\n]",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/saveIRDRs"
-      },
-      "response": []
     }
   ],
   "event": [
@@ -499,38 +449,38 @@
   ],
   "variable": [
     {
-      "id": "a72227cb-278a-4397-a4b7-be91abe675c0",
+      "id": "2fd88954-9046-418e-8ccc-ec172e809c48",
       "key": "UserName",
       "value": "Amandeep.goyal@nslhub.com"
     },
     {
-      "id": "6e5a011c-983e-4715-a012-e06752dc8867",
+      "id": "2171122c-18c4-465e-85dc-84d1026c1303",
       "key": "BookId",
       "value": "1421739491964",
       "disabled": true
     },
     {
-      "id": "dd93c341-93d2-46b7-ac80-acf19aedaa6a",
+      "id": "87529c83-3881-41ff-99f3-d9bbe21d469e",
       "key": "RoleId",
       "value": ""
     },
     {
-      "id": "0affac5b-d520-464d-8215-88755e77051a",
+      "id": "d1ec70ae-f040-4dc9-a9b4-aed7e5473047",
       "key": "SharedRole",
       "value": "Random"
     },
     {
-      "id": "4dd39e14-3360-46ad-8647-00b76ab1c90f",
+      "id": "7f1de393-8b7e-479d-a9cd-b2ca73207da2",
       "key": "UserNameDetails",
       "value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\""
     },
     {
-      "id": "5c9cd748-633b-4dc1-b9a2-85e1607c09c2",
+      "id": "6ac338f5-f9b6-4d89-9f28-08c7602d72da",
       "key": "BookName",
       "value": "BasicBook2022050910595455210"
     },
     {
-      "id": "d0b533b6-9131-4af0-92af-fd609afdb43b",
+      "id": "c0059c42-8db7-4a92-963a-a38bf7acf1a5",
       "key": "SolutionName",
       "value": "BasicSolution2022050910595455210"
     }
