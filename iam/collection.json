@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2fdada3c-4a1d-47f1-8121-21749d55799c",
+		"_postman_id": "1a8055d0-c570-4bb5-8cef-05c603c97f86",
 		"name": "IAM",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -333,6 +333,17 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
+							"",
+							"pm.variables.set('SharedRole', \"SharedRole\"+pm.variables.get(\"RandomNumber\"));"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
@@ -383,7 +394,56 @@
 			"response": []
 		}
 	],
-	"event": [],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let json = {",
+					"            \"id\": 2148143410395,",
+					"            \"createdAt\": 1650951442555,",
+					"            \"updatedAt\": 1650951442555,",
+					"            \"orgUnitId\": 1048774332110,",
+					"            \"name\": \"Amandeep.goyal@nslhub.com\",",
+					"            \"email\": \"Amandeep.goyal@nslhub.com\",",
+					"            \"mobileNumber\": \"7019356279\",",
+					"            \"isEnabled\": true,",
+					"            \"roles\": [",
+					"                {",
+					"                    \"id\": 1118115121063,",
+					"                    \"createdAt\": 1649163005001,",
+					"                    \"updatedAt\": 1652095461019,",
+					"                    \"name\": \" Employee\",",
+					"                    \"description\": \"\",",
+					"                    \"isEnabled\": true,",
+					"                    \"isAdmin\": false,",
+					"                    \"tagId\": 1892314879594,",
+					"                    \"roleType\": \"LOCAL\"",
+					"                }",
+					"            ],",
+					"            \"groups\": [],",
+					"            \"customID\": \"28246\",",
+					"            \"autoCustomID\": \"28246\"",
+					"        }",
+					"pm.variables.set(\"UserNameDetails\", JSON.stringify(json))",
+					"let bookId = 1421739491964",
+					"pm.variables.set(\"BookId\",bookId)",
+					"let solutionId = 1007437723886",
+					"pm.variables.set(\"SolutionId\",solutionId)"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "UserName",
@@ -400,11 +460,12 @@
 		},
 		{
 			"key": "SharedRole",
-			"value": "Random"
+			"value": "Random123"
 		},
 		{
 			"key": "UserNameDetails",
-			"value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\""
+			"value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\"",
+			"disabled": true
 		},
 		{
 			"key": "BookName",
