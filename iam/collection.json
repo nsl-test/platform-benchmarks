@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1a8055d0-c570-4bb5-8cef-05c603c97f86",
+		"_postman_id": "119a2089-33be-4fdc-9a08-c4db5d02136b",
 		"name": "IAM",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -72,94 +72,6 @@
 						"login",
 						"v2",
 						"login-action"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Users Info - UserName",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"\r",
-							"\r",
-							"    const users  = pm.response.json().content;\r",
-							"\r",
-							"    let isFound = false;\r",
-							"\r",
-							"    users.forEach((userName)=> {\r",
-							"        if(userName.name == pm.variables.get(\"UserName\")) {\r",
-							"            isFound = true;\r",
-							"            // pm.expect(userName.name).to.eq(pm.environment.get(\"UserCCO1\"));\r",
-							"            // pm.expect(userName.id).to.eq(parseInt(pm.environment.get(\"UserCCO1Id\")));\r",
-							"\r",
-							"            let json = userName;\r",
-							"            userName.roles = [];\r",
-							"            pm.variables.set(\"UserNameDetails\",JSON.stringify(json));\r",
-							"        }\r",
-							"    });\r",
-							"\r",
-							"    pm.expect(isFound).to.eq(true)\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{}"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=5&searchTerm={{UserName}}&isActive=false",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"user",
-						"getAllUsersBySearchTerm"
-					],
-					"query": [
-						{
-							"key": "pageNumber",
-							"value": "0"
-						},
-						{
-							"key": "pageSize",
-							"value": "5"
-						},
-						{
-							"key": "searchTerm",
-							"value": "{{UserName}}"
-						},
-						{
-							"key": "isActive",
-							"value": "false"
-						}
 					]
 				}
 			},
@@ -450,22 +362,12 @@
 			"value": "Amandeep.goyal@nslhub.com"
 		},
 		{
-			"key": "BookId",
-			"value": "1421739491964",
-			"disabled": true
-		},
-		{
 			"key": "RoleId",
 			"value": ""
 		},
 		{
 			"key": "SharedRole",
 			"value": "Random123"
-		},
-		{
-			"key": "UserNameDetails",
-			"value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\"",
-			"disabled": true
 		},
 		{
 			"key": "BookName",
