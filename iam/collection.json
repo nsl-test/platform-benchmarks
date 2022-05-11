@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Login as usercco Copy",
+			"name": "Login as usercco",
 			"event": [
 				{
 					"listen": "test",
@@ -78,7 +78,7 @@
 			"response": []
 		},
 		{
-			"name": "Get All Users Info - UserName Copy",
+			"name": "Get All Users Info - UserName",
 			"event": [
 				{
 					"listen": "test",
@@ -166,7 +166,7 @@
 			"response": []
 		},
 		{
-			"name": "Verify IRDR for shared role Copy",
+			"name": "Verify IRDR for shared role",
 			"event": [
 				{
 					"listen": "test",
@@ -241,7 +241,7 @@
 			"response": []
 		},
 		{
-			"name": "Fetch by username Copy",
+			"name": "Fetch by username",
 			"event": [
 				{
 					"listen": "test",
@@ -317,7 +317,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Shared Role Copy",
+			"name": "Create Shared Role",
 			"event": [
 				{
 					"listen": "test",
