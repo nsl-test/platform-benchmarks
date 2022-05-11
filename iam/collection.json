@@ -78,7 +78,7 @@
 			"response": []
 		},
 		{
-			"name": "Verify IRDR for shared role",
+			"name": "Get Book Tree By Id",
 			"event": [
 				{
 					"listen": "test",
@@ -86,37 +86,38 @@
 						"exec": [
 							"pm.test(\"Check status code\", function(){\r",
 							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(parseInt(pm.response.json().bookId)).to.eq(pm.variables.get(\"BookId\"));\r",
+							"    pm.expect(pm.response.json().bookId).to.eq(`${pm.variables.get(\"BookId\")}`);\r",
 							"    pm.expect(pm.response.json().bookName).to.eq(pm.variables.get(\"BookName\"));\r",
-							"    pm.expect(parseInt(pm.response.json().solDtos[0].gsiId)).to.eq(pm.variables.get(\"SolutionId\"));\r",
 							"    pm.expect(pm.response.json().solDtos[0].gsiName).to.eq(pm.variables.get(\"SolutionName\"));\r",
-							"});"
+							"    pm.expect(pm.response.json().solDtos[0].gsiId).to.eq(`${pm.variables.get(\"SolutionId\")}`);  \r",
+							"});\r",
+							""
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer"
-				},
 				"method": "GET",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
+						"key": "accept-language",
 						"value": "en",
 						"type": "text"
 					},
 					{
-						"key": "Content-Type",
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
 						"type": "text"
 					}
 				],
@@ -160,9 +161,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    //pm.variables.set('UserId1',pm.response.json().content[0].id);\r",
-							"    \r",
+							"    pm.response.to.have.status(200);  \r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -229,7 +228,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Shared Role",
+			"name": "Update Local Role & Attact to Book",
 			"event": [
 				{
 					"listen": "test",
@@ -237,11 +236,8 @@
 						"exec": [
 							"pm.test(\"Check status code\", function(){\r",
 							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");\r",
-							"})\r",
-							""
+							"    pm.expect(pm.response.json().message).to.eq(\"Role updated successfully\");\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -250,9 +246,22 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
-							"",
-							"pm.variables.set('SharedRole', \"SharedRole\"+pm.variables.get(\"RandomNumber\"));"
+							"let role = {",
+							"            \"id\": 1118115121063,",
+							"            \"createdAt\": 1649163005001,",
+							"            \"updatedAt\": 1652095461019,",
+							"            \"name\": \" Employee\",",
+							"            \"description\": \"\",",
+							"            \"isEnabled\": true,",
+							"            \"isAdmin\": false,",
+							"            \"tagId\": 1892314879594,",
+							"            \"roleType\": \"LOCAL\"",
+							"        }",
+							"pm.variables.set(\"RoleId\",role.id)",
+							"pm.variables.set(\"RoleName\",role.name)",
+							"pm.variables.set(\"TagId\",role.tagId)",
+							"pm.variables.set(\"CreatedAt\",role.createdAt)",
+							"pm.variables.set(\"UpdatedAt\",role.updatedAt)"
 						],
 						"type": "text/javascript"
 					}
@@ -262,24 +271,29 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
 						"value": "{{BearerToken}}",
 						"type": "text"
 					},
 					{
-						"key": "Accept-Language",
-						"value": "en",
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"{{SharedRole}}\",\r\n    \"users\": [\r\n        {{UserNameDetails}}\r\n    ],\r\n    \"groups\": [],\r\n    \"isAdmin\": false,\r\n    \"description\": \"\",\r\n    \"isEnabled\": false\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\r\n    \"id\": {{RoleId}},\r\n    \"createdAt\": {{CreatedAt}},\r\n    \"updatedAt\": {{UpdatedAt}},\r\n    \"name\": \"{{RoleName}}\",\r\n    \"description\": \"\",\r\n    \"isEnabled\": true,\r\n    \"isAdmin\": false,\r\n    \"tagId\": {{TagId}},\r\n    \"users\": [\r\n        {{UserDetails}}\r\n    ],\r\n    \"groups\": []\r\n}"
 				},
 				"url": {
 					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
@@ -300,6 +314,217 @@
 							"key": "bklist",
 							"value": "{{BookId}}"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Role Details - Local Role Copy 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    let isValid= false;\r",
+							"    pm.response.json().rolesList.forEach((roleName)=> {\r",
+							"\r",
+							"        if(roleName.id == pm.variables.get(\"RoleId\") && roleName.name == pm.variables.get(\"RoleName\")) {\r",
+							"        \r",
+							"        pm.variables.set(\"TagId\",roleName.tagId)\r",
+							"        pm.variables.set(\"CreatedAt\",roleName.createdAt)\r",
+							"        pm.variables.set(\"UpdatedAt\",roleName.updatedAt)\r",
+							"        isValid = true;\r",
+							"        }\r",
+							"\r",
+							"    })\r",
+							"    pm.expect(isValid).to.eq(true)  \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"RoleId\",\"1118115121063\")",
+							"pm.variables.set(\"RoleName\",\" Employee\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "b2c.qa3.nslhub.com"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\""
+					},
+					{
+						"key": "traceparent",
+						"value": "00-670b399b03706ec4dfe80007a4bc49a7-42c17ed83ad5cbca-01"
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "origin",
+						"value": "https://b2c.qa3.nslhub.com"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://b2c.qa3.nslhub.com/admin/viewLocalRole"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga=GA1.2.1007264212.1627288780"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"isActive\":true,\"roleName\":\"{{RoleName}}\"}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getB2cRoles?pageNumber=0&pageSize=10",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"getB2cRoles"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Irdr's",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"IRDRs Successfully Saved\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"RoleId\",\"1118115121063\")",
+							"pm.variables.set(\"RoleName\",\" Employee\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"bookId\": {{BookId}},\r\n        \"design\": true,\r\n        \"gsiId\": \"{{SolutionId}}\",\r\n        \"irdr\": {\r\n            \"decisionRight\": true,\r\n            \"disableParentRoleAccess\": false,\r\n            \"executionRight\": false,\r\n            \"informationRight\": true,\r\n            \"rightHolderId\": {{RoleId}},\r\n            \"rightHolderName\": \"{{RoleName}}\",\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    },\r\n    {\r\n        \"bookId\": {{BookId}},\r\n        \"design\": false,\r\n        \"gsiId\": \"{{SolutionId}}\",\r\n        \"irdr\": {\r\n            \"decisionRight\": false,\r\n            \"disableParentRoleAccess\": false,\r\n            \"executionRight\": true,\r\n            \"informationRight\": true,\r\n            \"rightHolderId\": {{RoleId}},\r\n            \"rightHolderName\": \"{{RoleName}}\",\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    }\r\n]"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/saveIRDRs",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"user",
+						"saveIRDRs"
 					]
 				}
 			},
@@ -338,7 +563,7 @@
 					"            \"customID\": \"28246\",",
 					"            \"autoCustomID\": \"28246\"",
 					"        }",
-					"pm.variables.set(\"UserNameDetails\", JSON.stringify(json))",
+					"pm.variables.set(\"UserDetails\", JSON.stringify(json))",
 					"let bookId = 1421739491964",
 					"pm.variables.set(\"BookId\",bookId)",
 					"let solutionId = 1007437723886",
