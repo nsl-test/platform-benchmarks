@@ -3,7 +3,8 @@ name: Sync Postman
 on:
   push:
     branches: [ main ]
-
+    paths:
+      - '**/collection.json'
   workflow_dispatch:
 
 jobs:
