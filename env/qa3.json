@@ -1,0 +1,629 @@
+{
+	"id": "3c8d359e-480e-4016-8043-9e72081d2fad",
+	"name": "QA3",
+	"values": [
+		{
+			"key": "BaseURL",
+			"value": "qa3.nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "IamURL",
+			"value": "https://qaiam.nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "SuperAdminTenant",
+			"value": "Super-Admin",
+			"enabled": true
+		},
+		{
+			"key": "TenantName",
+			"value": "apiqa0504",
+			"enabled": true
+		},
+		{
+			"key": "TenantAdmin",
+			"value": "admin@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "AdminPassword",
+			"value": "admin",
+			"enabled": true
+		},
+		{
+			"key": "CCORoleId",
+			"value": 1841833683818,
+			"enabled": true
+		},
+		{
+			"key": "RoleCCO",
+			"value": "CCO",
+			"enabled": true
+		},
+		{
+			"key": "UserCCOManager",
+			"value": "userccomanager",
+			"enabled": true
+		},
+		{
+			"key": "UserCCO",
+			"value": "usercco",
+			"enabled": true
+		},
+		{
+			"key": "UserCCOId",
+			"value": 322589991331,
+			"enabled": true
+		},
+		{
+			"key": "UserCCO1",
+			"value": "usercco1",
+			"enabled": true
+		},
+		{
+			"key": "UserCCO1Id",
+			"value": 1972120016659,
+			"enabled": true
+		},
+		{
+			"key": "CCHRoleId",
+			"value": 234529237640,
+			"enabled": true
+		},
+		{
+			"key": "RoleCCH",
+			"value": "CCH",
+			"enabled": true
+		},
+		{
+			"key": "UserCCH",
+			"value": "usercch",
+			"enabled": true
+		},
+		{
+			"key": "RoleCCA",
+			"value": "CCA",
+			"enabled": true
+		},
+		{
+			"key": "UserCCA",
+			"value": "usercca",
+			"enabled": true
+		},
+		{
+			"key": "Password",
+			"value": "test",
+			"enabled": true
+		},
+		{
+			"key": "BearerToken",
+			"value": "undefined undefined",
+			"enabled": true
+		},
+		{
+			"key": "TenantName2",
+			"value": "apiqaei0504",
+			"enabled": true
+		},
+		{
+			"key": "TenantAdmin2",
+			"value": "admin@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "AdminPassword2",
+			"value": "admin",
+			"enabled": true
+		},
+		{
+			"key": "DsdFileStoreURL",
+			"value": "https://ava-nlg-dev.nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "RefreshToken",
+			"value": null,
+			"enabled": true
+		},
+		{
+			"key": "WaitTime",
+			"value": 30000,
+			"enabled": true
+		},
+		{
+			"key": "NUMBER",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "COUNT",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "UserCCOEmailId",
+			"value": "usercco@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCO1EmailId",
+			"value": "usercco1@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCOManagerEmailId",
+			"value": "userccomanager@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCAId",
+			"value": 2044956951239,
+			"enabled": true
+		},
+		{
+			"key": "UserCCA1Id",
+			"value": 2043386291967,
+			"enabled": true
+		},
+		{
+			"key": "UserCCA1",
+			"value": "usercca1",
+			"enabled": true
+		},
+		{
+			"key": "CCARoleId",
+			"value": 368848764661,
+			"enabled": true
+		},
+		{
+			"key": "UserCCOManagerId",
+			"value": 2119243203126,
+			"enabled": true
+		},
+		{
+			"key": "UserCCH1",
+			"value": "usercch1",
+			"enabled": true
+		},
+		{
+			"key": "OuCCO",
+			"value": "oucco",
+			"enabled": true
+		},
+		{
+			"key": "OuCCOId",
+			"value": "191876919025",
+			"enabled": true
+		},
+		{
+			"key": "UserOuCCO",
+			"value": "useroucco",
+			"enabled": true
+		},
+		{
+			"key": "UserOuCCO1",
+			"value": "useroucco1",
+			"enabled": true
+		},
+		{
+			"key": "UserOuCCOId",
+			"value": 1657502426387,
+			"enabled": true
+		},
+		{
+			"key": "UserOuCCOId1",
+			"value": 668079088379,
+			"enabled": true
+		},
+		{
+			"key": "GN",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "SolutionPublisher",
+			"value": "SolutionPublisher",
+			"enabled": true
+		},
+		{
+			"key": "SolutionPublisherId",
+			"value": 824925532392,
+			"enabled": true
+		},
+		{
+			"key": "TenantNameStage",
+			"value": "apiqa0504stage",
+			"enabled": true
+		},
+		{
+			"key": "TenantNameProd",
+			"value": "apiqa0504prod",
+			"enabled": true
+		},
+		{
+			"key": "TenantNameStageClientId",
+			"value": "apiqa0504_staging",
+			"enabled": true
+		},
+		{
+			"key": "UserCCHId",
+			"value": 398151345508,
+			"enabled": true
+		},
+		{
+			"key": "TraceAuditRole",
+			"value": "auditdata",
+			"enabled": true
+		},
+		{
+			"key": "TraceAuditRoleId",
+			"value": 1873250222640,
+			"enabled": true
+		},
+		{
+			"key": "AuditDesigner",
+			"value": "auditdesigner",
+			"enabled": true
+		},
+		{
+			"key": "AuditDesignerId",
+			"value": 1139785560613,
+			"enabled": true
+		},
+		{
+			"key": "AuditReviewer",
+			"value": "auditreviewer",
+			"enabled": true
+		},
+		{
+			"key": "AuditReviewerId",
+			"value": 996441711937,
+			"enabled": true
+		},
+		{
+			"key": "AuditDesignerEmailId",
+			"value": "auditdesigner@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "SuperAdminUserName",
+			"value": "platformadmin@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "SuperAdminPassword",
+			"value": "padmin@123",
+			"enabled": true
+		},
+		{
+			"key": "SaasTenantName",
+			"value": "apiqasaas0802",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCO",
+			"value": "usercco",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCOId",
+			"value": "1173118793932",
+			"enabled": true
+		},
+		{
+			"key": "SaasTenantId",
+			"value": 28606,
+			"enabled": true
+		},
+		{
+			"key": "SuperAdminUserId",
+			"value": "-827185515",
+			"enabled": true
+		},
+		{
+			"key": "SuperAdminUser",
+			"value": "platformadmin",
+			"enabled": true
+		},
+		{
+			"key": "SaasRoleCCO",
+			"value": "CCO",
+			"enabled": true
+		},
+		{
+			"key": "SaasTenantAdmin",
+			"value": "admin@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCH",
+			"value": "usercch",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCHId",
+			"value": "933373429905",
+			"enabled": true
+		},
+		{
+			"key": "SaasRoleCCH",
+			"value": "CCH",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCA",
+			"value": "usercca",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCAId",
+			"value": "1588750292491",
+			"enabled": true
+		},
+		{
+			"key": "SaasRoleCCA",
+			"value": "CCA",
+			"enabled": true
+		},
+		{
+			"key": "RoleManager",
+			"value": "Manager",
+			"enabled": true
+		},
+		{
+			"key": "ManagerRoleId",
+			"value": 829265664407,
+			"enabled": true
+		},
+		{
+			"key": "RoleEmployee",
+			"value": "Employee",
+			"enabled": true
+		},
+		{
+			"key": "EmployeeRoleId",
+			"value": 2040409113899,
+			"enabled": true
+		},
+		{
+			"key": "RoleFinance",
+			"value": "Finance",
+			"enabled": true
+		},
+		{
+			"key": "FinanceRoleId",
+			"value": 1764637492961,
+			"enabled": true
+		},
+		{
+			"key": "TenantAdminId",
+			"value": 894878720178,
+			"enabled": true
+		},
+		{
+			"key": "Tenant2AdminId",
+			"value": 1597011094011,
+			"enabled": true
+		},
+		{
+			"key": "T2UserCCOId",
+			"value": 1386113498793,
+			"enabled": true
+		},
+		{
+			"key": "T2CCORoleId",
+			"value": 239407227356,
+			"enabled": true
+		},
+		{
+			"key": "EmployeeUser",
+			"value": "employeeuser",
+			"enabled": true
+		},
+		{
+			"key": "EmployeeUserId",
+			"value": 1917645633263,
+			"enabled": true
+		},
+		{
+			"key": "FinanceUser",
+			"value": "financeuser",
+			"enabled": true
+		},
+		{
+			"key": "FinanceUserId",
+			"value": 820077520635,
+			"enabled": true
+		},
+		{
+			"key": "FinanceUser1",
+			"value": "financeuser1",
+			"enabled": true
+		},
+		{
+			"key": "FinanceUserId1",
+			"value": "1192769182955",
+			"enabled": true
+		},
+		{
+			"key": "EmployeeUser1",
+			"value": "employeeuser1",
+			"enabled": true
+		},
+		{
+			"key": "EmployeeUserId1",
+			"value": "1228497924811",
+			"enabled": true
+		},
+		{
+			"key": "ManagerUser",
+			"value": "manageruser",
+			"enabled": true
+		},
+		{
+			"key": "ManagerUserId",
+			"value": 1732001198107,
+			"enabled": true
+		},
+		{
+			"key": "ManagerUser1",
+			"value": "manageruser1",
+			"enabled": true
+		},
+		{
+			"key": "ManagerUserId1",
+			"value": "897141596215",
+			"enabled": true
+		},
+		{
+			"key": "UserCCHEmailId",
+			"value": "usercch@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCAEmailId",
+			"value": "usercca@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCA1EmailId",
+			"value": "usercca1@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCH1EmailId",
+			"value": "usercch1@nslhub.com",
+			"enabled": true
+		},
+		{
+			"key": "UserCCH1Id",
+			"value": 632745185759,
+			"enabled": true
+		},
+		{
+			"key": "SAASAdminUserId",
+			"value": "242233047416",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCO1Id",
+			"value": "464692553728",
+			"enabled": true
+		},
+		{
+			"key": "SaasUserCCOManagerId",
+			"value": "202094916017",
+			"enabled": true
+		},
+		{
+			"key": "ManagerUser1Id",
+			"value": 1989195344420,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "FinanceUser1Id",
+			"value": 1829479253660,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "EmployeeUser1Id",
+			"value": 1178159858335,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "T2UserCCO1Id",
+			"value": 878542497800,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "StageAdmin",
+			"value": "stageadmin@nslhub.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserCCC",
+			"value": "userccc",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserCCC1",
+			"value": "userccc1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserCCCManager",
+			"value": "usercccmanager",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "RoleSolutionCustomizer",
+			"value": "SolutionCustomizer",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserCCCId",
+			"value": "668849564311",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "UserCCC1Id",
+			"value": "1607519294012",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "SolutionCustomizerRoleId",
+			"value": "639989182448",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "T3UserCCO1Id",
+			"value": 405650278408,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Tenant3AdminId",
+			"value": 982435399574,
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "T3UserCCOId",
+			"value": 1424682699760,
+			"enabled": true
+		},
+		{
+			"key": "T3CCORoleId",
+			"value": 129071126100,
+			"enabled": true
+		},
+		{
+			"key": "TenantName3",
+			"value": "apiqa3ten0604",
+			"enabled": true
+		},
+		{
+			"key": "REVIEW_WAITTIME",
+			"value": "5000",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-05-10T17:26:33.666Z",
+	"_postman_exported_using": "Postman/9.16.0"
+}
