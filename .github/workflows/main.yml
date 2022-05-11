@@ -19,8 +19,3 @@ jobs:
           postmanApiKey: ${{ secrets.postmanApiKey }}
           postmanWorkspaceId: 1f94fe93-e21e-4c77-9a43-cf2f96934003
           postmanTimeout: 30000
-
-      - name: Commit Updated Postman Collection IDs
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Updated Postman Collection ID
