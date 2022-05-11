@@ -1,322 +1,322 @@
 {
-  "info": {
-    "_postman_id": "e0293ac6-5ab3-441b-b12a-46dacb7404e7",
-    "name": "SecMcc",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Assign - usercco1",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){\r",
-              "    pm.expect(pm.response.code).to.eq(200);\r",
-              "    pm.expect(pm.response.json().message).to.eq(\"assigned successfully\");\r",
-              "\tpm.expect(pm.response.json().result).to.eq(\"successfully assigned to user - \"+pm.variables.get('UserCCO1Id'));\r",
-              "});\r",
-              "setTimeout(() => {}, pm.environment.get('WaitTime')/3); \r",
-              ""
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "Authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "traceparent",
-            "value": "00-42817721b6410b73e2d7a6a479b48553-59477548f520c665-01"
-          },
-          {
-            "key": "User-Agent",
-            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept-Language",
-            "value": "en",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n\t\"triggerCuId\": \"{{TriggerCuId1}}\",\r\n\t\"gsiId\": \"{{SolutionId}}\",\r\n\t\"transID\": \"{{TransactionId1}}\"\r\n}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/reAssign?transactionId={{TransactionId1}}&userId={{UserCCO1Id}}",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "secmcc",
-            "transaction",
-            "reAssign"
-          ],
-          "query": [
-            {
-              "key": "transactionId",
-              "value": "{{TransactionId1}}"
-            },
-            {
-              "key": "userId",
-              "value": "{{UserCCO1Id}}"
-            }
-          ]
-        },
-        "description": "Assigning the Transaction to usercco1"
-      },
-      "response": []
-    },
-    {
-      "name": "Transaction History",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){\r",
-              "    pm.expect(pm.response.code).to.eq(200);  \r",
-              "    pm.expect(pm.response.json().result.transactionStatus).to.eq('COMPLETED');  \r",
-              "\r",
-              "});\r",
-              "\r",
-              ""
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "accept-language",
-            "value": "en",
-            "type": "text"
-          },
-          {
-            "key": "authorization",
-            "value": "{{BearerToken}}",
-            "type": "text"
-          },
-          {
-            "key": "content-type",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/history/{{TransactionId}}/{{SolutionId}}",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "secmcc",
-            "transaction",
-            "history",
-            "{{TransactionId}}",
-            "{{SolutionId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Triggered Txn - Action History",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status code is 200\", function(){\r",
-              "    pm.response.to.have.status(200);\r",
-              "    pm.expect(pm.response.json().message).to.eq(\"cuDetails fetched successfully\");\r",
-              "    pm.expect(pm.response.json().result.gsiId).to.eq(pm.variables.get('SolutionId'))\r",
-              "    pm.expect(pm.response.json().result.transactionId).to.eq(pm.variables.get('TransactionId'))\r",
-              "    pm.expect(pm.response.json().result.cuContextualId).to.eq(pm.variables.get('ContextualId'))\r",
-              "\r",
-              "    \r",
-              "});\r",
-              "\r",
-              "\r",
-              ""
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "authority",
-            "value": "apiqa0109.qa3.nslhub.com"
-          },
-          {
-            "key": "sec-ch-ua",
-            "value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\""
-          },
-          {
-            "key": "traceparent",
-            "value": "00-492097fee5fda191c0de73c72940312a-5c7c4a7a061a7698-01"
-          },
-          {
-            "key": "accept-language",
-            "value": "en"
-          },
-          {
-            "key": "sec-ch-ua-mobile",
-            "value": "?0"
-          },
-          {
-            "key": "authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "user-agent",
-            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
-          },
-          {
-            "key": "sec-ch-ua-platform",
-            "value": "\"Windows\""
-          },
-          {
-            "key": "sec-fetch-site",
-            "value": "same-origin"
-          },
-          {
-            "key": "sec-fetch-mode",
-            "value": "cors"
-          },
-          {
-            "key": "sec-fetch-dest",
-            "value": "empty"
-          },
-          {
-            "key": "referer",
-            "value": "https://apiqa0109.qa3.nslhub.com/mylibrary/pending-transactions"
-          }
-        ],
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/cuTxnData/{{TransactionId}}/{{ContextualId}}",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "secmcc",
-            "transaction",
-            "cuTxnData",
-            "{{TransactionId}}",
-            "{{ContextualId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Escalate - userccomanager",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){\r",
-              "    pm.expect(pm.response.code).to.eq(200);\r",
-              "\t  pm.expect(pm.response.json().message).to.eq(\"escalated successfully\");\r",
-              "\tpm.expect(pm.response.json().result).to.eq(\"successfully escalated to user - \"+pm.variables.get('UserCCOManagerId'));\r",
-              "});\r",
-              "\r",
-              "\r",
-              "setTimeout(() => {}, pm.environment.get('WaitTime'));\r",
-              ""
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "Authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "traceparent",
-            "value": "00-42817721b6410b73e2d7a6a479b48553-59477548f520c665-01"
-          },
-          {
-            "key": "User-Agent",
-            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept-Language",
-            "value": "en",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n\t\"triggerCuId\": \"{{TriggerCuId1}}\",\r\n\t\"gsiId\": \"{{SolutionId}}\",\r\n\t\"transID\": \"{{TransId2}}\"\r\n}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/escalate?comment=undefined",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "secmcc",
-            "transaction",
-            "escalate"
-          ],
-          "query": [
-            {
-              "key": "comment",
-              "value": "undefined"
-            }
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "09a8e3d7-aa51-47d4-b550-dd05bd03be94",
+		"name": "SecMcc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Assign - usercco1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"assigned successfully\");\r",
+							"\tpm.expect(pm.response.json().result).to.eq(\"successfully assigned to user - \"+pm.variables.get('UserCCO1Id'));\r",
+							"});\r",
+							"setTimeout(() => {}, pm.environment.get('WaitTime')/3); \r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "traceparent",
+						"value": "00-42817721b6410b73e2d7a6a479b48553-59477548f520c665-01"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"triggerCuId\": \"{{TriggerCuId1}}\",\r\n\t\"gsiId\": \"{{SolutionId}}\",\r\n\t\"transID\": \"{{TransactionId1}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/reAssign?transactionId={{TransactionId1}}&userId={{UserCCO1Id}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"secmcc",
+						"transaction",
+						"reAssign"
+					],
+					"query": [
+						{
+							"key": "transactionId",
+							"value": "{{TransactionId1}}"
+						},
+						{
+							"key": "userId",
+							"value": "{{UserCCO1Id}}"
+						}
+					]
+				},
+				"description": "Assigning the Transaction to usercco1"
+			},
+			"response": []
+		},
+		{
+			"name": "Transaction History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);  \r",
+							"    pm.expect(pm.response.json().result.transactionStatus).to.eq('COMPLETED');  \r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/history/{{TransactionId}}/{{SolutionId}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"secmcc",
+						"transaction",
+						"history",
+						"{{TransactionId}}",
+						"{{SolutionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Triggered Txn - Action History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"cuDetails fetched successfully\");\r",
+							"    pm.expect(pm.response.json().result.gsiId).to.eq(pm.variables.get('SolutionId'))\r",
+							"    pm.expect(pm.response.json().result.transactionId).to.eq(pm.variables.get('TransactionId'))\r",
+							"    pm.expect(pm.response.json().result.cuContextualId).to.eq(pm.variables.get('ContextualId'))\r",
+							"\r",
+							"    \r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authority",
+						"value": "apiqa0109.qa3.nslhub.com"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\""
+					},
+					{
+						"key": "traceparent",
+						"value": "00-492097fee5fda191c0de73c72940312a-5c7c4a7a061a7698-01"
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://apiqa0109.qa3.nslhub.com/mylibrary/pending-transactions"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/cuTxnData/{{TransactionId}}/{{ContextualId}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"secmcc",
+						"transaction",
+						"cuTxnData",
+						"{{TransactionId}}",
+						"{{ContextualId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Escalate - userccomanager",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"\t  pm.expect(pm.response.json().message).to.eq(\"escalated successfully\");\r",
+							"\tpm.expect(pm.response.json().result).to.eq(\"successfully escalated to user - \"+pm.variables.get('UserCCOManagerId'));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"setTimeout(() => {}, pm.environment.get('WaitTime'));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "traceparent",
+						"value": "00-42817721b6410b73e2d7a6a479b48553-59477548f520c665-01"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"triggerCuId\": \"{{TriggerCuId1}}\",\r\n\t\"gsiId\": \"{{SolutionId}}\",\r\n\t\"transID\": \"{{TransId2}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/secmcc/transaction/escalate?comment=undefined",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"secmcc",
+						"transaction",
+						"escalate"
+					],
+					"query": [
+						{
+							"key": "comment",
+							"value": "undefined"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

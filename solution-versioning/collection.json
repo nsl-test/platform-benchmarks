@@ -1,453 +1,453 @@
 {
-  "info": {
-    "_postman_id": "c2017aa6-a283-4f69-a8cc-db56d841c1d3",
-    "name": "CU Versioning",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Generate Token (usercco)",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              "pm.variables.clear();",
-              "",
-              "pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1)); ",
-              "",
-              "pm.variables.set('CuName1','User Details'+ pm.variables.get('RandomNumber'));",
-              "pm.variables.set('EntityName1','user'+ pm.variables.get('RandomNumber'));",
-              "pm.variables.set('AttributeName11','Full Name');",
-              "pm.variables.set('AttributeName12','User ID');"
-            ],
-            "type": "text/javascript"
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "});",
-              "",
-              "pm.environment.set('BearerToken',pm.response.json().token_type+\" \"+pm.response.json().access_token);",
-              "pm.environment.set('RefreshToken',pm.response.json().refresh_token);"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "Accept-Language",
-            "value": "en"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/x-www-form-urlencoded"
-          }
-        ],
-        "body": {
-          "mode": "urlencoded",
-          "urlencoded": [
-            {
-              "key": "username",
-              "value": "{{UserCCO}}",
-              "type": "text"
-            },
-            {
-              "key": "password",
-              "value": "{{Password}}",
-              "type": "text"
-            },
-            {
-              "key": "grant_type",
-              "value": "password",
-              "type": "text"
-            },
-            {
-              "key": "client_id",
-              "value": "{{TenantName}}",
-              "type": "text"
-            }
-          ]
-        },
-        "url": {
-          "raw": "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
-          "host": [
-            "{{IamURL}}"
-          ],
-          "path": [
-            "auth",
-            "realms",
-            "{{TenantName}}",
-            "protocol",
-            "openid-connect",
-            "token"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create an entity",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "    pm.expect(pm.response.json().message).to.eq(pm.variables.get('EntityName1')+\" is successfully saved\");",
-              "});",
-              "",
-              "pm.variables.set('EntityId1',pm.response.json().result.id);",
-              "pm.variables.set('EntityMasterId',pm.response.json().result.id);",
-              "pm.variables.set('AttributeId11',pm.response.json().result.nslAttributes[0].id);",
-              "pm.variables.set('AttributeId12',pm.response.json().result.nslAttributes[1].id);",
-              "pm.variables.set('EntityGuid1',pm.response.json().result.guid)"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json, text/plain, */*",
-            "type": "text"
-          },
-          {
-            "key": "Authorization",
-            "value": "{{BearerToken}}",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          },
-          {
-            "key": "Accept-Language",
-            "value": "en",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n\t\"nslAttributes\": [\n\t\t{\n\t\t\t\"name\": \"{{AttributeName11}}\",\n\t\t\t\"isReserved\": false,\n\t\t\t\"constraints\": [],\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\"attributeType\": {\n\t\t\t\t\"type\": \"string\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t},\n\t\t\t\t\"uiElement\": \"text\"\n\t\t\t},\n\t\t\t\"id\": null\n\t\t},\n\t\t{\n\t\t\t\"defaultValue\": null,\n\t\t\t\"name\": \"{{AttributeName12}}\",\n\t\t\t\"isReserved\": false,\n\t\t\t\"constraints\": [],\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\"attributeType\": {\n\t\t\t\t\"type\": \"number\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t},\n\t\t\t\t\"uiElement\": \"number\"\n\t\t\t},\n\t\t\t\"id\": null\n\t\t}\n\t],\n\t\"entityClassification\": \"\",\n\t\"name\": \"{{EntityName1}}\",\n\t\"isMultiValue\": false\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/Entity",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "core",
-            "Entity"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Add attributes to the entity",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "    pm.expect(pm.response.json().message).to.eq(\"Successfully saved the UIAttribute \");",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept-Language",
-            "value": "en"
-          },
-          {
-            "key": "Authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept",
-            "value": "application/json, text/plain, */*"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n\t\"cuId\": null,\n\t\"cuType\": null,\n\t\"tuples\": [],\n\t\"entityList\": [\n\t\t{\n\t\t\t\"entityId\": {{EntityId1}},\n\t\t\t\"tuples\": [],\n\t\t\t\"attributeList\": [\n\t\t\t\t{\n\t\t\t\t\t\"attributeId\": {{AttributeId11}},\n\t\t\t\t\t\"tuples\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\n\t\t\t\t\t\t\t\"value\": \"text\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"attributeId\": {{AttributeId12}},\n\t\t\t\t\t\"tuples\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\n\t\t\t\t\t\t\t\"value\": \"number\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "core",
-            "UIAttribute"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Save CU",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "    pm.expect(pm.response.json().message).to.eq(\"CU has been saved successfully\");",
-              "    pm.expect(pm.response.json().result.status).to.eq(\"DRAFT\")",
-              "    pm.expect(pm.response.json().result.id).not.eq(undefined);",
-              "});",
-              "",
-              "pm.variables.set('CuMasterId',pm.response.json().result.id);",
-              "pm.variables.set('CuId1',pm.response.json().result.id);",
-              "pm.variables.set('ItemId1',pm.response.json().result.layers[0].participatingItems[0].id);",
-              "pm.variables.set('ParticipatingItemId1',pm.response.json().result.layers[0].id);"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "authority",
-            "value": "{{TenantName}}.{{BaseURL}}"
-          },
-          {
-            "key": "accept-language",
-            "value": "en"
-          },
-          {
-            "key": "sec-ch-ua-mobile",
-            "value": "?0"
-          },
-          {
-            "key": "authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "content-type",
-            "value": "application/json"
-          },
-          {
-            "key": "accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "origin",
-            "value": "https://{{TenantName}}.{{BaseURL}}"
-          },
-          {
-            "key": "sec-fetch-site",
-            "value": "same-origin"
-          },
-          {
-            "key": "sec-fetch-mode",
-            "value": "cors"
-          },
-          {
-            "key": "sec-fetch-dest",
-            "value": "empty"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n\t\"name\": \"{{CuName1}}\",\n\t\"agents\": [\n\t\t{\n\t\t\t\"agentType\": \"human\"\n\t\t}\n\t],\n\t\"cuType\": \"BASIC\",\n\t\"layers\": [\n\t\t{\n\t\t\t\"type\": \"physical\",\n\t\t\t\"label\": \"physical\",\n\t\t\t\"participatingItems\": [\n\t\t\t\t{\n\t\t\t\t\t\"item\": {\n\t\t\t\t\t\t\"TYPE\": \"GeneralEntity\",\n\t\t\t\t\t\t\"DATA\": {\n\t\t\t\t\t\t\t\"name\": \"{{EntityName1}}\",\n\t\t\t\t\t\t\t\"nslAttributes\": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName11}}\",\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\n\t\t\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId11}},\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"string\",\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Text\",\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"text\",\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName12}}\",\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\n\t\t\t\t\t\t\t\t\t\t\"type\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId12}},\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Number\",\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\"id\": {{EntityId1}}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t],\n\t\"designTimeRights\": [\n\t\t{\n\t\t\t\"rightHolderId\": {{CCORoleId}},\n\t\t\t\"name\": \"{{RoleCCO}}\",\n\t\t\t\"rightHolderType\": \"ROLE\",\n\t\t\t\"informationRight\": true,\n\t\t\t\"decisionRight\": true\n\t\t}\n\t],\n\t\"txnTimeRights\": [\n\t\t{\n\t\t\t\"rightHolderId\": {{CCORoleId}},\n\t\t\t\"name\": \"{{RoleCCO}}\",\n\t\t\t\"rightHolderType\": \"ROLE\",\n\t\t\t\"informationRight\": true,\n\t\t\t\"decisionRight\": false,\n\t\t\t\"executionRight\": true\n\t\t}\n\t],\n\t\"id\": null,\n\t\"draftedCu\": false,\n\t\"nextTriggerSet\": [],\n\t\"dcd\": [],\n\t\"mindCUList\": [],\n\t\"exceptionCUList\": [],\n\t\"isAlternate\": false,\n\t\"index\": 1,\n\t\"activeCuIndex\": true,\n\t\"entitySaved\": true,\n\t\"createdEntityId\": {{EntityId1}},\n\t\"displayName\": \"{{CuName1}}\",\n\t\"description\": \"Change Unit Description\"\n}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/CU",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "core",
-            "CU"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Send notofication for approval",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "    pm.expect(pm.response.json().message).to.eq(\"Notification sent successfully\");",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "authority",
-            "value": "{{TenantName}}.{{BaseURL}}"
-          },
-          {
-            "key": "accept-language",
-            "value": "en"
-          },
-          {
-            "key": "authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "content-type",
-            "value": "application/json"
-          },
-          {
-            "key": "accept",
-            "value": "application/json, text/plain, */*"
-          },
-          {
-            "key": "origin",
-            "value": "https://{{TenantName}}.{{BaseURL}}"
-          },
-          {
-            "key": "sec-fetch-site",
-            "value": "same-origin"
-          },
-          {
-            "key": "sec-fetch-mode",
-            "value": "cors"
-          },
-          {
-            "key": "sec-fetch-dest",
-            "value": "empty"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"actionableContent\": {\n        \"target_type\": \"Cu\",\n        \"target_id\": {{CuId1}},\n        \"target_name\": \"{{CuName1}}\",\n        \"context_cu\": \"\",\n        \"context_gsi\": \"\",\n        \"approvals\": \"true\"\n    },\n    \"title\": \"Review cu\",\n    \"targetUserId\": [\n        \"{{UserCCO1}}@nslhub.com\"\n    ],\n    \"notificationChannels\": [\n        \"PUSH\"\n    ],\n    \"content\": \"\"\n}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/v1/notifications/api/notification/send",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "dsd-orch",
-            "v1",
-            "notifications",
-            "api",
-            "notification",
-            "send"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Approve CU",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Check status code\", function(){",
-              "    pm.expect(pm.response.code).to.eq(200);",
-              "});",
-              "",
-              "setTimeout(() => {}, pm.environment.get('WaitTime')); "
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "accept-language",
-            "value": "en"
-          },
-          {
-            "key": "authorization",
-            "value": "{{BearerToken}}"
-          },
-          {
-            "key": "content-type",
-            "value": "application/json"
-          },
-          {
-            "key": "accept",
-            "value": "application/json, text/plain, */*"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"changeUnitId\":{{CuId1}}}"
-        },
-        "url": {
-          "raw": "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/cu/version/approve/{{CuId1}}",
-          "protocol": "https",
-          "host": [
-            "{{TenantName}}",
-            "{{BaseURL}}"
-          ],
-          "path": [
-            "solution-versioning",
-            "api",
-            "cu",
-            "version",
-            "approve",
-            "{{CuId1}}"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "4bbbbcbe-d56e-44c6-8c84-ee06af3c3d0e",
+		"name": "CU Versioning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate Token (usercco)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.clear();",
+							"",
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1)); ",
+							"",
+							"pm.variables.set('CuName1','User Details'+ pm.variables.get('RandomNumber'));",
+							"pm.variables.set('EntityName1','user'+ pm.variables.get('RandomNumber'));",
+							"pm.variables.set('AttributeName11','Full Name');",
+							"pm.variables.set('AttributeName12','User ID');"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"});",
+							"",
+							"pm.environment.set('BearerToken',pm.response.json().token_type+\" \"+pm.response.json().access_token);",
+							"pm.environment.set('RefreshToken',pm.response.json().refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "{{UserCCO}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{Password}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{TenantName}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
+					"host": [
+						"{{IamURL}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{TenantName}}",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an entity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(pm.variables.get('EntityName1')+\" is successfully saved\");",
+							"});",
+							"",
+							"pm.variables.set('EntityId1',pm.response.json().result.id);",
+							"pm.variables.set('EntityMasterId',pm.response.json().result.id);",
+							"pm.variables.set('AttributeId11',pm.response.json().result.nslAttributes[0].id);",
+							"pm.variables.set('AttributeId12',pm.response.json().result.nslAttributes[1].id);",
+							"pm.variables.set('EntityGuid1',pm.response.json().result.guid)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nslAttributes\": [\n\t\t{\n\t\t\t\"name\": \"{{AttributeName11}}\",\n\t\t\t\"isReserved\": false,\n\t\t\t\"constraints\": [],\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\"attributeType\": {\n\t\t\t\t\"type\": \"string\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t},\n\t\t\t\t\"uiElement\": \"text\"\n\t\t\t},\n\t\t\t\"id\": null\n\t\t},\n\t\t{\n\t\t\t\"defaultValue\": null,\n\t\t\t\"name\": \"{{AttributeName12}}\",\n\t\t\t\"isReserved\": false,\n\t\t\t\"constraints\": [],\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\"attributeType\": {\n\t\t\t\t\"type\": \"number\",\n\t\t\t\t\"properties\": {\n\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t},\n\t\t\t\t\"uiElement\": \"number\"\n\t\t\t},\n\t\t\t\"id\": null\n\t\t}\n\t],\n\t\"entityClassification\": \"\",\n\t\"name\": \"{{EntityName1}}\",\n\t\"isMultiValue\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/Entity",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"core",
+						"Entity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add attributes to the entity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"Successfully saved the UIAttribute \");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "en"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"cuId\": null,\n\t\"cuType\": null,\n\t\"tuples\": [],\n\t\"entityList\": [\n\t\t{\n\t\t\t\"entityId\": {{EntityId1}},\n\t\t\t\"tuples\": [],\n\t\t\t\"attributeList\": [\n\t\t\t\t{\n\t\t\t\t\t\"attributeId\": {{AttributeId11}},\n\t\t\t\t\t\"tuples\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\n\t\t\t\t\t\t\t\"value\": \"text\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"attributeId\": {{AttributeId12}},\n\t\t\t\t\t\"tuples\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\n\t\t\t\t\t\t\t\"value\": \"number\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"core",
+						"UIAttribute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save CU",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"CU has been saved successfully\");",
+							"    pm.expect(pm.response.json().result.status).to.eq(\"DRAFT\")",
+							"    pm.expect(pm.response.json().result.id).not.eq(undefined);",
+							"});",
+							"",
+							"pm.variables.set('CuMasterId',pm.response.json().result.id);",
+							"pm.variables.set('CuId1',pm.response.json().result.id);",
+							"pm.variables.set('ItemId1',pm.response.json().result.layers[0].participatingItems[0].id);",
+							"pm.variables.set('ParticipatingItemId1',pm.response.json().result.layers[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "{{TenantName}}.{{BaseURL}}"
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "origin",
+						"value": "https://{{TenantName}}.{{BaseURL}}"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{CuName1}}\",\n\t\"agents\": [\n\t\t{\n\t\t\t\"agentType\": \"human\"\n\t\t}\n\t],\n\t\"cuType\": \"BASIC\",\n\t\"layers\": [\n\t\t{\n\t\t\t\"type\": \"physical\",\n\t\t\t\"label\": \"physical\",\n\t\t\t\"participatingItems\": [\n\t\t\t\t{\n\t\t\t\t\t\"item\": {\n\t\t\t\t\t\t\"TYPE\": \"GeneralEntity\",\n\t\t\t\t\t\t\"DATA\": {\n\t\t\t\t\t\t\t\"name\": \"{{EntityName1}}\",\n\t\t\t\t\t\t\t\"nslAttributes\": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName11}}\",\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\n\t\t\t\t\t\t\t\t\t\t\"type\": \"string\",\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId11}},\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"string\",\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Text\",\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"text\",\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName12}}\",\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\n\t\t\t\t\t\t\t\t\t\t\"type\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId12}},\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Number\",\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"number\",\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t\"isReserved\": false,\n\t\t\t\t\t\t\t\"id\": {{EntityId1}}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t],\n\t\"designTimeRights\": [\n\t\t{\n\t\t\t\"rightHolderId\": {{CCORoleId}},\n\t\t\t\"name\": \"{{RoleCCO}}\",\n\t\t\t\"rightHolderType\": \"ROLE\",\n\t\t\t\"informationRight\": true,\n\t\t\t\"decisionRight\": true\n\t\t}\n\t],\n\t\"txnTimeRights\": [\n\t\t{\n\t\t\t\"rightHolderId\": {{CCORoleId}},\n\t\t\t\"name\": \"{{RoleCCO}}\",\n\t\t\t\"rightHolderType\": \"ROLE\",\n\t\t\t\"informationRight\": true,\n\t\t\t\"decisionRight\": false,\n\t\t\t\"executionRight\": true\n\t\t}\n\t],\n\t\"id\": null,\n\t\"draftedCu\": false,\n\t\"nextTriggerSet\": [],\n\t\"dcd\": [],\n\t\"mindCUList\": [],\n\t\"exceptionCUList\": [],\n\t\"isAlternate\": false,\n\t\"index\": 1,\n\t\"activeCuIndex\": true,\n\t\"entitySaved\": true,\n\t\"createdEntityId\": {{EntityId1}},\n\t\"displayName\": \"{{CuName1}}\",\n\t\"description\": \"Change Unit Description\"\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/CU",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"core",
+						"CU"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send notofication for approval",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"Notification sent successfully\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "{{TenantName}}.{{BaseURL}}"
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "origin",
+						"value": "https://{{TenantName}}.{{BaseURL}}"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"actionableContent\": {\n        \"target_type\": \"Cu\",\n        \"target_id\": {{CuId1}},\n        \"target_name\": \"{{CuName1}}\",\n        \"context_cu\": \"\",\n        \"context_gsi\": \"\",\n        \"approvals\": \"true\"\n    },\n    \"title\": \"Review cu\",\n    \"targetUserId\": [\n        \"{{UserCCO1}}@nslhub.com\"\n    ],\n    \"notificationChannels\": [\n        \"PUSH\"\n    ],\n    \"content\": \"\"\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/v1/notifications/api/notification/send",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"v1",
+						"notifications",
+						"api",
+						"notification",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve CU",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"});",
+							"",
+							"setTimeout(() => {}, pm.environment.get('WaitTime')); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"changeUnitId\":{{CuId1}}}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/cu/version/approve/{{CuId1}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"solution-versioning",
+						"api",
+						"cu",
+						"version",
+						"approve",
+						"{{CuId1}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }
