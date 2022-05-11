@@ -1,418 +1,418 @@
 {
-	"info": {
-		"_postman_id": "2fdada3c-4a1d-47f1-8121-21749d55799c",
-		"name": "IAM",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Login as usercco Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"\r",
-							"pm.environment.set('BearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);\r",
-							"pm.environment.set('RefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept-Language",
-						"type": "text",
-						"value": "en"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"login",
-						"v2",
-						"login-action"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Users Info - UserName Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"\r",
-							"\r",
-							"    const users  = pm.response.json().content;\r",
-							"\r",
-							"    let isFound = false;\r",
-							"\r",
-							"    users.forEach((userName)=> {\r",
-							"        if(userName.name == pm.variables.get(\"UserName\")) {\r",
-							"            isFound = true;\r",
-							"            // pm.expect(userName.name).to.eq(pm.environment.get(\"UserCCO1\"));\r",
-							"            // pm.expect(userName.id).to.eq(parseInt(pm.environment.get(\"UserCCO1Id\")));\r",
-							"\r",
-							"            let json = userName;\r",
-							"            userName.roles = [];\r",
-							"            pm.variables.set(\"UserNameDetails\",JSON.stringify(json));\r",
-							"        }\r",
-							"    });\r",
-							"\r",
-							"    pm.expect(isFound).to.eq(true)\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{}"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=5&searchTerm={{UserName}}&isActive=false",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"user",
-						"getAllUsersBySearchTerm"
-					],
-					"query": [
-						{
-							"key": "pageNumber",
-							"value": "0"
-						},
-						{
-							"key": "pageSize",
-							"value": "5"
-						},
-						{
-							"key": "searchTerm",
-							"value": "{{UserName}}"
-						},
-						{
-							"key": "isActive",
-							"value": "false"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Verify IRDR for shared role Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(parseInt(pm.response.json().bookId)).to.eq(pm.variables.get(\"BookId\"));\r",
-							"    pm.expect(pm.response.json().bookName).to.eq(pm.variables.get(\"BookName\"));\r",
-							"    pm.expect(parseInt(pm.response.json().solDtos[0].gsiId)).to.eq(pm.variables.get(\"SolutionId\"));\r",
-							"    pm.expect(pm.response.json().solDtos[0].gsiName).to.eq(pm.variables.get(\"SolutionName\"));\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer"
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookTreeById?id={{BookId}}&roleId={{RoleId}}&searchCriteria=",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"roles",
-						"getBookTreeById"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "{{BookId}}"
-						},
-						{
-							"key": "roleId",
-							"value": "{{RoleId}}"
-						},
-						{
-							"key": "searchCriteria",
-							"value": ""
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Fetch by username Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    //pm.variables.set('UserId1',pm.response.json().content[0].id);\r",
-							"    \r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=10&searchTerm={{UserName}}&isActive=false",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"user",
-						"getAllUsersBySearchTerm"
-					],
-					"query": [
-						{
-							"key": "pageNumber",
-							"value": "0"
-						},
-						{
-							"key": "pageSize",
-							"value": "10"
-						},
-						{
-							"key": "searchTerm",
-							"value": "{{UserName}}"
-						},
-						{
-							"key": "isActive",
-							"value": "false"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Shared Role Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");\r",
-							"})\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"{{SharedRole}}\",\r\n    \"users\": [\r\n        {{UserNameDetails}}\r\n    ],\r\n    \"groups\": [],\r\n    \"isAdmin\": false,\r\n    \"description\": \"\",\r\n    \"isEnabled\": false\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"roles",
-						"createRoleAndAttachToBooks"
-					],
-					"query": [
-						{
-							"key": "bklist",
-							"value": "{{BookId}}"
-						}
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [],
-	"variable": [
-		{
-			"key": "UserName",
-			"value": "Amandeep.goyal@nslhub.com"
-		},
-		{
-			"key": "BookId",
-			"value": "1421739491964",
-			"disabled": true
-		},
-		{
-			"key": "RoleId",
-			"value": ""
-		},
-		{
-			"key": "SharedRole",
-			"value": "Random"
-		},
-		{
-			"key": "UserNameDetails",
-			"value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\""
-		},
-		{
-			"key": "BookName",
-			"value": "BasicBook2022050910595455210"
-		},
-		{
-			"key": "SolutionName",
-			"value": "BasicSolution2022050910595455210"
-		}
-	]
+  "info": {
+    "_postman_id": "2fdada3c-4a1d-47f1-8121-21749d55799c",
+    "name": "IAM",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login as usercco Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check status code\", function(){\r",
+              "    pm.expect(pm.response.code).to.eq(200);\r",
+              "});\r",
+              "\r",
+              "pm.environment.set('BearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);\r",
+              "pm.environment.set('RefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json, text/plain, */*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept-Language",
+            "type": "text",
+            "value": "en"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "nsl-iam",
+            "api",
+            "login",
+            "v2",
+            "login-action"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Users Info - UserName Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check status code\", function(){\r",
+              "    pm.expect(pm.response.code).to.eq(200);\r",
+              "\r",
+              "\r",
+              "    const users  = pm.response.json().content;\r",
+              "\r",
+              "    let isFound = false;\r",
+              "\r",
+              "    users.forEach((userName)=> {\r",
+              "        if(userName.name == pm.variables.get(\"UserName\")) {\r",
+              "            isFound = true;\r",
+              "            // pm.expect(userName.name).to.eq(pm.environment.get(\"UserCCO1\"));\r",
+              "            // pm.expect(userName.id).to.eq(parseInt(pm.environment.get(\"UserCCO1Id\")));\r",
+              "\r",
+              "            let json = userName;\r",
+              "            userName.roles = [];\r",
+              "            pm.variables.set(\"UserNameDetails\",JSON.stringify(json));\r",
+              "        }\r",
+              "    });\r",
+              "\r",
+              "    pm.expect(isFound).to.eq(true)\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=5&searchTerm={{UserName}}&isActive=false",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "nsl-iam",
+            "api",
+            "user",
+            "getAllUsersBySearchTerm"
+          ],
+          "query": [
+            {
+              "key": "pageNumber",
+              "value": "0"
+            },
+            {
+              "key": "pageSize",
+              "value": "5"
+            },
+            {
+              "key": "searchTerm",
+              "value": "{{UserName}}"
+            },
+            {
+              "key": "isActive",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verify IRDR for shared role Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check status code\", function(){\r",
+              "    pm.expect(pm.response.code).to.eq(200);\r",
+              "});\r",
+              "pm.test(\"Check response\", function(){\r",
+              "    pm.expect(parseInt(pm.response.json().bookId)).to.eq(pm.variables.get(\"BookId\"));\r",
+              "    pm.expect(pm.response.json().bookName).to.eq(pm.variables.get(\"BookName\"));\r",
+              "    pm.expect(parseInt(pm.response.json().solDtos[0].gsiId)).to.eq(pm.variables.get(\"SolutionId\"));\r",
+              "    pm.expect(pm.response.json().solDtos[0].gsiName).to.eq(pm.variables.get(\"SolutionName\"));\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookTreeById?id={{BookId}}&roleId={{RoleId}}&searchCriteria=",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "nsl-iam",
+            "api",
+            "roles",
+            "getBookTreeById"
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "{{BookId}}"
+            },
+            {
+              "key": "roleId",
+              "value": "{{RoleId}}"
+            },
+            {
+              "key": "searchCriteria",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fetch by username Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    //pm.variables.set('UserId1',pm.response.json().content[0].id);\r",
+              "    \r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=10&searchTerm={{UserName}}&isActive=false",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "nsl-iam",
+            "api",
+            "user",
+            "getAllUsersBySearchTerm"
+          ],
+          "query": [
+            {
+              "key": "pageNumber",
+              "value": "0"
+            },
+            {
+              "key": "pageSize",
+              "value": "10"
+            },
+            {
+              "key": "searchTerm",
+              "value": "{{UserName}}"
+            },
+            {
+              "key": "isActive",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Shared Role Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check status code\", function(){\r",
+              "    pm.expect(pm.response.code).to.eq(200);\r",
+              "});\r",
+              "pm.test(\"Check response\", function(){\r",
+              "    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");\r",
+              "})\r",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{SharedRole}}\",\r\n    \"users\": [\r\n        {{UserNameDetails}}\r\n    ],\r\n    \"groups\": [],\r\n    \"isAdmin\": false,\r\n    \"description\": \"\",\r\n    \"isEnabled\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "nsl-iam",
+            "api",
+            "roles",
+            "createRoleAndAttachToBooks"
+          ],
+          "query": [
+            {
+              "key": "bklist",
+              "value": "{{BookId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "UserName",
+      "value": "Amandeep.goyal@nslhub.com"
+    },
+    {
+      "key": "BookId",
+      "value": "1421739491964",
+      "disabled": true
+    },
+    {
+      "key": "RoleId",
+      "value": ""
+    },
+    {
+      "key": "SharedRole",
+      "value": "Random"
+    },
+    {
+      "key": "UserNameDetails",
+      "value": "\" {\n            \"id\": 2148143410395,\n            \"createdAt\": 1650951442555,\n            \"updatedAt\": 1650951442555,\n            \"orgUnitId\": 1048774332110,\n            \"name\": \"Amandeep.goyal@nslhub.com\",\n            \"email\": \"Amandeep.goyal@nslhub.com\",\n            \"mobileNumber\": \"7019356279\",\n            \"isEnabled\": true,\n            \"roles\": [\n                {\n                    \"id\": 1118115121063,\n                    \"createdAt\": 1649163005001,\n                    \"updatedAt\": 1652095461019,\n                    \"name\": \" Employee\",\n                    \"description\": \"\",\n                    \"isEnabled\": true,\n                    \"isAdmin\": false,\n                    \"tagId\": 1892314879594,\n                    \"roleType\": \"LOCAL\"\n                }\n            ],\n            \"groups\": [],\n            \"customID\": \"28246\",\n            \"autoCustomID\": \"28246\"\n        }\""
+    },
+    {
+      "key": "BookName",
+      "value": "BasicBook2022050910595455210"
+    },
+    {
+      "key": "SolutionName",
+      "value": "BasicSolution2022050910595455210"
+    }
+  ]
 }

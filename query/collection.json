@@ -1,347 +1,347 @@
 {
-	"info": {
-		"_postman_id": "10a942b3-522f-4faf-975d-e90b4a1f55fb",
-		"name": "Query",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Search the TXN in Adv Search - UserCCH",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.expect(pm.response.json().message).equals('Success');\r",
-							"    pm.expect(pm.response.json().result.content[0].containerCuName).to.eq(pm.variables.get('SolutionName1'));\r",
-							"    pm.expect(pm.response.json().result.content[0].transactionStatus).to.eq('TRIGGERED');\r",
-							"    pm.expect(pm.response.json().result.content[0].transactionId).to.eq(pm.variables.get('TransactionId'));\r",
-							"\r",
-							"    pm.variables.set('TransactionId',pm.response.json().result.content[0].transactionId);\r",
-							"    pm.variables.set('GSIContextualId',pm.response.json().result.content[0].gsiContextualID);\r",
-							" \r",
-							"});\r",
-							" \r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"setTimeout(()=>{},pm.variables.get(\"WaitTime\")/2);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"limit\": 10,\r\n    \"pageNumber\": 0,\r\n    \"queries\": {\r\n        \"gsiName\": [\r\n            \"{{SolutionName1}}\"\r\n        ]\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/transaction/filtered-transactions",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"query",
-						"transaction",
-						"filtered-transactions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Fetched Value with Name",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"    pm.expect(pm.response.json().message).to.eq('Fetched transaction results successfully');\r",
-							"pm.expect(pm.response.json().result.result.searchResults[pm.variables.get(\"AttributeValue11\")]).to.not.eq(undefined);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "default"
-					},
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"filterName\": \"gsiMasterId\",\r\n            \"filterValues\": [\r\n                \"{{SolutionId}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.triggerCUId\",\r\n            \"filterValues\": [\r\n                \"{{TriggerCuId1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.entityName\",\r\n            \"filterValues\": [\r\n                \"{{EntityName1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeName\",\r\n            \"filterValues\": [\r\n                \"{{AttributeName11}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeValue\",\r\n            \"filterValues\": [\r\n                \"{{AttributeValue11}}\"\r\n            ]\r\n        }\r\n    ],\r\n    \"groupBys\": [\r\n        {\r\n            \"groupByField\": \"nslDimensions.attributeValue\"\r\n        }\r\n    ],\r\n    \"responseFormat\": \"AGG_KEY_VALUE_FORMAT\",\r\n    \"queryType\": \"OR\",\r\n    \"timeRangeType\": \"DAILY\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dynamic-search/txn-report",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"query",
-						"dynamic-search",
-						"txn-report"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Save the Widget - Widget1_Search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"pm.expect(pm.response.json().message).to.eq('Successfully saved widget');\r",
-							"\r",
-							"pm.expect(parseInt(pm.response.json().result[0].dashboardId)).to.eq(pm.variables.get('DashboardId'));\r",
-							"pm.expect(pm.response.json().result[0].dashboardName).to.eq(pm.variables.get('DashboardName'));\r",
-							"\r",
-							"pm.expect(pm.response.json().result[0].widget.name).to.eq(pm.variables.get('WidgetName1'));\r",
-							"\r",
-							"pm.expect(parseInt(pm.response.json().result[0].widget.requests[0].filters[0].filterValues[0])).to.eq(pm.variables.get('SolutionId'));\r",
-							"\r",
-							"pm.expect(parseInt(pm.response.json().result[0].widget.requests[0].filters[1].filterValues[0])).to.eq(pm.variables.get('TriggerCuId1'));\r",
-							"\r",
-							"pm.expect(pm.response.json().result[0].widget.requests[0].filters[2].filterValues[0]).to.eq(pm.variables.get('EntityName1'));\r",
-							"\r",
-							"pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[0]).to.eq(pm.variables.get('AttributeName11'));\r",
-							"pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[1]).to.eq(pm.variables.get('AttributeName12'));\r",
-							"pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[2]).to.eq(pm.variables.get('AttributeName13'));\r",
-							"\r",
-							"\r",
-							"pm.expect(pm.response.json().result[0].widget.additional.dataset).to.eq(pm.variables.get('DatasetName'));\r",
-							"pm.expect(pm.response.json().result[0].widget.additional.group).to.eq(pm.variables.get('GroupName'));\r",
-							"\r",
-							"pm.expect(pm.response.json().result[0].moduleType).to.eq('bar');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"dashboardId\": \"{{DashboardId}}\",\r\n        \"dashboardName\": \"{{DashboardName}}\",\r\n        \"moduleType\": \"bar\",\r\n        \"spaceWidgetLayout\": \"starter\",\r\n        \"widget\": {\r\n            \"additional\": {\r\n                \"additionalProp1\": \"\",\r\n                \"additionalProp2\": \"1\",\r\n                \"chartType\": \"timeSeries\",\r\n                \"dataset\": \"{{DatasetName}}\",\r\n                \"group\": \"{{GroupName}}\",\r\n                \"axesConfiguration\": \"totalCount\",\r\n                \"xaxisAttribute\": \"\",\r\n                \"yaxisAttribute\": \"\"\r\n            },\r\n            \"name\": \"{{WidgetName1}}\",\r\n            \"dashboardId\": \"{{DashboardId}}\",\r\n            \"requests\": [\r\n                {\r\n                    \"filters\": [\r\n                        {\r\n                            \"filterName\": \"containerCuId\",\r\n                            \"filterValues\": [\r\n                                \"{{SolutionId}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.triggerCUId\",\r\n                            \"filterValues\": [\r\n                                \"{{TriggerCuId1}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.entityName\",\r\n                            \"filterValues\": [\r\n                                \"{{EntityName1}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.attributeName\",\r\n                            \"filterValues\": [\r\n                                \"{{AttributeName11}}\",\r\n                                \"{{AttributeName12}}\",\r\n                                \"{{AttributeName13}}\"\r\n                            ]\r\n                        },\r\n                        \r\n                        {\r\n                            \"filterName\": \"nslDimensions.attributeValue\",\r\n                            \"filterValues\": [\r\n                                \"{{AttributeValue11}}\",\r\n                                \"{{AttributeValue12}}\",\r\n                                \"{{AttributeValue13}}\"\r\n                            ]\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    }\r\n]",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dashboards/widget-all",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"query",
-						"dashboards",
-						"widget-all"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Groups - Group_Search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"\r",
-							" pm.expect(pm.response.json().message).to.eq(\"Successfully fetched result\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dashboards/groups/list?pageNumber=0&pageSize=10&searchCriteria=",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"query",
-						"dashboards",
-						"groups",
-						"list"
-					],
-					"query": [
-						{
-							"key": "pageNumber",
-							"value": "0"
-						},
-						{
-							"key": "pageSize",
-							"value": "10"
-						},
-						{
-							"key": "searchCriteria",
-							"value": ""
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Values with Name",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"    pm.expect(pm.response.json().message).to.eq('Values with name '+pm.variables.get('AttributeName11')+' is successfully retrieved');\r",
-							"\r",
-							"pm.expect(pm.response.json().result.result[0]).to.eq(pm.variables.get('AttributeValue11'));\r",
-							"    \r",
-							"\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept-Language",
-						"value": "en",
-						"type": "default"
-					},
-					{
-						"key": "Authorization",
-						"value": "{{BearerToken}}",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"filterName\": \"containerCuId\",\r\n            \"filterValues\": [\r\n                \"{{SolutionId}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.triggerCUId\",\r\n            \"filterValues\": [\r\n                \"{{TriggerCuId1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.entityName\",\r\n            \"filterValues\": [\r\n                \"{{EntityName1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeName\",\r\n            \"filterValues\": [\r\n                \"{{AttributeName11}}\",\r\n                \"{{AttributeName12}}\",\r\n                \"{{AttributeName13}}\"\r\n            ]\r\n        }\r\n    ],\r\n    \"page\": {\r\n        \"pageNumber\": 0,\r\n        \"pageSize\": 10\r\n    },\r\n    \"queryType\": \"OR\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dynamic-search/attributeValues/name/{{AttributeName11}}",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"query",
-						"dynamic-search",
-						"attributeValues",
-						"name",
-						"{{AttributeName11}}"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "10a942b3-522f-4faf-975d-e90b4a1f55fb",
+    "name": "Query",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Search the TXN in Adv Search - UserCCH",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check status code\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.expect(pm.response.json().message).equals('Success');\r",
+              "    pm.expect(pm.response.json().result.content[0].containerCuName).to.eq(pm.variables.get('SolutionName1'));\r",
+              "    pm.expect(pm.response.json().result.content[0].transactionStatus).to.eq('TRIGGERED');\r",
+              "    pm.expect(pm.response.json().result.content[0].transactionId).to.eq(pm.variables.get('TransactionId'));\r",
+              "\r",
+              "    pm.variables.set('TransactionId',pm.response.json().result.content[0].transactionId);\r",
+              "    pm.variables.set('GSIContextualId',pm.response.json().result.content[0].gsiContextualID);\r",
+              " \r",
+              "});\r",
+              " \r",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "setTimeout(()=>{},pm.variables.get(\"WaitTime\")/2);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"limit\": 10,\r\n    \"pageNumber\": 0,\r\n    \"queries\": {\r\n        \"gsiName\": [\r\n            \"{{SolutionName1}}\"\r\n        ]\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/transaction/filtered-transactions",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "query",
+            "transaction",
+            "filtered-transactions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fetched Value with Name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "\r",
+              "    pm.expect(pm.response.json().message).to.eq('Fetched transaction results successfully');\r",
+              "pm.expect(pm.response.json().result.result.searchResults[pm.variables.get(\"AttributeValue11\")]).to.not.eq(undefined);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "default"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "default"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"filterName\": \"gsiMasterId\",\r\n            \"filterValues\": [\r\n                \"{{SolutionId}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.triggerCUId\",\r\n            \"filterValues\": [\r\n                \"{{TriggerCuId1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.entityName\",\r\n            \"filterValues\": [\r\n                \"{{EntityName1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeName\",\r\n            \"filterValues\": [\r\n                \"{{AttributeName11}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeValue\",\r\n            \"filterValues\": [\r\n                \"{{AttributeValue11}}\"\r\n            ]\r\n        }\r\n    ],\r\n    \"groupBys\": [\r\n        {\r\n            \"groupByField\": \"nslDimensions.attributeValue\"\r\n        }\r\n    ],\r\n    \"responseFormat\": \"AGG_KEY_VALUE_FORMAT\",\r\n    \"queryType\": \"OR\",\r\n    \"timeRangeType\": \"DAILY\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dynamic-search/txn-report",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "query",
+            "dynamic-search",
+            "txn-report"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Save the Widget - Widget1_Search",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "\r",
+              "pm.expect(pm.response.json().message).to.eq('Successfully saved widget');\r",
+              "\r",
+              "pm.expect(parseInt(pm.response.json().result[0].dashboardId)).to.eq(pm.variables.get('DashboardId'));\r",
+              "pm.expect(pm.response.json().result[0].dashboardName).to.eq(pm.variables.get('DashboardName'));\r",
+              "\r",
+              "pm.expect(pm.response.json().result[0].widget.name).to.eq(pm.variables.get('WidgetName1'));\r",
+              "\r",
+              "pm.expect(parseInt(pm.response.json().result[0].widget.requests[0].filters[0].filterValues[0])).to.eq(pm.variables.get('SolutionId'));\r",
+              "\r",
+              "pm.expect(parseInt(pm.response.json().result[0].widget.requests[0].filters[1].filterValues[0])).to.eq(pm.variables.get('TriggerCuId1'));\r",
+              "\r",
+              "pm.expect(pm.response.json().result[0].widget.requests[0].filters[2].filterValues[0]).to.eq(pm.variables.get('EntityName1'));\r",
+              "\r",
+              "pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[0]).to.eq(pm.variables.get('AttributeName11'));\r",
+              "pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[1]).to.eq(pm.variables.get('AttributeName12'));\r",
+              "pm.expect(pm.response.json().result[0].widget.requests[0].filters[3].filterValues[2]).to.eq(pm.variables.get('AttributeName13'));\r",
+              "\r",
+              "\r",
+              "pm.expect(pm.response.json().result[0].widget.additional.dataset).to.eq(pm.variables.get('DatasetName'));\r",
+              "pm.expect(pm.response.json().result[0].widget.additional.group).to.eq(pm.variables.get('GroupName'));\r",
+              "\r",
+              "pm.expect(pm.response.json().result[0].moduleType).to.eq('bar');\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\r\n    {\r\n        \"dashboardId\": \"{{DashboardId}}\",\r\n        \"dashboardName\": \"{{DashboardName}}\",\r\n        \"moduleType\": \"bar\",\r\n        \"spaceWidgetLayout\": \"starter\",\r\n        \"widget\": {\r\n            \"additional\": {\r\n                \"additionalProp1\": \"\",\r\n                \"additionalProp2\": \"1\",\r\n                \"chartType\": \"timeSeries\",\r\n                \"dataset\": \"{{DatasetName}}\",\r\n                \"group\": \"{{GroupName}}\",\r\n                \"axesConfiguration\": \"totalCount\",\r\n                \"xaxisAttribute\": \"\",\r\n                \"yaxisAttribute\": \"\"\r\n            },\r\n            \"name\": \"{{WidgetName1}}\",\r\n            \"dashboardId\": \"{{DashboardId}}\",\r\n            \"requests\": [\r\n                {\r\n                    \"filters\": [\r\n                        {\r\n                            \"filterName\": \"containerCuId\",\r\n                            \"filterValues\": [\r\n                                \"{{SolutionId}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.triggerCUId\",\r\n                            \"filterValues\": [\r\n                                \"{{TriggerCuId1}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.entityName\",\r\n                            \"filterValues\": [\r\n                                \"{{EntityName1}}\"\r\n                            ]\r\n                        },\r\n                        {\r\n                            \"filterName\": \"nslDimensions.attributeName\",\r\n                            \"filterValues\": [\r\n                                \"{{AttributeName11}}\",\r\n                                \"{{AttributeName12}}\",\r\n                                \"{{AttributeName13}}\"\r\n                            ]\r\n                        },\r\n                        \r\n                        {\r\n                            \"filterName\": \"nslDimensions.attributeValue\",\r\n                            \"filterValues\": [\r\n                                \"{{AttributeValue11}}\",\r\n                                \"{{AttributeValue12}}\",\r\n                                \"{{AttributeValue13}}\"\r\n                            ]\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    }\r\n]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dashboards/widget-all",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "query",
+            "dashboards",
+            "widget-all"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Groups - Group_Search",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "\r",
+              "\r",
+              " pm.expect(pm.response.json().message).to.eq(\"Successfully fetched result\");\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dashboards/groups/list?pageNumber=0&pageSize=10&searchCriteria=",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "query",
+            "dashboards",
+            "groups",
+            "list"
+          ],
+          "query": [
+            {
+              "key": "pageNumber",
+              "value": "0"
+            },
+            {
+              "key": "pageSize",
+              "value": "10"
+            },
+            {
+              "key": "searchCriteria",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Values with Name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "\r",
+              "    pm.expect(pm.response.json().message).to.eq('Values with name '+pm.variables.get('AttributeName11')+' is successfully retrieved');\r",
+              "\r",
+              "pm.expect(pm.response.json().result.result[0]).to.eq(pm.variables.get('AttributeValue11'));\r",
+              "    \r",
+              "\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept-Language",
+            "value": "en",
+            "type": "default"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{BearerToken}}",
+            "type": "default"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"filterName\": \"containerCuId\",\r\n            \"filterValues\": [\r\n                \"{{SolutionId}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.triggerCUId\",\r\n            \"filterValues\": [\r\n                \"{{TriggerCuId1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.entityName\",\r\n            \"filterValues\": [\r\n                \"{{EntityName1}}\"\r\n            ]\r\n        },\r\n        {\r\n            \"filterName\": \"nslDimensions.attributeName\",\r\n            \"filterValues\": [\r\n                \"{{AttributeName11}}\",\r\n                \"{{AttributeName12}}\",\r\n                \"{{AttributeName13}}\"\r\n            ]\r\n        }\r\n    ],\r\n    \"page\": {\r\n        \"pageNumber\": 0,\r\n        \"pageSize\": 10\r\n    },\r\n    \"queryType\": \"OR\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/query/dynamic-search/attributeValues/name/{{AttributeName11}}",
+          "protocol": "https",
+          "host": [
+            "{{TenantName}}",
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "dsd-orch",
+            "query",
+            "dynamic-search",
+            "attributeValues",
+            "name",
+            "{{AttributeName11}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }
