@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9e00c44f-ff1a-48db-9907-f9a87ca27102",
-		"name": "nsl-approvals",
+		"name": "Approvals",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -3286,7 +3286,7 @@
 			"response": []
 		},
 		{
-			"name": "Login as usercco - Tenant 2 Copy",
+			"name": "Login as usercco - Tenant 2",
 			"event": [
 				{
 					"listen": "test",
@@ -3372,7 +3372,7 @@
 			"response": []
 		},
 		{
-			"name": "Create first CU-(Input1_CuLevelConflictResolution) Copy",
+			"name": "Create first CU-(Input1_CuLevelConflictResolution)",
 			"event": [
 				{
 					"listen": "test",
@@ -3452,7 +3452,7 @@
 			"response": []
 		},
 		{
-			"name": "Create first Entity-(enter_details2_CuLevelConflictResolution) Copy",
+			"name": "Create first Entity-(enter_details2_CuLevelConflictResolution)",
 			"event": [
 				{
 					"listen": "test",
@@ -3550,7 +3550,7 @@
 			"response": []
 		},
 		{
-			"name": "Save CU - Input1_CuLevelConflictResolution Copy",
+			"name": "Save CU - Input1_CuLevelConflictResolution",
 			"event": [
 				{
 					"listen": "test",
@@ -3661,7 +3661,7 @@
 			"response": []
 		},
 		{
-			"name": "GET Approvals List - Input1_CuLevelConflictResolution Copy",
+			"name": "GET Approvals List - Input1_CuLevelConflictResolution",
 			"event": [
 				{
 					"listen": "test",
@@ -3718,7 +3718,7 @@
 			"response": []
 		},
 		{
-			"name": "Logout as usercco Copy",
+			"name": "Logout as usercco",
 			"event": [
 				{
 					"listen": "test",
