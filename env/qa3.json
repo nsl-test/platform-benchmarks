@@ -621,6 +621,16 @@
 			"value": "5000",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "UserCCOEncryptedPassword",
+			"value": "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",
+			"enabled": true
+		},
+		{
+			"key": "TenantAdminEncryptedPassword",
+			"value": "DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM=",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
