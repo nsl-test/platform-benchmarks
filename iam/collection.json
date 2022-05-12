@@ -6,468 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "Login as tenant admin",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"\r",
-							"pm.environment.set('TenantAdminBearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);\r",
-							"pm.environment.set('TenantAdminRefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept-Language",
-						"type": "text",
-						"value": "en"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{TenantAdmin}}\",\n    \"encryptedPassword\": \"DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"login",
-						"v2",
-						"login-action"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create role",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){",
-							"    pm.expect(pm.response.code).to.eq(200);",
-							"});",
-							"pm.test(\"Check response\", function(){",
-							"    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");",
-							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"RoleName\"));",
-							"})",
-							"pm.variables.set('RoleID',pm.response.json().result.id);"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
-							"",
-							"pm.variables.set('RoleName','NewRole'+ pm.variables.get('RandomNumber'));",
-							"pm.variables.set('RoleDescription','NewRoleDesc'+ pm.variables.get('RandomNumber'));"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "authority",
-						"value": "{{TenantName}}.{{BaseURL}}",
-						"disabled": true
-					},
-					{
-						"key": "sec-ch-ua",
-						"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
-						"disabled": true
-					},
-					{
-						"key": "traceparent",
-						"value": "00-01b6097e98e11b7c4279c22393899f38-68a6dac47b330246-01",
-						"disabled": true
-					},
-					{
-						"key": "accept-language",
-						"value": "en"
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?0",
-						"disabled": true
-					},
-					{
-						"key": "authorization",
-						"value": "{{TenantAdminBearerToken}}"
-					},
-					{
-						"key": "content-type",
-						"value": "application/json"
-					},
-					{
-						"key": "accept",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "user-agent",
-						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
-						"disabled": true
-					},
-					{
-						"key": "origin",
-						"value": "https://{{TenantName}}.{{BaseURL}}",
-						"disabled": true
-					},
-					{
-						"key": "sec-fetch-site",
-						"value": "same-origin"
-					},
-					{
-						"key": "sec-fetch-mode",
-						"value": "cors"
-					},
-					{
-						"key": "sec-fetch-dest",
-						"value": "empty"
-					},
-					{
-						"key": "referer",
-						"value": "https://{{TenantName}}.{{BaseURL}}/admin/addrole",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{RoleName}}\",\n    \"isEnabled\": true,\n    \"isAdmin\": false,\n    \"users\": [],\n    \"groups\": [],\n    \"description\": \"{{RoleDescription}}\"\n}"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/save",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"roles",
-						"save"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Root OrgUnit Details",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"\r",
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"    pm.expect(pm.response.json().result.content.length).to.eq(1);\r",
-							"    pm.variables.set(\"RootOrgUnitId\",pm.response.json().result.content[0].id);\r",
-							"    pm.variables.set(\"RootOrgUnitName\",pm.response.json().result.content[0].name);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "accept-language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?0",
-						"type": "text"
-					},
-					{
-						"key": "authorization",
-						"value": "{{TenantAdminBearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "content-type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[]"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/getAllOrgUnits?pageNumber=0&pageSize=10&searchCriteria=root",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"orgUnits",
-						"getAllOrgUnits"
-					],
-					"query": [
-						{
-							"key": "pageNumber",
-							"value": "0"
-						},
-						{
-							"key": "pageSize",
-							"value": "10"
-						},
-						{
-							"key": "searchCriteria",
-							"value": "root"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add User to OrgUnit",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(pm.response.json().message).to.eq(\"users added to org unit\");\r",
-							"    pm.expect(pm.response.json().result[0].id).to.eq(pm.variables.get(\"RdfUserId\"));\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"pm.variables.set(\"OrgUnitId\",198265232809)",
-							"",
-							"let json = {",
-							"            \"id\": 2148143410395,",
-							"            \"createdAt\": 1650951442555,",
-							"            \"updatedAt\": 1650951442555,",
-							"            \"orgUnitId\": 1048774332110,",
-							"            \"name\": \"Amandeep.goyal@nslhub.com\",",
-							"            \"email\": \"Amandeep.goyal@nslhub.com\",",
-							"            \"mobileNumber\": \"7019356279\",",
-							"            \"isEnabled\": true,",
-							"            \"roles\": [",
-							"                {",
-							"                    \"id\": 1118115121063,",
-							"                    \"createdAt\": 1649163005001,",
-							"                    \"updatedAt\": 1652095461019,",
-							"                    \"name\": \" Employee\",",
-							"                    \"description\": \"\",",
-							"                    \"isEnabled\": true,",
-							"                    \"isAdmin\": false,",
-							"                    \"tagId\": 1892314879594,",
-							"                    \"roleType\": \"LOCAL\"",
-							"                }",
-							"            ],",
-							"            \"groups\": [],",
-							"            \"customID\": \"28246\",",
-							"            \"autoCustomID\": \"28246\"",
-							"        }",
-							"pm.variables.set(\"UserDetails\", JSON.stringify(json))",
-							"pm.variables.set(\"RdfUserId\",2148143410395)"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "accept-language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?0",
-						"type": "text"
-					},
-					{
-						"key": "authorization",
-						"value": "{{TenantAdminBearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "content-type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\r\n   {{UserDetails}}\r\n]"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/users?orgUnitId={{OrgUnitId}}",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"orgUnits",
-						"users"
-					],
-					"query": [
-						{
-							"key": "orgUnitId",
-							"value": "{{OrgUnitId}}"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Org Unit",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"pm.test(\"Check response\", function(){\r",
-							"    pm.expect(pm.response.json().message).to.eq(\"OrgUnit created successfully\");\r",
-							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"OrgUnitName\"));\r",
-							"    pm.expect(pm.response.json().result.isEnabled).to.eq(true);\r",
-							"    pm.expect(pm.response.json().result.parentOrgUnit.name).to.eq(\"root\");\r",
-							"    pm.variables.set(\"OrgUnitId\",pm.response.json().result.id);\r",
-							"    pm.variables.set(\"ParentOrgUnitDetails\",JSON.stringify(pm.response.json().result.parentOrgUnit));    \r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
-							"",
-							"pm.variables.set('OrgUnitName','OrgUnit'+ pm.variables.get('RandomNumber'));",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "accept-language",
-						"value": "en",
-						"type": "text"
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?0",
-						"type": "text"
-					},
-					{
-						"key": "authorization",
-						"value": "{{TenantAdminBearerToken}}",
-						"type": "text"
-					},
-					{
-						"key": "content-type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"{{OrgUnitName}}\",\r\n    \"isEnabled\": true,\r\n    \"description\": \"{{OrgUnitName}}\"\r\n}"
-				},
-				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/save",
-					"protocol": "https",
-					"host": [
-						"{{TenantName}}",
-						"{{BaseURL}}"
-					],
-					"path": [
-						"dsd-orch",
-						"nsl-iam",
-						"api",
-						"orgUnits",
-						"save"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Login as usercco",
 			"event": [
 				{
@@ -634,7 +172,7 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
+						"key": "authorization",
 						"value": "{{BearerToken}}",
 						"type": "text"
 					},
@@ -1418,7 +956,7 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
+						"key": "authorization",
 						"value": "{{BearerToken}}",
 						"type": "text"
 					},
@@ -1543,6 +1081,468 @@
 						"api",
 						"user",
 						"getActiveUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login as tenant admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set('TenantAdminBearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);\r",
+							"pm.environment.set('TenantAdminRefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"type": "text",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{TenantAdmin}}\",\n    \"encryptedPassword\": \"DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"login",
+						"v2",
+						"login-action"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"});",
+							"pm.test(\"Check response\", function(){",
+							"    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");",
+							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"RoleName\"));",
+							"})",
+							"pm.variables.set('RoleID',pm.response.json().result.id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
+							"",
+							"pm.variables.set('RoleName','NewRole'+ pm.variables.get('RandomNumber'));",
+							"pm.variables.set('RoleDescription','NewRoleDesc'+ pm.variables.get('RandomNumber'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "{{TenantName}}.{{BaseURL}}",
+						"disabled": true
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+						"disabled": true
+					},
+					{
+						"key": "traceparent",
+						"value": "00-01b6097e98e11b7c4279c22393899f38-68a6dac47b330246-01",
+						"disabled": true
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"disabled": true
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
+						"disabled": true
+					},
+					{
+						"key": "origin",
+						"value": "https://{{TenantName}}.{{BaseURL}}",
+						"disabled": true
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://{{TenantName}}.{{BaseURL}}/admin/addrole",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{RoleName}}\",\n    \"isEnabled\": true,\n    \"isAdmin\": false,\n    \"users\": [],\n    \"groups\": [],\n    \"description\": \"{{RoleDescription}}\"\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/save",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Root OrgUnit Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().result.content.length).to.eq(1);\r",
+							"    pm.variables.set(\"RootOrgUnitId\",pm.response.json().result.content[0].id);\r",
+							"    pm.variables.set(\"RootOrgUnitName\",pm.response.json().result.content[0].name);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[]"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/getAllOrgUnits?pageNumber=0&pageSize=10&searchCriteria=root",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"getAllOrgUnits"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "searchCriteria",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User to OrgUnit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"pm.test(\"Check response\", function(){\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"users added to org unit\");\r",
+							"    pm.expect(pm.response.json().result[0].id).to.eq(pm.variables.get(\"RdfUserId\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"OrgUnitId\",198265232809)",
+							"",
+							"let json = {",
+							"            \"id\": 2148143410395,",
+							"            \"createdAt\": 1650951442555,",
+							"            \"updatedAt\": 1650951442555,",
+							"            \"orgUnitId\": 1048774332110,",
+							"            \"name\": \"Amandeep.goyal@nslhub.com\",",
+							"            \"email\": \"Amandeep.goyal@nslhub.com\",",
+							"            \"mobileNumber\": \"7019356279\",",
+							"            \"isEnabled\": true,",
+							"            \"roles\": [",
+							"                {",
+							"                    \"id\": 1118115121063,",
+							"                    \"createdAt\": 1649163005001,",
+							"                    \"updatedAt\": 1652095461019,",
+							"                    \"name\": \" Employee\",",
+							"                    \"description\": \"\",",
+							"                    \"isEnabled\": true,",
+							"                    \"isAdmin\": false,",
+							"                    \"tagId\": 1892314879594,",
+							"                    \"roleType\": \"LOCAL\"",
+							"                }",
+							"            ],",
+							"            \"groups\": [],",
+							"            \"customID\": \"28246\",",
+							"            \"autoCustomID\": \"28246\"",
+							"        }",
+							"pm.variables.set(\"UserDetails\", JSON.stringify(json))",
+							"pm.variables.set(\"RdfUserId\",2148143410395)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n   {{UserDetails}}\r\n]"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/users?orgUnitId={{OrgUnitId}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"users"
+					],
+					"query": [
+						{
+							"key": "orgUnitId",
+							"value": "{{OrgUnitId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Org Unit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"pm.test(\"Check response\", function(){\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"OrgUnit created successfully\");\r",
+							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"OrgUnitName\"));\r",
+							"    pm.expect(pm.response.json().result.isEnabled).to.eq(true);\r",
+							"    pm.expect(pm.response.json().result.parentOrgUnit.name).to.eq(\"root\");\r",
+							"    pm.variables.set(\"OrgUnitId\",pm.response.json().result.id);\r",
+							"    pm.variables.set(\"ParentOrgUnitDetails\",JSON.stringify(pm.response.json().result.parentOrgUnit));    \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
+							"",
+							"pm.variables.set('OrgUnitName','OrgUnit'+ pm.variables.get('RandomNumber'));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{OrgUnitName}}\",\r\n    \"isEnabled\": true,\r\n    \"description\": \"{{OrgUnitName}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/save",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"save"
 					]
 				}
 			},
