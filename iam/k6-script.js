@@ -178,7 +178,7 @@ export default function() {
 
   postman[Request]({
     name: "Login as usercco",
-    id: "b93c7db0-604d-4e06-bc84-c4b886b2aabb",
+    id: "71586fc6-3988-4d86-bfd6-d3c625556eb9",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -209,7 +209,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Book Tree By Id",
-    id: "8d490ca7-7fc2-42ed-a3b5-1e41f99560d2",
+    id: "9f1ccb15-d0e7-4411-95d7-8bb8063e068b",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookTreeById?id={{BookId}}&roleId={{RoleId}}&searchCriteria=",
@@ -240,13 +240,13 @@ export default function() {
 
   postman[Request]({
     name: "Fetch by username",
-    id: "876d502c-58e2-4c73-a0a1-188e126e9e60",
+    id: "f8cb6e17-5a50-4d3a-8ac6-8fc84aa72237",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=10&searchTerm={{UserName}}&isActive=false",
     data: "{}",
     headers: {
-      Authorization: "{{BearerToken}}",
+      authorization: "{{BearerToken}}",
       "Accept-Language": "en"
     },
     post(response) {
@@ -258,7 +258,7 @@ export default function() {
 
   postman[Request]({
     name: "Update Local Role & Attact to Book",
-    id: "ecf8437f-e31d-4859-a010-1cca6e231fe0",
+    id: "28ce7e59-c6f5-40be-9dd1-f40798fb7e1b",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
@@ -299,8 +299,8 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Get Role Details - Local Role Copy 2",
-    id: "61844c31-f78d-4cc0-958a-a79f21eeb1b2",
+    name: "Get Role Details - Local Role",
+    id: "99588059-6314-4c52-ad71-9139ec5eab64",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getB2cRoles?pageNumber=0&pageSize=10",
@@ -351,7 +351,7 @@ export default function() {
 
   postman[Request]({
     name: "Save Irdr's",
-    id: "2d069530-4669-431c-833f-87ac1753754d",
+    id: "f154b21b-52c2-4e95-9382-eb5c46191af1",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/saveIRDRs",
@@ -371,6 +371,439 @@ export default function() {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
         pm.expect(pm.response.json().message).to.eq("IRDRs Successfully Saved");
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Get Book Role Tree",
+    id: "f41468b9-00b5-4992-8907-fe7e0e6453f4",
+    method: "GET",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookRoleTree/{{BookId}}",
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    pre() {
+      pm.variables.set("RoleName", "Fc4SyFfp0Q");
+      pm.variables.set("RoleId", "17642430179");
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json()[0].name).to.eq(
+          pm.variables.get("RoleName")
+        );
+        pm.expect(pm.response.json()[0].id + "").to.eq(
+          pm.variables.get("RoleId")
+        );
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Get B2C Shared Notifications",
+    id: "e8dadd88-4d50-44a7-9eae-49db2c097ecd",
+    method: "GET",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/b2c/getB2CSharedNotifications",
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.test("Verify basic solution is published successfully", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          `B2C Space notifications fetched successfully`
+        );
+        pm.expect(pm.response.json().result.length > 0).to.eq(true);
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Add User To Space -> Send Invitation",
+    id: "37177b26-6557-4677-b0ec-9fc801e88920",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/addUserstoSpace",
+    data:
+      '{\r\n    "bookId": {{BookId}},\r\n    "userList": [\r\n        {\r\n            "email": "{{UserCCO1EmailId}}",\r\n            "name": "{{UserCCO1}}",\r\n            "isEnabled": false\r\n        }\r\n    ]\r\n}',
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.test("Verify basic solution is published successfully", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(`Invitation sent !`);
+        pm.expect(pm.response.json().result).to.eq(true);
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "CCA Role ID Getting",
+    id: "4ca55911-f685-4448-b80c-2c788167bcc3",
+    method: "POST",
+    address:
+      "https://{{TenantName2}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getAllRoles?pageNumber=0&pageSize=10",
+    data: '{"isActive":true,"roleName":""}',
+    headers: {
+      authority: "apiqaei0802.qa3.nslhub.com",
+      accept: "application/json, text/plain, */*",
+      "accept-language": "EN",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      origin: "https://apiqaei0802.qa3.nslhub.com",
+      referer:
+        "https://apiqaei0802.qa3.nslhub.com/mylibrary/bet-configuration/eyJzb2x1dGlvblR5cGUiOiJwcmVtaXVtIiwibm9PZlNvbHV0aW9ucyI6MSwibm9PZkVudGl0aWVzIjoxLCJpc0Jvb2tBZGRlZCI6ZmFsc2UsImlzRG93bmxvYWRlZCI6ZmFsc2UsImlzU3Vic2NyaWJlZCI6ZmFsc2UsInVwZ3JhZGVBdmFpbGFibGUiOmZhbHNlLCJtYXJrZXRwbGFjZUlkIjp7ImFwcHJvdmVyTWV0YUlkIjoiNjI1M2MxYWFlYzUxMWMzZTM0OTI1ZTJjIiwicHVibGlzaGVySWQiOiJTYW1wbGUiLCJkc2RJZCI6IjYyNTNjMWFhMzYzOGJiN2M1YWRjMWU0ZCIsInR5cGUiOiJCT09LIiwiaWQiOjQzODc4MDA1NzIxLCJib29rRHNkSWQiOiI2MjUzYzFhYTM2MzhiYjdjNWFkYzFlNGQiLCJuc2xMaWJyYXJ5QXBwbGljYXRpb25OYW1lIjoiQ29uZmxpY3QgMTEwNCBCb29rIiwibnNsTGlicmFyeUFwcGxpY2F0aW9uVmVyc2lvbiI6IjEiLCJ0ZW5hbnRJZCI6ImFwaXFhMDEwOSIsIm5zbExpYnJhcnlNYXN0ZXJJZCI6MTI4ODQzNjYzNjY0N30sImRzZElkIjoiNjI1M2MxYWEzNjM4YmI3YzVhZGMxZTRkIiwibmFtZSI6IkNvbmZsaWN0IDExMDQgQm9vayIsImRpc3BsYXlOYW1lIjoiQ29uZmxpY3QgMTEwNCBCb29rIiwiZGVzY3JpcHRpb24iOiJDb25mbGljdCAxMTA0IEJvb2siLCJvbnRvbG9neSI6W3siaWQiOiJjb21tb24iLCJuYW1lIjoiY29tbW9uIiwiZGlzcGxheU5hbWUiOiJDb21tb24iLCJsZXZlbCI6MSwiaXNWYWxpZGF0ZWQiOmZhbHNlfSx7ImlkIjoiY29tbW9uLmZpbmFuY2VDb21tb24iLCJuYW1lIjoiZmluYW5jZUNvbW1vbiIsImRpc3BsYXlOYW1lIjoiRmluYW5jZSAmIEFjY291bnRpbmciLCJsZXZlbCI6MiwiaXNWYWxpZGF0ZWQiOmZhbHNlfSx7ImlkIjoiY29tbW9uLmZpbmFuY2VDb21tb24uYmFua2luZyIsIm5hbWUiOiJiYW5raW5nIiwiZGlzcGxheU5hbWUiOiJCYW5raW5nIiwibGV2ZWwiOjMsImlzVmFsaWRhdGVkIjpmYWxzZX0seyJpZCI6ImNvbW1vbi5maW5hbmNlQ29tbW9uLmJhbmtpbmcuYXJyZWFycyIsIm5hbWUiOiJhcnJlYXJzIiwiZGlzcGxheU5hbWUiOiJBcnJlYXJzIiwibGV2ZWwiOjQsImlzVmFsaWRhdGVkIjpmYWxzZX1dLCJwdWJsaXNoZXIiOnsiaWQiOiJTYW1wbGUiLCJuYW1lIjoiU2FtcGxlIiwiZW1haWwiOlsiYW1ldGkubGlraGl0aEBuc2xodWIuY29tIl0sImNvbnRhY3ROdW1iZXIiOlsiOTU2MTUyNjM4MSJdLCJhZGRyZXNzIjpbIkh5ZCJdLCJ3ZWJzaXRlTGluayI6InNhbXBsZS5jb20ifSwiaXNSZXNlcnZlZCI6ZmFsc2UsIm1hc3RlcklkIjo0Mzg3ODAwNTcyMSwidmVyc2lvbiI6IjEuMCIsInN0YXR1cyI6IkRSQUZUIn0",
+      "sec-ch-ua":
+        '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"Windows"',
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-origin",
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36"
+    },
+    post(response) {
+      pm.variables.set("CCARoleIdMapping", pm.response.json().rolesList[1].id);
+    }
+  });
+
+  postman[Request]({
+    name: "Get All Assigned Users - 0 User - For OrgUnits",
+    id: "0c53497b-38fc-429c-9886-271e1c03449b",
+    method: "GET",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/page/matching/assignedusers?orgUnitId={{OrgUnitId}}&pageNo=0&pageSize=10&searchCriteria=s",
+    headers: {
+      "accept-language": "en",
+      "sec-ch-ua-mobile": "?0",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json"
+    },
+    pre() {
+      pm.variables.set("OrgUnitId", 1367783128912);
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().result.content.length).to.eq(0);
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "UpdateEnableUser",
+    id: "48027ec6-fde7-4815-a3b1-5f11b0ed0254",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/update/user?type=graph&userId={{UserId1}}",
+    data:
+      '{\r\n    "name": "{{UserName}}",\r\n    "email": "{{Email}}",\r\n    "isEnabled": true,\r\n    "roles": [\r\n        {\r\n            "id": {{RoleId}}\r\n        }\r\n    ],\r\n    "manager": {\r\n        "id": {{managerId1}}\r\n    }\r\n}',
+    headers: {
+      authorization: "{{BearerToken}}",
+      "Accept-Language": "en",
+      "Content-Type": "application/json"
+    },
+    pre() {
+      pm.variables.set("UserId1", 1701107834287);
+      pm.variables.set("Email", "Abdul.kalam@nslhub.com");
+      pm.variables.set("UserName", "Abdul.kalam@nslhub.com");
+      pm.variables.set("managerId1", 2119243203126);
+      pm.variables.set("RoleId", 1281586869929);
+    },
+    post(response) {
+      pm.test("Status code is 200", function() {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "Requested user updated successfully"
+        );
+
+        pm.expect(pm.response.json().result.isEnabled).to.eq(true);
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "getActiveUser GET",
+    id: "4aa6bcfa-9f53-4136-878d-8a8ef5995e77",
+    method: "GET",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getActiveUser",
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json"
+    },
+    post(response) {
+      pm.test("Check For Status Code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+
+      pm.test("Check Response Values", function() {
+        pm.expect(pm.response.json().id).to.eq(
+          parseInt(pm.environment.get("UserCCOId"))
+        );
+        pm.expect(pm.response.json().name).to.eq(pm.environment.get("UserCCO"));
+        pm.expect(pm.response.json().isEnabled).to.eq(true);
+        pm.expect(pm.response.json().roles.length > 0).to.eq(true);
+        pm.expect(pm.response.json().manager.name).to.eq(
+          pm.environment.get("UserCCOManager")
+        );
+        pm.expect(pm.response.json().manager.id).to.eq(
+          parseInt(pm.environment.get("UserCCOManagerId"))
+        );
+
+        let isRoleExists = false;
+
+        pm.response.json().roles.forEach(role => {
+          if (
+            role.name == pm.environment.get("RoleCCO") &&
+            role.id == pm.environment.get("CCORoleId") &&
+            role.isEnabled == true
+          ) {
+            isRoleExists = true;
+          }
+        });
+
+        pm.expect(isRoleExists).to.eq(true);
+
+        pm.expect(pm.response.json().planNFeatureMapping.active).to.eq(true);
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Login as tenant admin",
+    id: "a9a45593-96ec-4245-bb27-86baa647b317",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+    data:
+      '{\n    "userName": "{{TenantAdmin}}",\n    "encryptedPassword": "DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM=",\n    "tenantName": "{{TenantName}}",\n    "clientId": "{{TenantName}}"\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+
+      pm.environment.set(
+        "TenantAdminBearerToken",
+        pm.response.json().result.token_type +
+          " " +
+          pm.response.json().result.access_token
+      );
+      pm.environment.set(
+        "TenantAdminRefreshToken",
+        pm.response.json()["result"]["refresh_token"]
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Create role",
+    id: "415a96bd-f449-41e9-aa47-2db9f54585b9",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/save",
+    data:
+      '{\n    "name": "{{RoleName}}",\n    "isEnabled": true,\n    "isAdmin": false,\n    "users": [],\n    "groups": [],\n    "description": "{{RoleDescription}}"\n}',
+    headers: {
+      "accept-language": "en",
+      authorization: "{{TenantAdminBearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty"
+    },
+    pre() {
+      pm.variables.set(
+        "RandomNumber",
+        new Date()
+          .toISOString()
+          .replace(/[^0-9]/g, "")
+          .slice(0, -3) +
+          "" +
+          Math.floor(Math.random() * 100000 + 1)
+      );
+
+      pm.variables.set(
+        "RoleName",
+        "NewRole" + pm.variables.get("RandomNumber")
+      );
+      pm.variables.set(
+        "RoleDescription",
+        "NewRoleDesc" + pm.variables.get("RandomNumber")
+      );
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+      pm.test("Check response", function() {
+        pm.expect(pm.response.json().message).to.eq(
+          "Role created successfully"
+        );
+        pm.expect(pm.response.json().result.name).to.eq(
+          pm.variables.get("RoleName")
+        );
+      });
+      pm.variables.set("RoleID", pm.response.json().result.id);
+    }
+  });
+
+  postman[Request]({
+    name: "Get Root OrgUnit Details",
+    id: "f3fb06a9-1ed4-4e14-9e63-daef2d77214e",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/getAllOrgUnits?pageNumber=0&pageSize=10&searchCriteria=root",
+    data: "[]",
+    headers: {
+      "accept-language": "en",
+      "sec-ch-ua-mobile": "?0",
+      authorization: "{{TenantAdminBearerToken}}",
+      "content-type": "application/json"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().result.content.length).to.eq(1);
+        pm.variables.set(
+          "RootOrgUnitId",
+          pm.response.json().result.content[0].id
+        );
+        pm.variables.set(
+          "RootOrgUnitName",
+          pm.response.json().result.content[0].name
+        );
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Add User to OrgUnit",
+    id: "3a1058b6-4bb6-49c6-b135-d2591bcd391e",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/users?orgUnitId={{OrgUnitId}}",
+    data: "[\r\n   {{UserDetails}}\r\n]",
+    headers: {
+      "accept-language": "en",
+      "sec-ch-ua-mobile": "?0",
+      authorization: "{{TenantAdminBearerToken}}",
+      "content-type": "application/json"
+    },
+    pre() {
+      pm.variables.set("OrgUnitId", 198265232809);
+
+      let json = {
+        id: 2148143410395,
+        createdAt: 1650951442555,
+        updatedAt: 1650951442555,
+        orgUnitId: 1048774332110,
+        name: "Amandeep.goyal@nslhub.com",
+        email: "Amandeep.goyal@nslhub.com",
+        mobileNumber: "7019356279",
+        isEnabled: true,
+        roles: [
+          {
+            id: 1118115121063,
+            createdAt: 1649163005001,
+            updatedAt: 1652095461019,
+            name: " Employee",
+            description: "",
+            isEnabled: true,
+            isAdmin: false,
+            tagId: 1892314879594,
+            roleType: "LOCAL"
+          }
+        ],
+        groups: [],
+        customID: "28246",
+        autoCustomID: "28246"
+      };
+      pm.variables.set("UserDetails", JSON.stringify(json));
+      pm.variables.set("RdfUserId", 2148143410395);
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+      pm.test("Check response", function() {
+        pm.expect(pm.response.json().message).to.eq("users added to org unit");
+        pm.expect(pm.response.json().result[0].id).to.eq(
+          pm.variables.get("RdfUserId")
+        );
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Create Org Unit",
+    id: "5a3a5c43-c1bb-4637-84de-f88a18484450",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/save",
+    data:
+      '{\r\n    "name": "{{OrgUnitName}}",\r\n    "isEnabled": true,\r\n    "description": "{{OrgUnitName}}"\r\n}',
+    headers: {
+      "accept-language": "en",
+      "sec-ch-ua-mobile": "?0",
+      authorization: "{{TenantAdminBearerToken}}",
+      "content-type": "application/json"
+    },
+    pre() {
+      pm.variables.set(
+        "RandomNumber",
+        new Date()
+          .toISOString()
+          .replace(/[^0-9]/g, "")
+          .slice(0, -3) +
+          "" +
+          Math.floor(Math.random() * 100000 + 1)
+      );
+
+      pm.variables.set(
+        "OrgUnitName",
+        "OrgUnit" + pm.variables.get("RandomNumber")
+      );
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+      pm.test("Check response", function() {
+        pm.expect(pm.response.json().message).to.eq(
+          "OrgUnit created successfully"
+        );
+        pm.expect(pm.response.json().result.name).to.eq(
+          pm.variables.get("OrgUnitName")
+        );
+        pm.expect(pm.response.json().result.isEnabled).to.eq(true);
+        pm.expect(pm.response.json().result.parentOrgUnit.name).to.eq("root");
+        pm.variables.set("OrgUnitId", pm.response.json().result.id);
+        pm.variables.set(
+          "ParentOrgUnitDetails",
+          JSON.stringify(pm.response.json().result.parentOrgUnit)
+        );
       });
     }
   });
