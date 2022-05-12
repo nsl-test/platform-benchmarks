@@ -12,12 +12,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
-							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"});\r",
-							"\r",
-							"pm.environment.set('BearerToken',pm.response.json().token_type+\" \"+pm.response.json().access_token);\r",
-							"pm.environment.set('RefreshToken',pm.response.json().refresh_token);"
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"});",
+							"",
+							"pm.environment.set('BearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);",
+							"pm.environment.set('RefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
 						],
 						"type": "text/javascript"
 					}
@@ -26,34 +26,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"//pm.variables.clear();\r",
-							"\r",
-							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1)); \r",
-							"\r",
-							"// Solution Development \r",
-							"\r",
-							"pm.variables.set('BookName','BasicBook'+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('SolutionName','BasicSolution'+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('CCORoleId', pm.variables.get('CCORoleId'));\r",
-							"pm.variables.set('RoleCCO', pm.variables.get('RoleCCO'));\r",
-							"\r",
-							"pm.variables.set('CuName1','Input1_BasicSolution '+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('EntityName1','enter_details1'+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('AttributeName11','Name');\r",
-							"pm.variables.set('AttributeName12','Age');\r",
-							"\r",
-							"pm.variables.set('CuName2','Input2_BasicSolution '+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('EntityName2','enter_details2'+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('AttributeName21','Address');\r",
-							"pm.variables.set('AttributeName22','Pin Code');\r",
-							"\r",
-							"// Solution Execution\r",
-							"\r",
-							"pm.variables.set('AttributeValue11', 'Ramya '+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('AttributeValue12', pm.variables.get('RandomNumber'));\r",
-							"\r",
-							"pm.variables.set('AttributeValue21', 'Hyderabad '+ pm.variables.get('RandomNumber'));\r",
-							"pm.variables.set('AttributeValue22', pm.variables.get('RandomNumber'));"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -67,52 +40,32 @@
 						"value": "application/json, text/plain, */*"
 					},
 					{
-						"key": "User-Agent",
-						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
-					},
-					{
 						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
+						"value": "application/json"
 					},
 					{
 						"key": "Accept-Language",
-						"type": "text",
 						"value": "en"
 					}
 				],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "client_id",
-							"value": "{{TenantName}}"
-						},
-						{
-							"key": "grant_type",
-							"value": "password"
-						},
-						{
-							"key": "password",
-							"value": "{{Password}}"
-						},
-						{
-							"key": "username",
-							"value": "{{UserCCO}}"
-						}
-					]
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}"
 				},
 				"url": {
-					"raw": "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+					"protocol": "https",
 					"host": [
-						"{{IamURL}}"
+						"{{TenantName}}",
+						"{{BaseURL}}"
 					],
 					"path": [
-						"auth",
-						"realms",
-						"{{TenantName}}",
-						"protocol",
-						"openid-connect",
-						"token"
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"login",
+						"v2",
+						"login-action"
 					]
 				}
 			},
@@ -127,9 +80,22 @@
 						"exec": [
 							"pm.test(\"Check status code\", function(){\r",
 							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    \r",
 							"});\r",
-							"pm.variables.set('TransactionId',pm.response.json().result.transId);\r",
-							"pm.variables.set('TriggerCuId1',pm.response.json().result.currentCU.id);"
+							"\r",
+							"pm.environment.set('TransactionId',pm.response.json().result.transId);\r",
+							"pm.environment.set('TriggerCuId2',1137225956451);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('SolutionId',1245802040817);",
+							"pm.variables.set('SolutionName','BasicSolution2022051204071424161');",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -166,7 +132,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"gsiId\": 758040314799\r\n}"
+					"raw": "{\r\n\t\"gsiId\": {{SolutionId}}\r\n}"
 				},
 				"url": {
 					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/execute/change-unit",
@@ -197,6 +163,18 @@
 							"});\r",
 							"\r",
 							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"SolutionId\", 1245802040817);",
+							"pm.variables.set(\"SolutionName\", \"BasicSolution2022051204071424161\");",
+							"pm.environment.set(\"TransactionId\",881922374451);",
+							"pm.environment.set(\"TriggerCuId2\", 1137225956451);"
 						],
 						"type": "text/javascript"
 					}
@@ -232,7 +210,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"gsiContextualId\": null,\r\n    \"transId\": \"{{TransactionId}}\",\r\n    \"gsiId\": 758040314799,\r\n    \"triggerCuId\": {{TriggerCuId1}}\r\n}"
+					"raw": "{\r\n    \"gsiContextualId\": null,\r\n    \"transId\": \"{{TransactionId}}\",\r\n    \"gsiId\": {{SolutionId}},\r\n    \"triggerCuId\": {{TriggerCuId2}}\r\n}"
 				},
 				"url": {
 					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/execute/resume",
@@ -251,18 +229,24 @@
 			"response": []
 		},
 		{
-			"name": "Get All transactions",
+			"name": "Check Mail Box Should Be Empty",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Check status code\", function(){\r",
+							"pm.test(\"Verify basic solution is executed successfully\", function(){\r",
 							"    pm.expect(pm.response.code).to.eq(200);\r",
-							"    \r",
-							"    \r",
-							"\r",
 							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//setTimeout(() => {},pm.variables.get(\"WaitTime\")/2)"
 						],
 						"type": "text/javascript"
 					}
@@ -272,40 +256,16 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "authority",
-						"value": "apiqa1607.qa3.nslhub.com"
-					},
-					{
-						"key": "sec-ch-ua",
-						"value": "\"Google Chrome\";v=\"93\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"93\""
-					},
-					{
-						"key": "traceparent",
-						"value": "00-c696bcf14e71d6098c91699fc3322e76-230e863a555291a6-01"
-					},
-					{
-						"key": "accept-language",
-						"value": "en"
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?0"
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
 					},
 					{
 						"key": "authorization",
 						"value": "{{BearerToken}}"
 					},
 					{
-						"key": "accept",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "user-agent",
-						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36"
-					},
-					{
-						"key": "sec-ch-ua-platform",
-						"value": "\"Windows\""
+						"key": "accept-language",
+						"value": "en"
 					},
 					{
 						"key": "sec-fetch-site",
@@ -314,18 +274,10 @@
 					{
 						"key": "sec-fetch-mode",
 						"value": "cors"
-					},
-					{
-						"key": "sec-fetch-dest",
-						"value": "empty"
-					},
-					{
-						"key": "referer",
-						"value": "https://apiqa1607.qa3.nslhub.com/mylibrary/pending-transactions"
 					}
 				],
 				"url": {
-					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/txn/transactions/all?containerCUName=&pageNo=0&pageSize=10",
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/txn/transactions/all?containerCUName={{SolutionName}}&pageNo=0&pageSize=10",
 					"protocol": "https",
 					"host": [
 						"{{TenantName}}",
@@ -340,7 +292,7 @@
 					"query": [
 						{
 							"key": "containerCUName",
-							"value": ""
+							"value": "{{SolutionName}}"
 						},
 						{
 							"key": "pageNo",
