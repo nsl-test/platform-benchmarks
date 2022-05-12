@@ -33,4 +33,10 @@ image:
 format:
 	go fmt ./...
 
-.PHONY: build clean format help
+
+gen:
+	@postman-to-k6 $(var)/collection.json -e env/qa3.json -o $(var)/k6-script.js
+
+##	
+.PHONY: build clean format help gen
+

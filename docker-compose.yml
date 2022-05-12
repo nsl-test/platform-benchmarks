@@ -33,7 +33,7 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards
 
   k6:
-    image: 660124699787.dkr.ecr.ap-south-1.amazonaws.com/xk6:v0.0.1
+    image: ghcr.io/nsl-test/xk6:v0.3
     networks:
       - k6
     ports:

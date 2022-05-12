@@ -17,4 +17,4 @@
 .vscode/
 
 k6
-**/script.js
+**/libs
