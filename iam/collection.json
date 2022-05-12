@@ -51,7 +51,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"{{UserCCOEncryptedPassword}}\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1132,7 +1132,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{TenantAdmin}}\",\n    \"encryptedPassword\": \"DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+					"raw": "{\n    \"userName\": \"{{TenantAdmin}}\",\n    \"encryptedPassword\": \"{{TenantAdminEncryptedPassword}}\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
