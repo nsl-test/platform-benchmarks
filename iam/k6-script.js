@@ -178,7 +178,7 @@ export default function() {
 
   postman[Request]({
     name: "Login as usercco",
-    id: "99483a5c-e8c3-42f4-b10f-d4613c099778",
+    id: "d08de0ad-1a75-44e7-a3bc-aace794d9a4a",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -209,7 +209,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Book Tree By Id",
-    id: "56bd66a4-1020-44ae-827f-181b50dd7f35",
+    id: "4b0be280-bb34-4992-8a4b-478d70f3191c",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookTreeById?id={{BookId}}&roleId={{RoleId}}&searchCriteria=",
@@ -240,7 +240,7 @@ export default function() {
 
   postman[Request]({
     name: "Fetch by username",
-    id: "1375d10d-84b2-43b5-b554-2169dd2c105f",
+    id: "f1e95c17-497e-4345-a814-647cc85b55be",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=10&searchTerm={{UserName}}&isActive=false",
@@ -258,7 +258,7 @@ export default function() {
 
   postman[Request]({
     name: "Update Local Role & Attact to Book",
-    id: "c767fedd-5872-4e48-b7b1-09b787798cdc",
+    id: "9685214a-ca5f-4197-b3ab-f6a477ed718d",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
@@ -300,7 +300,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Role Details - Local Role Copy 2",
-    id: "f32762be-a414-4beb-a41c-7c1a48b97e5c",
+    id: "507c7b66-99d2-4f86-b66b-8972a9a46372",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getB2cRoles?pageNumber=0&pageSize=10",
@@ -351,7 +351,7 @@ export default function() {
 
   postman[Request]({
     name: "Save Irdr's",
-    id: "fdd97665-6b18-48f9-8814-17bb1b7eb4fd",
+    id: "191974f4-310c-4568-b4a5-cd9d0afe2088",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/saveIRDRs",
