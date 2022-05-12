@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "5e886f6c-d837-448b-bbd9-6ebc6b1fb44b",
-		"name": "txn-fixed",
+		"_postman_id": "650e7dc9-5666-4545-b5f6-761d023bd50c",
+		"name": "TXN",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "user login iam",
+			"name": "Login as usercco",
 			"event": [
 				{
 					"listen": "test",
