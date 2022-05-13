@@ -6,6 +6,11 @@ on:
     paths:
       - 'Dockerfile'
   workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: tag
+        
 
 
 jobs:
@@ -32,7 +37,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker build and push ☁️
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || ${{ github.event.inputs.tag != '' }}
         uses: docker/build-push-action@v3
         with:
           context: .
