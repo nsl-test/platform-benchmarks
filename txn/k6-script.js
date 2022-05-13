@@ -2,7 +2,6 @@
 
 import "./libs/shim/core.js";
 import "./libs/shim/expect.js";
-import "./libs/shim/urijs.js";
 
 export let options = { maxRedirects: 4 };
 
@@ -130,91 +129,27 @@ postman[Symbol.for("initial")]({
     T3UserCCOId: 1424682699760,
     T3CCORoleId: 129071126100,
     TenantName3: "apiqa3ten0604",
-    REVIEW_WAITTIME: "5000"
+    REVIEW_WAITTIME: "5000",
+    UserCCOEncryptedPassword:
+      "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",
+    TenantAdminEncryptedPassword:
+      "DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM="
   }
 });
 
 export default function() {
   postman[Request]({
     name: "Login as usercco",
-    id: "b5e1aea5-1bd7-4c48-9b03-38c72a2e460b",
+    id: "a412fa49-0f55-450c-8aff-477a34cba87b",
     method: "POST",
     address:
-      "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
-    data: {
-      client_id: "{{TenantName}}",
-      grant_type: "password",
-      password: "{{Password}}",
-      username: "{{UserCCO}}"
-    },
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+    data:
+      '{\n    "userName": "{{UserCCO}}",\n    "encryptedPassword": "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",\n    "tenantName": "{{TenantName}}",\n    "clientId": "{{TenantName}}"\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
       "Accept-Language": "en"
-    },
-    pre() {
-      //pm.variables.clear();
-
-      pm.variables.set(
-        "RandomNumber",
-        new Date()
-          .toISOString()
-          .replace(/[^0-9]/g, "")
-          .slice(0, -3) +
-          "" +
-          Math.floor(Math.random() * 100000 + 1)
-      );
-
-      // Solution Development
-
-      pm.variables.set(
-        "BookName",
-        "BasicBook" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set(
-        "SolutionName",
-        "BasicSolution" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("CCORoleId", pm.variables.get("CCORoleId"));
-      pm.variables.set("RoleCCO", pm.variables.get("RoleCCO"));
-
-      pm.variables.set(
-        "CuName1",
-        "Input1_BasicSolution " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set(
-        "EntityName1",
-        "enter_details1" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeName11", "Name");
-      pm.variables.set("AttributeName12", "Age");
-
-      pm.variables.set(
-        "CuName2",
-        "Input2_BasicSolution " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set(
-        "EntityName2",
-        "enter_details2" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeName21", "Address");
-      pm.variables.set("AttributeName22", "Pin Code");
-
-      // Solution Execution
-
-      pm.variables.set(
-        "AttributeValue11",
-        "Ramya " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeValue12", pm.variables.get("RandomNumber"));
-
-      pm.variables.set(
-        "AttributeValue21",
-        "Hyderabad " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeValue22", pm.variables.get("RandomNumber"));
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -223,18 +158,23 @@ export default function() {
 
       pm.environment.set(
         "BearerToken",
-        pm.response.json().token_type + " " + pm.response.json().access_token
+        pm.response.json().result.token_type +
+          " " +
+          pm.response.json().result.access_token
       );
-      pm.environment.set("RefreshToken", pm.response.json().refresh_token);
+      pm.environment.set(
+        "RefreshToken",
+        pm.response.json()["result"]["refresh_token"]
+      );
     }
   });
 
   postman[Request]({
     name: "Start Execution of Solution-(BasicSolution)",
-    id: "79baf9d6-cf45-4f3c-9a0b-7c724e27f7cf",
+    id: "f617e376-29c7-4feb-9226-86870c146e99",
     method: "POST",
     address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/execute/change-unit",
-    data: '{\r\n\t"gsiId": 758040314799\r\n}',
+    data: '{\r\n\t"gsiId": {{SolutionId}}\r\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
       Authorization: "{{BearerToken}}",
@@ -244,22 +184,27 @@ export default function() {
       "Content-Type": "application/json",
       "Accept-Language": "en"
     },
+    pre() {
+      pm.variables.set("SolutionId", 1245802040817);
+      pm.variables.set("SolutionName", "BasicSolution2022051204071424161");
+    },
     post(response) {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
       });
-      pm.variables.set("TransactionId", pm.response.json().result.transId);
-      pm.variables.set("TriggerCuId1", pm.response.json().result.currentCU.id);
+
+      pm.environment.set("TransactionId", pm.response.json().result.transId);
+      pm.environment.set("TriggerCuId2", 1137225956451);
     }
   });
 
   postman[Request]({
     name: "Resume transaction - From ManagerUser",
-    id: "b248226a-fd76-47b7-a3a3-633f606ac5ef",
+    id: "fc345c9c-3b8a-483e-b187-97bd4382b9f8",
     method: "POST",
     address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/execute/resume",
     data:
-      '{\r\n    "gsiContextualId": null,\r\n    "transId": "{{TransactionId}}",\r\n    "gsiId": 758040314799,\r\n    "triggerCuId": {{TriggerCuId1}}\r\n}',
+      '{\r\n    "gsiContextualId": null,\r\n    "transId": "{{TransactionId}}",\r\n    "gsiId": {{SolutionId}},\r\n    "triggerCuId": {{TriggerCuId2}}\r\n}',
     headers: {
       "accept-language": "en",
       authorization: "{{BearerToken}}",
@@ -268,6 +213,12 @@ export default function() {
       "sec-fetch-site": "same-origin",
       "sec-fetch-mode": "cors"
     },
+    pre() {
+      pm.variables.set("SolutionId", 1245802040817);
+      pm.variables.set("SolutionName", "BasicSolution2022051204071424161");
+      pm.environment.set("TransactionId", 881922374451);
+      pm.environment.set("TriggerCuId2", 1137225956451);
+    },
     post(response) {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
@@ -276,30 +227,23 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Get All transactions",
-    id: "6e435b33-c1f6-4087-b998-a1beca662f36",
+    name: "Check Mail Box Should Be Empty",
+    id: "47d1fe2d-483b-41c1-b505-d5ef62e54128",
     method: "GET",
     address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/txn/transactions/all?containerCUName=&pageNo=0&pageSize=10",
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/txn/transactions/all?containerCUName={{SolutionName}}&pageNo=0&pageSize=10",
     headers: {
-      authority: "apiqa1607.qa3.nslhub.com",
-      "sec-ch-ua":
-        '"Google Chrome";v="93", " Not;A Brand";v="99", "Chromium";v="93"',
-      traceparent: "00-c696bcf14e71d6098c91699fc3322e76-230e863a555291a6-01",
-      "accept-language": "en",
-      "sec-ch-ua-mobile": "?0",
-      authorization: "{{BearerToken}}",
       accept: "application/json, text/plain, */*",
-      "user-agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36",
-      "sec-ch-ua-platform": '"Windows"',
+      authorization: "{{BearerToken}}",
+      "accept-language": "en",
       "sec-fetch-site": "same-origin",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-dest": "empty",
-      referer: "https://apiqa1607.qa3.nslhub.com/mylibrary/pending-transactions"
+      "sec-fetch-mode": "cors"
+    },
+    pre() {
+      //setTimeout(() => {},pm.variables.get("WaitTime")/2)
     },
     post(response) {
-      pm.test("Check status code", function() {
+      pm.test("Verify basic solution is executed successfully", function() {
         pm.expect(pm.response.code).to.eq(200);
       });
     }
