@@ -1,9 +1,12 @@
-name: Build and publish xk6-kafka
+name: Build and publish xk6-image
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+  workflow_dispatch:
+
 
 jobs:
   build:

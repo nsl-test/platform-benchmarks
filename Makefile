@@ -22,12 +22,13 @@ build:
 	CGO_ENABLED=0 xk6 build --with github.com/grafana/xk6-output-prometheus-remote@latest \
  		--with github.com/grafana/xk6-sql@latest \
  		--with github.com/mostafa/xk6-kafka@latest \
- 		--with github.com/szkiba/xk6-jose@latest
+ 		--with github.com/szkiba/xk6-jose@latest \
+		--with github.com/ydarias/xk6-nats@latest
 ##	xk6 build --with github.com/grafana/xk6-redis=/Users/rverma/dev/xk6-redis
 
 image:
 #	aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 660124699787.dkr.ecr.ap-south-1.amazonaws.com
-	docker buildx build --push --platform linux/amd64,linux/arm64 --tag 660124699787.dkr.ecr.ap-south-1.amazonaws.com/xk6:v0.0.1 .
+	docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/nsl-test/xk6:v0.4 . --push   
 
 ## format: Applies Go formatting to code.
 format:
