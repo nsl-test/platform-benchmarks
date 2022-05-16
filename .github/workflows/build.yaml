@@ -11,13 +11,12 @@ on:
         type: string
         description: tag
         
-
-
 jobs:
   build:
     name: Build xk6-kafka
     runs-on: ubuntu-latest
     permissions:
+      checks: write
       packages: write
     steps:
       - name: Checkout

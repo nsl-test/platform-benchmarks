@@ -38,6 +38,10 @@ format:
 gen:
 	@postman-to-k6 $(var)/collection.json -e env/qa3.json -o $(var)/k6-script.js
 
+deploy: 
+##	go install sigs.k8s.io/kustomize/kustomize/v4@latest
+	@kustomize build deploy | kubectl apply -f -
+
 ##	
-.PHONY: build clean format help gen
+.PHONY: build clean format help gen deploy
 

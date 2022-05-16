@@ -136,7 +136,7 @@ postman[Symbol.for("initial")]({
   }
 });
 
-export default function() {
+export function old() {
   postman[Request]({
     name: "ES-fetch",
     id: "28a4e90f-9e34-44a7-be14-7b42d89d295e",
@@ -151,3 +151,21 @@ export default function() {
     }
   });
 }
+
+export function newn() {
+  postman[Request]({
+    name: "ES-fetch",
+    id: "28a4e90f-9e34-44a7-be14-7b42d89d295e",
+    method: "GET",
+    address:
+      "https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com/nsl_txn_eql_entity_record_apiqa0504/_search",
+    data:
+      '{\"explain\":true,\"query\":{\"bool\":{\"must\":[{\"constant_score\":{\"filter\":{\"match\":{\"txnAttrMapping.Scoredetails_Reserved_Report2022041111505441962.Name.values\":\"Dhoni\"}}}}],\"filter\":[{\"match\":{\"entityName\":\"Scoredetails_Reserved_Report2022041111505441962\"}}]}}}\r\n',
+    headers: {
+      "User-Agent": "-t",
+      "Content-Type": "application/json"
+    }
+  });
+}
+
+
