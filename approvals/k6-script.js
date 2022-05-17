@@ -147,7 +147,7 @@ export default function() {
 
   postman[Request]({
     name: "user login iam",
-    id: "72ffbe05-65c4-44a3-a44f-da2875086f64",
+    id: "c096b763-aca1-4970-858e-39786e0c2d75",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -178,7 +178,7 @@ export default function() {
 
   postman[Request]({
     name: "GET Approvals List - solutionId",
-    id: "2da9a51c-2e2e-4daf-bf0d-8a8b49ee8549",
+    id: "0951f150-32e0-4c36-8c09-7aadd0f30997",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{SolutionId}}",
@@ -201,7 +201,7 @@ export default function() {
 
   postman[Request]({
     name: "GET Approvals List - entityId",
-    id: "07d76613-28c9-453e-ae36-43fb3dc1d0b3",
+    id: "86408474-46cf-4f93-9c00-b729b86184b1",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{EntityId}}",
@@ -224,7 +224,7 @@ export default function() {
 
   postman[Request]({
     name: "GET Approvals List - cuid",
-    id: "f9ab9f66-6d64-4fa2-9920-e9d5e7469551",
+    id: "66d134cf-cf5d-4f69-b654-94014571d7de",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{CuId}}",
