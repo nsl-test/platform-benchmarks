@@ -5,6 +5,7 @@ import "./libs/shim/expect.js";
 
 export let options = { maxRedirects: 4 };
 
+const Pre = Symbol.for("pre");
 const Request = Symbol.for("request");
 postman[Symbol.for("initial")]({
   options,
@@ -129,28 +130,33 @@ postman[Symbol.for("initial")]({
     T3UserCCOId: 1424682699760,
     T3CCORoleId: 129071126100,
     TenantName3: "apiqa3ten0604",
-    REVIEW_WAITTIME: "5000"
+    REVIEW_WAITTIME: "5000",
+    UserCCOEncryptedPassword:
+      "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",
+    TenantAdminEncryptedPassword:
+      "DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM="
   }
 });
 
 export default function() {
+  postman[Pre].push(() => {
+    pm.variables.set("SolutionId", "1479665240150");
+    pm.variables.set("EntityId", "1125583457112");
+    pm.variables.set("CuId", "1217982231832");
+  });
+
   postman[Request]({
     name: "user login iam",
-    id: "3fd0e3d6-f407-4fdf-98e2-f24e8a4c891b",
+    id: "c096b763-aca1-4970-858e-39786e0c2d75",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
     data:
-      '{\n    "userName": "{{UserCCO}}",\n    "encryptedPassword": "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",\n    "tenantName": "{{TenantName}}",\n    "clientId": "{{TenantName}}"\n}',
+      '{\n    "userName": "{{UserCCO}}",\n    "encryptedPassword": "{{UserCCOEncryptedPassword}}",\n    "tenantName": "{{TenantName}}",\n    "clientId": "{{TenantName}}"\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
       "Content-Type": "application/json",
       "Accept-Language": "en"
-    },
-    pre() {
-      pm.variables.set("SolutionId", "1479665240150");
-      pm.variables.set("EntityId", "1125583457112");
-      pm.variables.set("CuId", "1217982231832");
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -172,7 +178,7 @@ export default function() {
 
   postman[Request]({
     name: "GET Approvals List - solutionId",
-    id: "edb1ab31-5f37-4a40-afce-855f3a8dd0a8",
+    id: "0951f150-32e0-4c36-8c09-7aadd0f30997",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{SolutionId}}",
@@ -190,15 +196,12 @@ export default function() {
           "No active review process found for BET id 1479665240150"
         );
       });
-    },
-    auth(config, Var) {
-      config.headers.Authorization = "Bearer ";
     }
   });
 
   postman[Request]({
     name: "GET Approvals List - entityId",
-    id: "4e8256a8-9e05-4f30-9040-6343b124ce59",
+    id: "86408474-46cf-4f93-9c00-b729b86184b1",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{EntityId}}",
@@ -216,15 +219,12 @@ export default function() {
           "No active review process found for BET id 1125583457112"
         );
       });
-    },
-    auth(config, Var) {
-      config.headers.Authorization = "Bearer ";
     }
   });
 
   postman[Request]({
     name: "GET Approvals List - cuid",
-    id: "1637dff9-0280-4ac2-aff2-d6aef57604d9",
+    id: "66d134cf-cf5d-4f69-b654-94014571d7de",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-approvals/api/review/details/{{CuId}}",
@@ -242,9 +242,8 @@ export default function() {
           "No active review process found for BET id 1217982231832"
         );
       });
-    },
-    auth(config, Var) {
-      config.headers.Authorization = "Bearer ";
     }
   });
+
+  postman[Pre].pop();
 }

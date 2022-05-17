@@ -26,9 +26,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.variables.set(\"SolutionId\",\"1479665240150\");",
-							"pm.variables.set(\"EntityId\",\"1125583457112\");",
-							"pm.variables.set(\"CuId\",\"1217982231832\");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -52,7 +50,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}"
+					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"{{UserCCOEncryptedPassword}}\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}"
 				},
 				"url": {
 					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -86,6 +84,7 @@
 							"pm.test(\"Check Response Values\",function() {\r",
 							"        pm.expect(pm.response.json().message).to.eq(\"No active review process found for BET id 1479665240150\");\r",
 							"    });\r",
+							"    \r",
 							"\r",
 							""
 						],
@@ -94,16 +93,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -154,6 +143,7 @@
 							"pm.test(\"Check Response Values\",function() {\r",
 							"        pm.expect(pm.response.json().message).to.eq(\"No active review process found for BET id 1125583457112\");\r",
 							"    });\r",
+							"    \r",
 							"\r",
 							""
 						],
@@ -162,16 +152,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -222,7 +202,7 @@
 							"pm.test(\"Check Response Values\",function() {\r",
 							"        pm.expect(pm.response.json().message).to.eq(\"No active review process found for BET id 1217982231832\");\r",
 							"    });\r",
-							"\r",
+							"    \r",
 							""
 						],
 						"type": "text/javascript"
@@ -230,16 +210,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -276,6 +246,28 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.variables.set(\"SolutionId\",\"1479665240150\");",
+					"pm.variables.set(\"EntityId\",\"1125583457112\");",
+					"pm.variables.set(\"CuId\",\"1217982231832\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
