@@ -38,5 +38,4 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          image: ghcr.io/nsl-test/xk6
-          tags: ${{ github.event.inputs.tag }}
+          tags: ghcr.io/nsl-test/xk6:${{ github.event.inputs.tag }}
