@@ -21,8 +21,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2       
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2     
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -30,13 +31,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Semantic Release
-        uses:  'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag-prefix:  'v'
 
       - name: Build image 
         id: build-image
@@ -47,3 +41,12 @@ jobs:
           archs: amd64, arm64
           dockerfiles: |
             ./Dockerfile    
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          image: ghcr.io/nsl-test/xk6
+          tags: ${{ github.event.inputs.tag }}
