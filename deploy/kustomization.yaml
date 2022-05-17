@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - github.com/grafana/k6-operator//config/default
+  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.22
+helmCharts:
+  - name: grafana
+    includeCRDs: false
+    namespace: k6-operator-system
+    valuesInline:
+      testFramework:
+        enabled: false
+      env:
+        GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: false
+        GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        GF_AUTH_ANONYMOUS_ENABLED: true
+        GF_AUTH_BASIC_ENABLED: false
+      sidecar:
+        datasources:
+          enabled: true
+          searchNamespace: ALL
+        dashboards:
+          enabled: true
+          searchNamespace: ALL
+    releaseName: grafana
+    repo: https://grafana.github.io/helm-charts
+  - name: prometheus
+    includeCRDs: false
+    namespace: k6-operator-system
+    valuesInline:
+      alertmanager:
+        enabled: false
+      nodeExporter:
+        enabled: false
+      pushgateway:
+        enabled: false
+      server:
+        extraFlags:
+          - web.enable-remote-write-receiver
+        persistentVolume:
+          size: 2Gi
+          storageClass: local-path
+    repo: https://prometheus-community.github.io/helm-charts
+    releaseName: prometheus

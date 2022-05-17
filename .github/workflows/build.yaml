@@ -1,15 +1,22 @@
-name: Build and publish xk6-kafka
+name: Build and publish xk6-image
 
 on:
   push:
-    tags:
-      - "v*"
-
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: tag
+        
 jobs:
   build:
     name: Build xk6-kafka
     runs-on: ubuntu-latest
     permissions:
+      checks: write
       packages: write
     steps:
       - name: Checkout
@@ -17,9 +24,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2       
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -28,11 +34,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker build and push ☁️
+      - name: Set iamge tag from tags
         if: startsWith(github.ref, 'refs/tags/')
-        uses: docker/build-push-action@v3
+        run: |
+          echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Set iamge tag from provided
+        if: ${{ github.event.inputs.tag != '' }}
+        run: |
+          echo "IMAGE_TAG=${{ github.event.inputs.tag }}" >> $GITHUB_ENV    
+          
+      - name: Build image 
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
         with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/nsl-test/xk6:latest
+          image: ghcr.io/nsl-test/xk6
+          tags: ${{ env.IMAGE_TAG }}
+          archs: amd64, arm64
+          dockerfiles: |
+            ./Dockerfile    

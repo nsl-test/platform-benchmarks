@@ -16,8 +16,10 @@ RUN xk6 build --with github.com/grafana/xk6-output-prometheus-remote@latest \
 
 # Create image for running k6 with output for Prometheus Remote Write
 FROM scratch
-COPY --from=builder /tmp/k6 /home/k6/
-
+COPY --from=redboxoss/scuttle:latest scuttle /bin/scuttle
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /tmp/k6 /usr/bin/
 USER 12345
 WORKDIR /home/k6
-ENTRYPOINT ["/home/k6/k6"]
+ADD iam/libs .
+ENTRYPOINT ["k6"]

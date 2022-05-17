@@ -51,7 +51,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+					"raw": "{\n    \"userName\": \"{{UserCCO}}\",\n    \"encryptedPassword\": \"{{UserCCOEncryptedPassword}}\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -172,7 +172,7 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
+						"key": "authorization",
 						"value": "{{BearerToken}}",
 						"type": "text"
 					},
@@ -320,7 +320,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Role Details - Local Role Copy 2",
+			"name": "Get Role Details - Local Role",
 			"event": [
 				{
 					"listen": "test",
@@ -525,6 +525,1024 @@
 						"api",
 						"user",
 						"saveIRDRs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Book Role Tree",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json()[0].name).to.eq(pm.variables.get(\"RoleName\"));\r",
+							"    pm.expect(pm.response.json()[0].id+'').to.eq(pm.variables.get(\"RoleId\"));\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"RoleName\",\"Fc4SyFfp0Q\")",
+							"pm.variables.set(\"RoleId\",'17642430179')"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookRoleTree/{{BookId}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"getBookRoleTree",
+						"{{BookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get B2C Shared Notifications",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify basic solution is published successfully\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(`B2C Space notifications fetched successfully`);\r",
+							"    pm.expect(pm.response.json().result.length > 0).to.eq(true);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/b2c/getB2CSharedNotifications",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"b2c",
+						"getB2CSharedNotifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User To Space -> Send Invitation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify basic solution is published successfully\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(`Invitation sent !`);\r",
+							"    pm.expect(pm.response.json().result).to.eq(true);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": {{BookId}},\r\n    \"userList\": [\r\n        {\r\n            \"email\": \"{{UserCCO1EmailId}}\",\r\n            \"name\": \"{{UserCCO1}}\",\r\n            \"isEnabled\": false\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/addUserstoSpace",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"addUserstoSpace"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CCA Role ID Getting",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.variables.set('CCARoleIdMapping',pm.response.json().rolesList[1].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "apiqaei0802.qa3.nslhub.com"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "EN"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "origin",
+						"value": "https://apiqaei0802.qa3.nslhub.com"
+					},
+					{
+						"key": "referer",
+						"value": "https://apiqaei0802.qa3.nslhub.com/mylibrary/bet-configuration/eyJzb2x1dGlvblR5cGUiOiJwcmVtaXVtIiwibm9PZlNvbHV0aW9ucyI6MSwibm9PZkVudGl0aWVzIjoxLCJpc0Jvb2tBZGRlZCI6ZmFsc2UsImlzRG93bmxvYWRlZCI6ZmFsc2UsImlzU3Vic2NyaWJlZCI6ZmFsc2UsInVwZ3JhZGVBdmFpbGFibGUiOmZhbHNlLCJtYXJrZXRwbGFjZUlkIjp7ImFwcHJvdmVyTWV0YUlkIjoiNjI1M2MxYWFlYzUxMWMzZTM0OTI1ZTJjIiwicHVibGlzaGVySWQiOiJTYW1wbGUiLCJkc2RJZCI6IjYyNTNjMWFhMzYzOGJiN2M1YWRjMWU0ZCIsInR5cGUiOiJCT09LIiwiaWQiOjQzODc4MDA1NzIxLCJib29rRHNkSWQiOiI2MjUzYzFhYTM2MzhiYjdjNWFkYzFlNGQiLCJuc2xMaWJyYXJ5QXBwbGljYXRpb25OYW1lIjoiQ29uZmxpY3QgMTEwNCBCb29rIiwibnNsTGlicmFyeUFwcGxpY2F0aW9uVmVyc2lvbiI6IjEiLCJ0ZW5hbnRJZCI6ImFwaXFhMDEwOSIsIm5zbExpYnJhcnlNYXN0ZXJJZCI6MTI4ODQzNjYzNjY0N30sImRzZElkIjoiNjI1M2MxYWEzNjM4YmI3YzVhZGMxZTRkIiwibmFtZSI6IkNvbmZsaWN0IDExMDQgQm9vayIsImRpc3BsYXlOYW1lIjoiQ29uZmxpY3QgMTEwNCBCb29rIiwiZGVzY3JpcHRpb24iOiJDb25mbGljdCAxMTA0IEJvb2siLCJvbnRvbG9neSI6W3siaWQiOiJjb21tb24iLCJuYW1lIjoiY29tbW9uIiwiZGlzcGxheU5hbWUiOiJDb21tb24iLCJsZXZlbCI6MSwiaXNWYWxpZGF0ZWQiOmZhbHNlfSx7ImlkIjoiY29tbW9uLmZpbmFuY2VDb21tb24iLCJuYW1lIjoiZmluYW5jZUNvbW1vbiIsImRpc3BsYXlOYW1lIjoiRmluYW5jZSAmIEFjY291bnRpbmciLCJsZXZlbCI6MiwiaXNWYWxpZGF0ZWQiOmZhbHNlfSx7ImlkIjoiY29tbW9uLmZpbmFuY2VDb21tb24uYmFua2luZyIsIm5hbWUiOiJiYW5raW5nIiwiZGlzcGxheU5hbWUiOiJCYW5raW5nIiwibGV2ZWwiOjMsImlzVmFsaWRhdGVkIjpmYWxzZX0seyJpZCI6ImNvbW1vbi5maW5hbmNlQ29tbW9uLmJhbmtpbmcuYXJyZWFycyIsIm5hbWUiOiJhcnJlYXJzIiwiZGlzcGxheU5hbWUiOiJBcnJlYXJzIiwibGV2ZWwiOjQsImlzVmFsaWRhdGVkIjpmYWxzZX1dLCJwdWJsaXNoZXIiOnsiaWQiOiJTYW1wbGUiLCJuYW1lIjoiU2FtcGxlIiwiZW1haWwiOlsiYW1ldGkubGlraGl0aEBuc2xodWIuY29tIl0sImNvbnRhY3ROdW1iZXIiOlsiOTU2MTUyNjM4MSJdLCJhZGRyZXNzIjpbIkh5ZCJdLCJ3ZWJzaXRlTGluayI6InNhbXBsZS5jb20ifSwiaXNSZXNlcnZlZCI6ZmFsc2UsIm1hc3RlcklkIjo0Mzg3ODAwNTcyMSwidmVyc2lvbiI6IjEuMCIsInN0YXR1cyI6IkRSQUZUIn0"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"100\", \"Google Chrome\";v=\"100\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"isActive\":true,\"roleName\":\"\"}"
+				},
+				"url": {
+					"raw": "https://{{TenantName2}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getAllRoles?pageNumber=0&pageSize=10",
+					"protocol": "https",
+					"host": [
+						"{{TenantName2}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"getAllRoles"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Assigned Users - 0 User - For OrgUnits",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().result.content.length).to.eq(0);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"OrgUnitId\",1367783128912)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/page/matching/assignedusers?orgUnitId={{OrgUnitId}}&pageNo=0&pageSize=10&searchCriteria=s",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"page",
+						"matching",
+						"assignedusers"
+					],
+					"query": [
+						{
+							"key": "orgUnitId",
+							"value": "{{OrgUnitId}}"
+						},
+						{
+							"key": "pageNo",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "searchCriteria",
+							"value": "s"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateEnableUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"Requested user updated successfully\");\r",
+							"    \r",
+							"    pm.expect(pm.response.json().result.isEnabled).to.eq(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"UserId1\",1701107834287)",
+							"pm.variables.set(\"Email\",\"Abdul.kalam@nslhub.com\");",
+							"pm.variables.set(\"UserName\",\"Abdul.kalam@nslhub.com\");",
+							"pm.variables.set(\"managerId1\",2119243203126);",
+							"pm.variables.set(\"RoleId\",1281586869929);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{UserName}}\",\r\n    \"email\": \"{{Email}}\",\r\n    \"isEnabled\": true,\r\n    \"roles\": [\r\n        {\r\n            \"id\": {{RoleId}}\r\n        }\r\n    ],\r\n    \"manager\": {\r\n        \"id\": {{managerId1}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/update/user?type=graph&userId={{UserId1}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"user",
+						"update",
+						"user"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "graph"
+						},
+						{
+							"key": "userId",
+							"value": "{{UserId1}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getActiveUser GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check For Status Code\",function() {\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Check Response Values\",function(){\r",
+							"    pm.expect(pm.response.json().id).to.eq(parseInt(pm.environment.get(\"UserCCOId\")));\r",
+							"    pm.expect(pm.response.json().name).to.eq(pm.environment.get(\"UserCCO\"));\r",
+							"    pm.expect(pm.response.json().isEnabled).to.eq(true);\r",
+							"    pm.expect(pm.response.json().roles.length > 0).to.eq(true);\r",
+							"    pm.expect(pm.response.json().manager.name).to.eq(pm.environment.get(\"UserCCOManager\"));\r",
+							"    pm.expect(pm.response.json().manager.id).to.eq(parseInt(pm.environment.get(\"UserCCOManagerId\")));\r",
+							"\r",
+							"    \r",
+							"    let isRoleExists = false;\r",
+							"\r",
+							"    pm.response.json().roles.forEach((role) => {\r",
+							"        if( role.name == pm.environment.get(\"RoleCCO\") \r",
+							"            && role.id == pm.environment.get(\"CCORoleId\")\r",
+							"            && role.isEnabled  == true\r",
+							"           ) {\r",
+							"                isRoleExists = true;\r",
+							"        }\r",
+							"    })\r",
+							"    \r",
+							"    pm.expect(isRoleExists).to.eq(true);\r",
+							"\r",
+							"    pm.expect(pm.response.json().planNFeatureMapping.active).to.eq(true)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getActiveUser",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"user",
+						"getActiveUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login as tenant admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set('TenantAdminBearerToken',pm.response.json().result.token_type+\" \"+pm.response.json().result.access_token);\r",
+							"pm.environment.set('TenantAdminRefreshToken',pm.response.json()[\"result\"][\"refresh_token\"]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"type": "text",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{TenantAdmin}}\",\n    \"encryptedPassword\": \"{{TenantAdminEncryptedPassword}}\",\n    \"tenantName\": \"{{TenantName}}\",\n    \"clientId\": \"{{TenantName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"login",
+						"v2",
+						"login-action"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"});",
+							"pm.test(\"Check response\", function(){",
+							"    pm.expect(pm.response.json().message).to.eq(\"Role created successfully\");",
+							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"RoleName\"));",
+							"})",
+							"pm.variables.set('RoleID',pm.response.json().result.id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
+							"",
+							"pm.variables.set('RoleName','NewRole'+ pm.variables.get('RandomNumber'));",
+							"pm.variables.set('RoleDescription','NewRoleDesc'+ pm.variables.get('RandomNumber'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "{{TenantName}}.{{BaseURL}}",
+						"disabled": true
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+						"disabled": true
+					},
+					{
+						"key": "traceparent",
+						"value": "00-01b6097e98e11b7c4279c22393899f38-68a6dac47b330246-01",
+						"disabled": true
+					},
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"disabled": true
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
+						"disabled": true
+					},
+					{
+						"key": "origin",
+						"value": "https://{{TenantName}}.{{BaseURL}}",
+						"disabled": true
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://{{TenantName}}.{{BaseURL}}/admin/addrole",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{RoleName}}\",\n    \"isEnabled\": true,\n    \"isAdmin\": false,\n    \"users\": [],\n    \"groups\": [],\n    \"description\": \"{{RoleDescription}}\"\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/save",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"roles",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Root OrgUnit Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().result.content.length).to.eq(1);\r",
+							"    pm.variables.set(\"RootOrgUnitId\",pm.response.json().result.content[0].id);\r",
+							"    pm.variables.set(\"RootOrgUnitName\",pm.response.json().result.content[0].name);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[]"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/getAllOrgUnits?pageNumber=0&pageSize=10&searchCriteria=root",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"getAllOrgUnits"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "searchCriteria",
+							"value": "root"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User to OrgUnit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"pm.test(\"Check response\", function(){\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"users added to org unit\");\r",
+							"    pm.expect(pm.response.json().result[0].id).to.eq(pm.variables.get(\"RdfUserId\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"OrgUnitId\",198265232809)",
+							"",
+							"let json = {",
+							"            \"id\": 2148143410395,",
+							"            \"createdAt\": 1650951442555,",
+							"            \"updatedAt\": 1650951442555,",
+							"            \"orgUnitId\": 1048774332110,",
+							"            \"name\": \"Amandeep.goyal@nslhub.com\",",
+							"            \"email\": \"Amandeep.goyal@nslhub.com\",",
+							"            \"mobileNumber\": \"7019356279\",",
+							"            \"isEnabled\": true,",
+							"            \"roles\": [",
+							"                {",
+							"                    \"id\": 1118115121063,",
+							"                    \"createdAt\": 1649163005001,",
+							"                    \"updatedAt\": 1652095461019,",
+							"                    \"name\": \" Employee\",",
+							"                    \"description\": \"\",",
+							"                    \"isEnabled\": true,",
+							"                    \"isAdmin\": false,",
+							"                    \"tagId\": 1892314879594,",
+							"                    \"roleType\": \"LOCAL\"",
+							"                }",
+							"            ],",
+							"            \"groups\": [],",
+							"            \"customID\": \"28246\",",
+							"            \"autoCustomID\": \"28246\"",
+							"        }",
+							"pm.variables.set(\"UserDetails\", JSON.stringify(json))",
+							"pm.variables.set(\"RdfUserId\",2148143410395)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n   {{UserDetails}}\r\n]"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/users?orgUnitId={{OrgUnitId}}",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"users"
+					],
+					"query": [
+						{
+							"key": "orgUnitId",
+							"value": "{{OrgUnitId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Org Unit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"pm.test(\"Check response\", function(){\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"OrgUnit created successfully\");\r",
+							"    pm.expect(pm.response.json().result.name).to.eq(pm.variables.get(\"OrgUnitName\"));\r",
+							"    pm.expect(pm.response.json().result.isEnabled).to.eq(true);\r",
+							"    pm.expect(pm.response.json().result.parentOrgUnit.name).to.eq(\"root\");\r",
+							"    pm.variables.set(\"OrgUnitId\",pm.response.json().result.id);\r",
+							"    pm.variables.set(\"ParentOrgUnitDetails\",JSON.stringify(pm.response.json().result.parentOrgUnit));    \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1));",
+							"",
+							"pm.variables.set('OrgUnitName','OrgUnit'+ pm.variables.get('RandomNumber'));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en",
+						"type": "text"
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0",
+						"type": "text"
+					},
+					{
+						"key": "authorization",
+						"value": "{{TenantAdminBearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{OrgUnitName}}\",\r\n    \"isEnabled\": true,\r\n    \"description\": \"{{OrgUnitName}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/save",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"nsl-iam",
+						"api",
+						"orgUnits",
+						"save"
 					]
 				}
 			},

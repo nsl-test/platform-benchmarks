@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env sh
 
 #
 # This script simply executes a provided JavaScript test using
@@ -10,12 +10,14 @@
 
 set -e
 
-if [ $# -ne 1 ]; then
-    echo "Usage: ./docker-run.sh <SCRIPT_NAME>"
-    exit 1
-fi
+# if [ $# -ne 1 ]; then
+#     echo "Usage: ./docker-run.sh <MODULE_NAME>"
+#     exit 1
+# fi
 
-SCRIPT_NAME=$1
+MODULE_NAME="$1"
+shift
+SCRIPT_NAME=$MODULE_NAME/k6-script.js
 TAG_NAME="$(basename -s .js $SCRIPT_NAME)-$(date +%s)"
 
-docker-compose run -T --rm k6 run -<$SCRIPT_NAME --tag testid=$TAG_NAME
+docker compose run -T --rm  k6 run -<$SCRIPT_NAME --tag testid=$TAG_NAME "$@"
