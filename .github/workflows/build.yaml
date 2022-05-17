@@ -32,16 +32,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image 
-        id: build-image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ghcr.io/nsl-test/xk6
-          tags: ${{ github.event.inputs.tag }}
-          archs: amd64, arm64
-          dockerfiles: |
-            ./Dockerfile    
-
       - name: Docker build and push
         uses: docker/build-push-action@v3
         with:
