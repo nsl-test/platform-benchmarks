@@ -34,8 +34,10 @@ jobs:
 
       - name: Docker build and push
         uses: docker/build-push-action@v3
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.tags }}
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/nsl-test/xk6:${{ github.event.inputs.tag }}
+          platforms: linux/amd64
+          tags: ghcr.io/nsl-test/xk6:$IMAGE_TAG
