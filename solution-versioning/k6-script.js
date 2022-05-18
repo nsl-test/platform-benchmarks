@@ -29,7 +29,7 @@ postman[Symbol.for("initial")]({
     RoleCCA: "CCA",
     UserCCA: "usercca",
     Password: "test",
-    BearerToken: "undefined undefined",
+    BearerToken: "undefined token",
     TenantName2: "apiqaei0504",
     TenantAdmin2: "admin@nslhub.com",
     AdminPassword2: "admin",
@@ -129,33 +129,32 @@ postman[Symbol.for("initial")]({
     Tenant3AdminId: 982435399574,
     T3UserCCOId: 1424682699760,
     T3CCORoleId: 129071126100,
-    TenantName3: "apiqa3ten0604",
-    REVIEW_WAITTIME: "5000"
+    TenantName3: "apiqa3ten0604"
   }
 });
 
 export default function() {
   postman[Request]({
-    name: "Generate Token (usercco)",
-    id: "fdeeaff6-f72a-4ac8-88ef-dd7236f223e6",
+    name: "Generate Token (usercco) and Test Data",
+    id: "013f2569-956f-464d-9858-92486a7de34e",
     method: "POST",
     address:
       "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
     data: {
-      username: "{{UserCCO}}",
-      password: "{{Password}}",
+      client_id: "{{TenantName}}",
       grant_type: "password",
-      client_id: "{{TenantName}}"
+      password: "{{Password}}",
+      username: "{{UserCCO}}"
     },
     headers: {
       Accept: "application/json, text/plain, */*",
-      "Accept-Language": "en",
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept-Language": "en"
     },
     pre() {
-      pm.variables.clear();
+      // pm.variables.clear();
 
-      pm.variables.set(
+      pm.environment.set(
         "RandomNumber",
         new Date()
           .toISOString()
@@ -165,16 +164,50 @@ export default function() {
           Math.floor(Math.random() * 100000 + 1)
       );
 
-      pm.variables.set(
+      // Solution Development
+
+      pm.environment.set(
+        "SolutionName",
+        "BasicSolution" + pm.environment.get("RandomNumber")
+      );
+      pm.environment.set("CCORoleId", pm.environment.get("CCORoleId"));
+      pm.environment.set("RoleCCO", pm.environment.get("RoleCCO"));
+
+      pm.environment.set(
         "CuName1",
-        "User Details" + pm.variables.get("RandomNumber")
+        "Student Details " + pm.environment.get("RandomNumber")
       );
-      pm.variables.set(
+      pm.environment.set(
         "EntityName1",
-        "user" + pm.variables.get("RandomNumber")
+        "student" + pm.environment.get("RandomNumber")
       );
-      pm.variables.set("AttributeName11", "Full Name");
-      pm.variables.set("AttributeName12", "User ID");
+      pm.environment.set("AttributeName11", "Full Name");
+      pm.environment.set("AttributeName12", "Age");
+
+      pm.environment.set(
+        "CuName2",
+        "Address " + pm.environment.get("RandomNumber")
+      );
+      pm.environment.set(
+        "EntityName2",
+        "contact" + pm.environment.get("RandomNumber")
+      );
+      pm.environment.set("AttributeName21", "Address");
+      pm.environment.set("AttributeName22", "Pin Code");
+
+      // Solution Execution
+
+      pm.environment.set(
+        "AttributeValue11",
+        "John " + pm.environment.get("RandomNumber")
+      );
+      pm.environment.set("AttributeValue12", pm.environment.get("RandomNumber"));
+
+      pm.environment.set(
+        "AttributeValue21",
+        "California " + pm.environment.get("RandomNumber")
+      );
+      pm.environment.set("AttributeValue22", pm.environment.get("RandomNumber"));
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -190,52 +223,50 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Create an entity",
-    id: "8cdce63b-7454-4c9a-a9ac-876f836c4496",
+    name: "Create first Entity",
+    id: "7827da1f-ab9b-4fa6-a143-886f776410cd",
     method: "POST",
     address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/Entity",
     data:
-      '{\n\t"nslAttributes": [\n\t\t{\n\t\t\t"name": "{{AttributeName11}}",\n\t\t\t"isReserved": false,\n\t\t\t"constraints": [],\n\t\t\t"attributeClassification": "ESSENTIAL",\n\t\t\t"attributeType": {\n\t\t\t\t"type": "string",\n\t\t\t\t"properties": {\n\t\t\t\t\t"sourceValues": "[]"\n\t\t\t\t},\n\t\t\t\t"uiElement": "text"\n\t\t\t},\n\t\t\t"id": null\n\t\t},\n\t\t{\n\t\t\t"defaultValue": null,\n\t\t\t"name": "{{AttributeName12}}",\n\t\t\t"isReserved": false,\n\t\t\t"constraints": [],\n\t\t\t"attributeClassification": "ESSENTIAL",\n\t\t\t"attributeType": {\n\t\t\t\t"type": "number",\n\t\t\t\t"properties": {\n\t\t\t\t\t"sourceValues": "[]"\n\t\t\t\t},\n\t\t\t\t"uiElement": "number"\n\t\t\t},\n\t\t\t"id": null\n\t\t}\n\t],\n\t"entityClassification": "",\n\t"name": "{{EntityName1}}",\n\t"isMultiValue": false\n}',
+      '{\r\n\t"nslAttributes": [\r\n\t\t{\r\n\t\t\t"name": "{{AttributeName11}}",\r\n\t\t\t"isReserved": false,\r\n\t\t\t"constraints": [],\r\n\t\t\t"attributeClassification": "ESSENTIAL",\r\n\t\t\t"attributeType": {\r\n\t\t\t\t"type": "string",\r\n\t\t\t\t"properties": {\r\n\t\t\t\t\t"sourceValues": "[]"\r\n\t\t\t\t},\r\n\t\t\t\t"uiElement": "text"\r\n\t\t\t},\r\n\t\t\t"id": null\r\n\t\t},\r\n\t\t{\r\n\t\t\t"defaultValue": null,\r\n\t\t\t"name": "{{AttributeName12}}",\r\n\t\t\t"isReserved": false,\r\n\t\t\t"constraints": [],\r\n\t\t\t"attributeClassification": "ESSENTIAL",\r\n\t\t\t"attributeType": {\r\n\t\t\t\t"type": "number",\r\n\t\t\t\t"properties": {\r\n\t\t\t\t\t"sourceValues": "[]"\r\n\t\t\t\t},\r\n\t\t\t\t"uiElement": "number"\r\n\t\t\t},\r\n\t\t\t"id": null\r\n\t\t}\r\n\t],\r\n\t"entityClassification": "",\r\n\t"name": "{{EntityName1}}",\r\n\t"isMultiValue": false\r\n}',
+    headers: {
+      "accept-language": "en",
+      Authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.test("Check status code", function () {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          pm.environment.get("EntityName1") + " is successfully saved"
+        );
+      });
+
+      pm.environment.set("EntityId1", pm.response.json().result.id);
+      pm.environment.set(
+        "AttributeId11",
+        pm.response.json().result.nslAttributes[0].id
+      );
+      pm.environment.set(
+        "AttributeId12",
+        pm.response.json().result.nslAttributes[1].id
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Add Attributes to First Entity",
+    id: "4a14b736-92d8-4048-98a4-59731aba0817",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
+    data:
+      '{\r\n\t"cuId": null,\r\n\t"cuType": null,\r\n\t"tuples": [],\r\n\t"entityList": [\r\n\t\t{\r\n\t\t\t"entityId": {{EntityId1}},\r\n\t\t\t"tuples": [],\r\n\t\t\t"attributeList": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"attributeId": {{AttributeId11}},\r\n\t\t\t\t\t"tuples": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t"key": "uiControl",\r\n\t\t\t\t\t\t\t"value": "text"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t]\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t"attributeId": {{AttributeId12}},\r\n\t\t\t\t\t"tuples": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t"key": "uiControl",\r\n\t\t\t\t\t\t\t"value": "number"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t]\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t]\r\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
       Authorization: "{{BearerToken}}",
       "Content-Type": "application/json",
       "Accept-Language": "en"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          pm.variables.get("EntityName1") + " is successfully saved"
-        );
-      });
-
-      pm.variables.set("EntityId1", pm.response.json().result.id);
-      pm.variables.set("EntityMasterId", pm.response.json().result.id);
-      pm.variables.set(
-        "AttributeId11",
-        pm.response.json().result.nslAttributes[0].id
-      );
-      pm.variables.set(
-        "AttributeId12",
-        pm.response.json().result.nslAttributes[1].id
-      );
-      pm.variables.set("EntityGuid1", pm.response.json().result.guid);
-    }
-  });
-
-  postman[Request]({
-    name: "Add attributes to the entity",
-    id: "fedff3d7-638e-4bef-bdf2-573b9256c943",
-    method: "POST",
-    address: "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
-    data:
-      '{\n\t"cuId": null,\n\t"cuType": null,\n\t"tuples": [],\n\t"entityList": [\n\t\t{\n\t\t\t"entityId": {{EntityId1}},\n\t\t\t"tuples": [],\n\t\t\t"attributeList": [\n\t\t\t\t{\n\t\t\t\t\t"attributeId": {{AttributeId11}},\n\t\t\t\t\t"tuples": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"key": "uiControl",\n\t\t\t\t\t\t\t"value": "text"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t"attributeId": {{AttributeId12}},\n\t\t\t\t\t"tuples": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t"key": "uiControl",\n\t\t\t\t\t\t\t"value": "number"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}',
-    headers: {
-      "Accept-Language": "en",
-      Authorization: "{{BearerToken}}",
-      "Content-Type": "application/json",
-      Accept: "application/json, text/plain, */*"
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -248,23 +279,17 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Save CU",
-    id: "df449d71-877d-413e-9424-74c8140b5855",
+    name: "Create first CU",
+    id: "59c94124-657b-4706-b49a-9936abef48b1",
     method: "POST",
     address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/CU",
     data:
-      '{\n\t"name": "{{CuName1}}",\n\t"agents": [\n\t\t{\n\t\t\t"agentType": "human"\n\t\t}\n\t],\n\t"cuType": "BASIC",\n\t"layers": [\n\t\t{\n\t\t\t"type": "physical",\n\t\t\t"label": "physical",\n\t\t\t"participatingItems": [\n\t\t\t\t{\n\t\t\t\t\t"item": {\n\t\t\t\t\t\t"TYPE": "GeneralEntity",\n\t\t\t\t\t\t"DATA": {\n\t\t\t\t\t\t\t"name": "{{EntityName1}}",\n\t\t\t\t\t\t\t"nslAttributes": [\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t"name": "{{AttributeName11}}",\n\t\t\t\t\t\t\t\t\t"attributeType": {\n\t\t\t\t\t\t\t\t\t\t"type": "string",\n\t\t\t\t\t\t\t\t\t\t"nestedNslDataTypeProperties": {},\n\t\t\t\t\t\t\t\t\t\t"properties": {\n\t\t\t\t\t\t\t\t\t\t\t"sourceValues": "[]"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t"constraints": [],\n\t\t\t\t\t\t\t\t\t"attributeClassification": "ESSENTIAL",\n\t\t\t\t\t\t\t\t\t"isReserved": false,\n\t\t\t\t\t\t\t\t\t"id": {{AttributeId11}},\n\t\t\t\t\t\t\t\t\t"uiElement": {\n\t\t\t\t\t\t\t\t\t\t"dataType": "string",\n\t\t\t\t\t\t\t\t\t\t"name": "Text",\n\t\t\t\t\t\t\t\t\t\t"uiElement": "text",\n\t\t\t\t\t\t\t\t\t\t"isMulti": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t"name": "{{AttributeName12}}",\n\t\t\t\t\t\t\t\t\t"attributeType": {\n\t\t\t\t\t\t\t\t\t\t"type": "number",\n\t\t\t\t\t\t\t\t\t\t"nestedNslDataTypeProperties": {},\n\t\t\t\t\t\t\t\t\t\t"properties": {\n\t\t\t\t\t\t\t\t\t\t\t"sourceValues": "[]"\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t"constraints": [],\n\t\t\t\t\t\t\t\t\t"attributeClassification": "ESSENTIAL",\n\t\t\t\t\t\t\t\t\t"isReserved": false,\n\t\t\t\t\t\t\t\t\t"id": {{AttributeId12}},\n\t\t\t\t\t\t\t\t\t"uiElement": {\n\t\t\t\t\t\t\t\t\t\t"dataType": "number",\n\t\t\t\t\t\t\t\t\t\t"name": "Number",\n\t\t\t\t\t\t\t\t\t\t"uiElement": "number",\n\t\t\t\t\t\t\t\t\t\t"isMulti": false\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t],\n\t\t\t\t\t\t\t"isReserved": false,\n\t\t\t\t\t\t\t"id": {{EntityId1}}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t],\n\t"designTimeRights": [\n\t\t{\n\t\t\t"rightHolderId": {{CCORoleId}},\n\t\t\t"name": "{{RoleCCO}}",\n\t\t\t"rightHolderType": "ROLE",\n\t\t\t"informationRight": true,\n\t\t\t"decisionRight": true\n\t\t}\n\t],\n\t"txnTimeRights": [\n\t\t{\n\t\t\t"rightHolderId": {{CCORoleId}},\n\t\t\t"name": "{{RoleCCO}}",\n\t\t\t"rightHolderType": "ROLE",\n\t\t\t"informationRight": true,\n\t\t\t"decisionRight": false,\n\t\t\t"executionRight": true\n\t\t}\n\t],\n\t"id": null,\n\t"draftedCu": false,\n\t"nextTriggerSet": [],\n\t"dcd": [],\n\t"mindCUList": [],\n\t"exceptionCUList": [],\n\t"isAlternate": false,\n\t"index": 1,\n\t"activeCuIndex": true,\n\t"entitySaved": true,\n\t"createdEntityId": {{EntityId1}},\n\t"displayName": "{{CuName1}}",\n\t"description": "Change Unit Description"\n}',
+      '{\r\n\t"name": "{{CuName1}}",\r\n\t"agents": [\r\n\t\t{\r\n\t\t\t"agentType": "human"\r\n\t\t}\r\n\t],\r\n\t"cuType": "BASIC",\r\n\t"layers": [\r\n\t\t{\r\n\t\t\t"type": "physical",\r\n\t\t\t"label": "physical",\r\n\t\t\t"participatingItems": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"item": {\r\n\t\t\t\t\t\t"TYPE": "GeneralEntity",\r\n\t\t\t\t\t\t"DATA": {\r\n\t\t\t\t\t\t\t"name": "{{EntityName1}}",\r\n\t\t\t\t\t\t\t"nslAttributes": [\r\n\t\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\t"name": "{{AttributeName11}}",\r\n\t\t\t\t\t\t\t\t\t"attributeType": {\r\n\t\t\t\t\t\t\t\t\t\t"type": "string",\r\n\t\t\t\t\t\t\t\t\t\t"nestedNslDataTypeProperties": {},\r\n\t\t\t\t\t\t\t\t\t\t"properties": {\r\n\t\t\t\t\t\t\t\t\t\t\t"sourceValues": "[]"\r\n\t\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t\t"constraints": [],\r\n\t\t\t\t\t\t\t\t\t"attributeClassification": "ESSENTIAL",\r\n\t\t\t\t\t\t\t\t\t"isReserved": false,\r\n\t\t\t\t\t\t\t\t\t"id": {{AttributeId11}},\r\n\t\t\t\t\t\t\t\t\t"uiElement": {\r\n\t\t\t\t\t\t\t\t\t\t"dataType": "string",\r\n\t\t\t\t\t\t\t\t\t\t"name": "Text",\r\n\t\t\t\t\t\t\t\t\t\t"uiElement": "text",\r\n\t\t\t\t\t\t\t\t\t\t"isMulti": false\r\n\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\t"name": "{{AttributeName12}}",\r\n\t\t\t\t\t\t\t\t\t"attributeType": {\r\n\t\t\t\t\t\t\t\t\t\t"type": "number",\r\n\t\t\t\t\t\t\t\t\t\t"nestedNslDataTypeProperties": {},\r\n\t\t\t\t\t\t\t\t\t\t"properties": {\r\n\t\t\t\t\t\t\t\t\t\t\t"sourceValues": "[]"\r\n\t\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t\t"constraints": [],\r\n\t\t\t\t\t\t\t\t\t"attributeClassification": "ESSENTIAL",\r\n\t\t\t\t\t\t\t\t\t"isReserved": false,\r\n\t\t\t\t\t\t\t\t\t"id": {{AttributeId12}},\r\n\t\t\t\t\t\t\t\t\t"uiElement": {\r\n\t\t\t\t\t\t\t\t\t\t"dataType": "number",\r\n\t\t\t\t\t\t\t\t\t\t"name": "Number",\r\n\t\t\t\t\t\t\t\t\t\t"uiElement": "number",\r\n\t\t\t\t\t\t\t\t\t\t"isMulti": false\r\n\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t],\r\n\t\t\t\t\t\t\t"isReserved": false,\r\n\t\t\t\t\t\t\t"id": {{EntityId1}}\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t],\r\n\t"designTimeRights": [\r\n\t\t{\r\n\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t"informationRight": true,\r\n\t\t\t"decisionRight": true\r\n\t\t}\r\n\t],\r\n\t"txnTimeRights": [\r\n\t\t{\r\n\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t"informationRight": true,\r\n\t\t\t"decisionRight": false,\r\n\t\t\t"executionRight": true\r\n\t\t}\r\n\t],\r\n\t"id": null,\r\n\t"draftedCu": false,\r\n\t"nextTriggerSet": [],\r\n\t"dcd": [],\r\n\t"mindCUList": [],\r\n\t"exceptionCUList": [],\r\n\t"isAlternate": false,\r\n\t"index": 1,\r\n\t"activeCuIndex": true,\r\n\t"entitySaved": true,\r\n\t"createdEntityId": {{EntityId1}},\r\n\t"displayName": "{{CuName1}}",\r\n\t"description": "Change Unit Description"\r\n}',
     headers: {
-      authority: "{{TenantName}}.{{BaseURL}}",
-      "accept-language": "en",
-      "sec-ch-ua-mobile": "?0",
-      authorization: "{{BearerToken}}",
-      "content-type": "application/json",
-      accept: "application/json, text/plain, */*",
-      origin: "https://{{TenantName}}.{{BaseURL}}",
-      "sec-fetch-site": "same-origin",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-dest": "empty"
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -273,16 +298,13 @@ export default function() {
           "CU has been saved successfully"
         );
         pm.expect(pm.response.json().result.status).to.eq("DRAFT");
-        pm.expect(pm.response.json().result.id).not.eq(undefined);
       });
-
-      pm.variables.set("CuMasterId", pm.response.json().result.id);
-      pm.variables.set("CuId1", pm.response.json().result.id);
-      pm.variables.set(
+      pm.environment.set("CuId1", pm.response.json().result.id);
+      pm.environment.set(
         "ItemId1",
         pm.response.json().result.layers[0].participatingItems[0].id
       );
-      pm.variables.set(
+      pm.environment.set(
         "ParticipatingItemId1",
         pm.response.json().result.layers[0].id
       );
@@ -290,23 +312,100 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Send notofication for approval",
-    id: "43d543e6-c694-4d63-ba40-2037ca529419",
+    name: "Create GSI-Draft",
+    id: "2bb0037f-dd2c-41ab-9ee9-99382ff008c0",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/core/GSI-Draft",
+    data:
+      '{\n    "name": "{{SolutionName}}",\n    "displayName": "{{SolutionName}}",\n    "cuType": "GSI",\n    "agents": [\n        {\n            "agentType": "human"\n        }\n    ],\n    "subOrdinateCUList": [],\n    "superOrdinateCUList": [],\n    "layers": null,\n    "solutionLogic": [\n        {\n    "referencedChangeUnit": {{CuId1}},\n\t\t\t"id": null,\n\t\t\t"draftedCu": false,\n\t\t\t"name": "{{CuName1}}",\n\t\t\t"nextTriggerSet": [],\n\t\t\t"dcd": [],\n\t\t\t"mindCUList": [],\n\t\t\t"exceptionCUList": [],\n\t\t\t"cuType": "BASIC",\n\t\t\t"index": 1,\n            "designTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": true,\n                    "executionRight": false,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "txnTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": false,\n                    "executionRight": true,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "visited": true\n        }\n    ],\n    "designTimeRights": [\n        {\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderName": "{{RoleCCO}}",\n            "name": "{{RoleCCO}}",\n            "informationRight": true,\n            "decisionRight": true,\n            "rightHolderType": "ROLE"\n        }\n    ],\n    "txnTimeRights": [\n        {\n            "executionRight": true,\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderName": "{{RoleCCO}}",\n            "name": "{{RoleCCO}}",\n            "informationRight": true,\n            "decisionRight": false,\n            "rightHolderType": "ROLE"\n        }\n    ],\n    "id": null\n}',
+    headers: {
+      "Accept-Language": "en",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      Accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI has been saved successfully"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
+      });
+      pm.environment.set("SolutionId1", pm.response.json().result.id);
+      pm.environment.set(
+        "LayerId1",
+        pm.response.json().result.solutionLogic[0].id
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Save GSI",
+    id: "77004cec-aa09-48f6-9b65-a0c9db458580",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/GSI",
+    data:
+      '{\r\n    "name": "{{SolutionName}}",\r\n    "displayName": "{{SolutionName}}",\r\n    "cuType": "GSI",\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "subOrdinateCUList": [],\r\n    "superOrdinateCUList": [],\r\n    "layers": null,\r\n    "solutionLogic": [\r\n        {\r\n            "index": 1,\r\n            "nextTriggerSet": [],\r\n            "referencedChangeUnit": {{CuId1}},\r\n            "dcd": [],\r\n            "exceptionCUList": [],\r\n            "eventCUList": [],\r\n            "mindCUList": [],\r\n            "entityDesignRights": {},\r\n            "entityTransactionRights": {},\r\n            "attributeDesignRights": {},\r\n            "attributeTransactionRights": {},\r\n            "cuType": "BASIC",\r\n            "specialFeatureProperties": {},\r\n            "slotItemData": {},\r\n            "name": "{{CuName1}}",\r\n            "displayName": "{{CuName1}}",\r\n            "description": "Change Unit Description",\r\n            "agents": [\r\n                {\r\n                    "agentType": "human"\r\n                }\r\n            ],\r\n            "superOrdinateCUList": [],\r\n            "membershipList": [],\r\n            "status": "DRAFT",\r\n            "propertiesMap": {\r\n                "specialFeatures": [],\r\n                "defaultValues": []\r\n            },\r\n            "cuSystemProperties": {},\r\n            "id": {{LayerId1}},\r\n            "designTimeRights": [\r\n                {\r\n                    "informationRight": true,\r\n                    "decisionRight": true,\r\n                    "executionRight": false,\r\n                    "rightHolderId": {{CCORoleId}},\r\n                    "rightHolderType": "ROLE",\r\n                    "rightHolderName": "{{RoleCCO}}",\r\n                    "disableParentRoleAccess": false\r\n                }\r\n            ],\r\n            "txnTimeRights": [\r\n                {\r\n                    "informationRight": true,\r\n                    "decisionRight": false,\r\n                    "executionRight": true,\r\n                    "rightHolderId": {{CCORoleId}},\r\n                    "rightHolderType": "ROLE",\r\n                    "rightHolderName": "{{RoleCCO}}",\r\n                    "disableParentRoleAccess": false\r\n                }\r\n            ],\r\n            "visited": true\r\n        }\r\n    ],\r\n    "designTimeRights": [\r\n        {\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "name": "{{RoleCCO}}",\r\n            "informationRight": true,\r\n            "decisionRight": true,\r\n            "rightHolderType": "ROLE"\r\n        }\r\n    ],\r\n    "txnTimeRights": [\r\n        {\r\n            "executionRight": true,\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "name": "{{RoleCCO}}",\r\n            "informationRight": true,\r\n            "decisionRight": false,\r\n            "rightHolderType": "ROLE"\r\n        }\r\n    ],\r\n    "id": {{SolutionId1}},\r\n    "status": "DRAFT",\r\n    "version": "1.0",\r\n    "masterId": {{SolutionId1}}\r\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI has been saved successfully"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Finish GSI",
+    id: "0782484e-6745-4c4c-b950-c1b7c3ae15be",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/version/finish",
+    data:
+      '{\n  "constrainedToReportingTree": false,\n  "constrainedToTeam": false,\n  "rights": [\n    "TXN_INFO_RIGHTS",\n    "SOLUTIONS_DECISION_RIGHTS",\n    "EXECUTION_RIGHTS"\n  ],\n  "nextTriggerSet": [],\n  "dcd": [],\n  "exceptionCUList": [],\n  "eventCUList": [],\n  "mindCUList": [],\n  "entityDesignRights": {},\n  "entityTransactionRights": {},\n  "attributeDesignRights": {},\n  "attributeTransactionRights": {},\n  "cuType": "BASIC",\n  "specialFeatureProperties": {},\n  "slotItemData": {},\n  "name": "{{SolutionName}}",\n  "displayName": "{{SolutionName}}",\n  "agents": [\n    {\n      "agentType": "human"\n    }\n  ],\n  "superOrdinateCUList": [],\n  "membershipList": [],\n  "isReserved": false,\n  "status": "DRAFT",\n  "propertiesMap": {},\n  "cuSystemProperties": {},\n  "id": {{SolutionId1}},\n  "designTimeRights": [\n    {\n      "informationRight": true,\n      "decisionRight": true,\n      "executionRight": false,\n      "rightHolderId": {{CCORoleId}},\n      "rightHolderType": "ROLE",\n      "rightHolderName": "{{RoleCCO}}",\n      "disableParentRoleAccess": false\n    }\n  ],\n  "txnTimeRights": [\n    {\n      "informationRight": true,\n      "decisionRight": false,\n      "executionRight": true,\n      "rightHolderId": {{CCORoleId}},\n      "rightHolderType": "ROLE",\n      "rightHolderName": "{{RoleCCO}}",\n      "disableParentRoleAccess": false\n    }\n  ],\n  "masterId": {{SolutionId1}}\n}',
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI " +
+            pm.environment.get("SolutionName") +
+            " GSI Unit Id :" +
+            pm.environment.get("SolutionId1") +
+            " is successfully finished"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("READY");
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Send Notification for approval",
+    id: "804bf668-db1c-458f-89c7-03b5ae9a38e0",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/v1/notifications/api/notification/send",
     data:
-      '{\n    "actionableContent": {\n        "target_type": "Cu",\n        "target_id": {{CuId1}},\n        "target_name": "{{CuName1}}",\n        "context_cu": "",\n        "context_gsi": "",\n        "approvals": "true"\n    },\n    "title": "Review cu",\n    "targetUserId": [\n        "{{UserCCO1}}@nslhub.com"\n    ],\n    "notificationChannels": [\n        "PUSH"\n    ],\n    "content": ""\n}',
+      '{\n  "actionableContent": {\n    "target_type": "Gsi",\n    "target_id": {{SolutionId1}},\n    "target_name": "{{SolutionName}}",\n    "context_cu": "",\n    "context_gsi": "",\n    "approvals": "true"\n  },\n  "title": "Review gsi",\n  "targetUserId": [\n    "{{UserCCO1}}@nslhub.com"\n  ],\n  "notificationChannels": [\n    "PUSH"\n  ],\n  "content": ""\n}',
     headers: {
-      authority: "{{TenantName}}.{{BaseURL}}",
       "accept-language": "en",
       authorization: "{{BearerToken}}",
       "content-type": "application/json",
-      accept: "application/json, text/plain, */*",
-      origin: "https://{{TenantName}}.{{BaseURL}}",
-      "sec-fetch-site": "same-origin",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-dest": "empty"
+      accept: "application/json, text/plain, */*"
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -319,12 +418,164 @@ export default function() {
   });
 
   postman[Request]({
-    name: "Approve CU",
-    id: "182c176a-eac1-44d8-9668-1927cfcf2913",
+    name: "Edit GSI",
+    id: "bc017888-ca0a-41dd-a418-191bd6ed54e8",
     method: "POST",
     address:
-      "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/cu/version/approve/{{CuId1}}",
-    data: '{"changeUnitId":{{CuId1}}}',
+      "https://qa3apitesting0305.qa3.nslhub.com/solution-versioning/api/version/edit/{{SolutionId1}}",
+    data: "{}",
+    headers: {
+      "accept-language": "en",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json",
+      accept: "application/json, text/plain, */*"
+    },
+    post(response) {
+      pm.environment.set("SolutionId2", pm.response.json().result.id);
+      pm.environment.set(
+        "LayerId21",
+        pm.response.json().result.solutionLogic[0].DATA.id
+      );
+
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI " +
+            pm.environment.get("SolutionName") +
+            " GSI Unit Id :" +
+            pm.environment.get("SolutionId2") +
+            " is successfully edited"
+        );
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Create second Entity",
+    id: "37216b96-0e8a-4197-a58c-832fe9ccf568",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/Entity",
+    data:
+      '{\r\n    "entityClassification": "",\r\n    "isMultiValue": false,\r\n    "name": "{{EntityName2}}",\r\n    "nslAttributes": [\r\n        {\r\n            "name": "{{AttributeName21}}",\r\n            "isReserved": false,\r\n            "constraints": [],\r\n            "attributeClassification": "ESSENTIAL",\r\n            "attributeType": {\r\n                "type": "string",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": "text"\r\n            },\r\n            "id": null\r\n        },\r\n        {\r\n            "defaultValue": null,\r\n            "name": "{{AttributeName22}}",\r\n            "isReserved": false,\r\n            "constraints": [],\r\n            "attributeClassification": "ESSENTIAL",\r\n            "attributeType": {\r\n                "type": "number",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": "number"\r\n            },\r\n            "id": null\r\n        }\r\n    ],\r\n    "ontology": [\r\n        {\r\n            "id": "common"\r\n        }\r\n    ]\r\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          pm.environment.get("EntityName2") + " is successfully saved"
+        );
+      });
+
+      pm.environment.set("EntityId2", pm.response.json().result.id);
+      pm.environment.set(
+        "AttributeId21",
+        pm.response.json().result.nslAttributes[0].id
+      );
+      pm.environment.set(
+        "AttributeId22",
+        pm.response.json().result.nslAttributes[1].id
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Add Attributes to Second Entity",
+    id: "068d1d8b-4509-42f2-ab9b-141f34b4f876",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
+    data:
+      '{\r\n    "cuId": null,\r\n    "cuType": null,\r\n    "tuples": [],\r\n    "entityList": [\r\n        {\r\n            "entityId": {{EntityId2}},\r\n            "tuples": [],\r\n            "attributeList": [\r\n                {\r\n                    "attributeId": {{AttributeId21}},\r\n                    "tuples": [\r\n                        {\r\n                            "key": "uiControl",\r\n                            "value": "text"\r\n                        }\r\n                    ]\r\n                },\r\n                {\r\n                    "attributeId": {{AttributeId22}},\r\n                    "tuples": [\r\n                        {\r\n                            "key": "uiControl",\r\n                            "value": "number"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "Successfully saved the UIAttribute "
+        );
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Create second CU",
+    id: "09488b79-626f-4569-ae49-6b99d512a75b",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/CU",
+    data:
+      '{\r\n    "name": "{{CuName2}}",\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "cuType": "BASIC",\r\n    "layers": [\r\n        {\r\n            "type": "physical",\r\n            "label": "physical",\r\n            "participatingItems": [\r\n                {\r\n                    "item": {\r\n                        "TYPE": "GeneralEntity",\r\n                        "DATA": {\r\n                            "name": "{{EntityName2}}",\r\n                            "nslAttributes": [\r\n                                {\r\n                                    "name": "{{AttributeName21}}",\r\n                                    "attributeType": {\r\n                                        "type": "string",\r\n                                        "nestedNslDataTypeProperties": {},\r\n                                        "properties": {\r\n                                            "sourceValues": "[]"\r\n                                        }\r\n                                    },\r\n                                    "constraints": [],\r\n                                    "attributeClassification": "ESSENTIAL",\r\n                                    "isReserved": false,\r\n                                    "id": {{AttributeId21}},\r\n                                    "uiElement": {\r\n                                        "dataType": "string",\r\n                                        "name": "Text",\r\n                                        "uiElement": "text",\r\n                                        "isMulti": false\r\n                                    }\r\n                                },\r\n                                {\r\n                                    "name": "{{AttributeName22}}",\r\n                                    "attributeType": {\r\n                                        "type": "number",\r\n                                        "nestedNslDataTypeProperties": {},\r\n                                        "properties": {\r\n                                            "sourceValues": "[]"\r\n                                        }\r\n                                    },\r\n                                    "constraints": [],\r\n                                    "attributeClassification": "ESSENTIAL",\r\n                                    "isReserved": false,\r\n                                    "id": {{AttributeId22}},\r\n                                    "uiElement": {\r\n                                        "dataType": "number",\r\n                                        "name": "Number",\r\n                                        "uiElement": "number",\r\n                                        "isMulti": false\r\n                                    }\r\n                                }\r\n                            ],\r\n                            "isReserved": false,\r\n                            "id": {{EntityId2}}\r\n                        }\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    "designTimeRights": [\r\n        {\r\n            "rightHolderId": {{CCORoleId}},\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderType": "ROLE",\r\n            "informationRight": true,\r\n            "decisionRight": true\r\n        }\r\n    ],\r\n    "txnTimeRights": [\r\n        {\r\n            "rightHolderId": {{CCORoleId}},\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderType": "ROLE",\r\n            "informationRight": true,\r\n            "decisionRight": false,\r\n            "executionRight": true\r\n        }\r\n    ],\r\n    "id": null,\r\n    "draftedCu": false,\r\n    "nextTriggerSet": [],\r\n    "dcd": [],\r\n    "mindCUList": [],\r\n    "exceptionCUList": [],\r\n    "isAlternate": false,\r\n    "index": 2,\r\n    "activeCuIndex": true,\r\n    "entitySaved": true,\r\n    "createdEntityId": {{EntityId2}},\r\n    "displayName": "{{CuName2}}",\r\n    "description": "Change Unit Description"\r\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "CU has been saved successfully"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
+      });
+      pm.environment.set("CuId2", pm.response.json().result.id);
+      pm.environment.set(
+        "ItemId2",
+        pm.response.json().result.layers[0].participatingItems[0].id
+      );
+      pm.environment.set(
+        "ParticipatingItemId2",
+        pm.response.json().result.layers[0].id
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Create GSI-Draft",
+    id: "2b3a1c08-6c39-4856-a595-be6d29a47723",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/core/GSI-Draft",
+    data:
+      '{\r\n\t"name": "{{SolutionName}}",\r\n\t"displayName": "{{SolutionName}}",\r\n\t"cuType": "GSI",\r\n\t"agents": [\r\n\t\t{\r\n\t\t\t"agentType": "human"\r\n\t\t}\r\n\t],\r\n\t"subOrdinateCUList": [],\r\n\t"superOrdinateCUList": [],\r\n\t"solutionLogic": [\r\n\t\t{\r\n\t\t\t"referencedChangeUnit": {{CuId1}},\r\n\t\t\t"id": {{LayerId21}},\r\n\t\t\t"draftedCu": false,\r\n\t\t\t"name": "{{CuName1}}",\r\n\t\t\t"nextTriggerSet": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"nextCUName": "{{CuName2}}",\r\n\t\t\t\t\t"index": 2\r\n\t\t\t\t}\r\n\t\t\t],\r\n\t\t\t"dcd": [],\r\n\t\t\t"mindCUList": [],\r\n\t\t\t"exceptionCUList": [],\r\n\t\t\t"cuType": "BASIC",\r\n\t\t\t"index": 1,\r\n\t\t\t"designTimeRights": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"informationRight": true,\r\n\t\t\t\t\t"decisionRight": true,\r\n\t\t\t\t\t"executionRight": false,\r\n\t\t\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t\t\t"rightHolderName": "{{RoleCCO}}",\r\n\t\t\t\t\t"disableParentRoleAccess": false,\r\n\t\t\t\t\t"name": "{{RoleCCO}}"\r\n\t\t\t\t}\r\n\t\t\t],\r\n\t\t\t"txnTimeRights": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"informationRight": true,\r\n\t\t\t\t\t"decisionRight": false,\r\n\t\t\t\t\t"executionRight": true,\r\n\t\t\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t\t\t"rightHolderName": "{{RoleCCO}}",\r\n\t\t\t\t\t"disableParentRoleAccess": false,\r\n\t\t\t\t\t"name": "{{RoleCCO}}"\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t},\r\n\t\t{\r\n\t\t\t"referencedChangeUnit": {{CuId2}},\r\n\t\t\t"draftedCu": false,\r\n\t\t\t"name": "{{CuName2}}",\r\n\t\t\t"nextTriggerSet": [],\r\n\t\t\t"dcd": [],\r\n\t\t\t"mindCUList": [],\r\n\t\t\t"exceptionCUList": [],\r\n\t\t\t"cuType": "BASIC",\r\n\t\t\t"index": 2,\r\n\t\t\t"designTimeRights": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t\t\t"informationRight": true,\r\n\t\t\t\t\t"decisionRight": true\r\n\t\t\t\t}\r\n\t\t\t],\r\n\t\t\t"txnTimeRights": [\r\n\t\t\t\t{\r\n\t\t\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t\t\t"informationRight": true,\r\n\t\t\t\t\t"decisionRight": false,\r\n\t\t\t\t\t"executionRight": true\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t],\r\n\t"designTimeRights": [\r\n\t\t{\r\n\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t"informationRight": true,\r\n\t\t\t"decisionRight": true\r\n\t\t}\r\n\t],\r\n\t"txnTimeRights": [\r\n\t\t{\r\n\t\t\t"rightHolderId": {{CCORoleId}},\r\n\t\t\t"name": "{{RoleCCO}}",\r\n\t\t\t"rightHolderType": "ROLE",\r\n\t\t\t"informationRight": true,\r\n\t\t\t"decisionRight": false,\r\n\t\t\t"executionRight": true\r\n\t\t}\r\n\t],\r\n\t"id": {{SolutionId2}},\r\n    "status": "DRAFT",\r\n    "version": "2.0",\r\n    "masterId": {{SolutionId1}}\r\n}',
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      Authorization: "{{BearerToken}}",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI has been saved successfully"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
+        pm.expect(pm.response.json().result.version).to.eq("2.0");
+      });
+
+      pm.environment.set(
+        "LayerId2",
+        pm.response.json().result.solutionLogic[1].id
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Save GSI",
+    id: "60ffe3e1-7692-40e0-8dc5-452fd0bca730",
+    method: "POST",
+    address: "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/GSI",
+    data:
+      '{\n    "name": "{{SolutionName}}",\n    "displayName": "{{SolutionName}}",\n    "cuType": "GSI",\n    "agents": [\n        {\n            "agentType": "human"\n        }\n    ],\n    "subOrdinateCUList": [],\n    "superOrdinateCUList": [],\n    "layers": null,\n    "solutionLogic": [\n        {\n            "index": 1,\n            "nextTriggerSet": [\n                {\n                    "index": 2,\n                    "nextCUName": "{{CuName2}}"\n                }\n            ],\n            "referencedChangeUnit": {{CuId1}},\n            "dcd": [],\n            "exceptionCUList": [],\n            "eventCUList": [],\n            "mindCUList": [],\n            "entityDesignRights": {},\n            "entityTransactionRights": {},\n            "attributeDesignRights": {},\n            "attributeTransactionRights": {},\n            "cuType": "BASIC",\n            "specialFeatureProperties": {},\n            "slotItemData": {},\n            "name": "{{CuName1}}",\n            "displayName": "{{CuName1}}",\n            "description": "Change Unit Description",\n            "agents": [\n                {\n                    "agentType": "human"\n                }\n            ],\n            "superOrdinateCUList": [],\n            "membershipList": [],\n            "status": "DRAFT",\n            "propertiesMap": {\n                "defaultValues": [],\n                "specialFeatures": []\n            },\n            "cuSystemProperties": {},\n            "id": {{LayerId21}},\n            "designTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": true,\n                    "executionRight": false,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "txnTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": false,\n                    "executionRight": true,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "visited": true\n        },\n        {\n            "index": 2,\n            "nextTriggerSet": [],\n            "referencedChangeUnit": {{CuId2}},\n            "dcd": [],\n            "exceptionCUList": [],\n            "eventCUList": [],\n            "mindCUList": [],\n            "entityDesignRights": {},\n            "entityTransactionRights": {},\n            "attributeDesignRights": {},\n            "attributeTransactionRights": {},\n            "cuType": "BASIC",\n            "specialFeatureProperties": {},\n            "slotItemData": {},\n            "name": "{{CuName2}}",\n            "displayName": "{{CuName2}}",\n            "agents": [\n                {}\n            ],\n            "superOrdinateCUList": [],\n            "membershipList": [],\n            "status": "DRAFT",\n            "propertiesMap": {},\n            "cuSystemProperties": {},\n            "id": {{LayerId2}},\n            "designTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": true,\n                    "executionRight": false,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "txnTimeRights": [\n                {\n                    "informationRight": true,\n                    "decisionRight": false,\n                    "executionRight": true,\n                    "rightHolderId": {{CCORoleId}},\n                    "rightHolderType": "ROLE",\n                    "rightHolderName": "{{RoleCCO}}",\n                    "disableParentRoleAccess": false\n                }\n            ],\n            "draftedCu": false\n        }\n    ],\n    "designTimeRights": [\n        {\n            "informationRight": true,\n            "decisionRight": true,\n            "executionRight": false,\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderType": "ROLE",\n            "rightHolderName": "{{RoleCCO}}",\n            "disableParentRoleAccess": false,\n            "name": "{{RoleCCO}}"\n        }\n    ],\n    "txnTimeRights": [\n        {\n            "informationRight": true,\n            "decisionRight": false,\n            "executionRight": true,\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderType": "ROLE",\n            "rightHolderName": "{{RoleCCO}}",\n            "disableParentRoleAccess": false,\n            "name": "{{RoleCCO}}"\n        }\n    ],\n    "id": {{SolutionId2}},\n    "status": "DRAFT",\n    "version": "2.0",\n    "masterId": {{SolutionId1}}\n}',
     headers: {
       "accept-language": "en",
       authorization: "{{BearerToken}}",
@@ -334,9 +585,65 @@ export default function() {
     post(response) {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI has been saved successfully"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
+        pm.expect(pm.response.json().result.version).to.eq("2.0");
       });
+    }
+  });
 
-      setTimeout(() => {}, pm.environment.get("WaitTime"));
+  postman[Request]({
+    name: "Finish GSI (2.0)",
+    id: "79fa42f2-71e1-45fa-a44d-127b1fcc2a00",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/version/finish",
+    data:
+      '{\n    "constrainedToReportingTree": false,\n    "constrainedToTeam": false,\n    "rights": [\n        "EXECUTION_RIGHTS",\n        "SOLUTIONS_DECISION_RIGHTS",\n        "TXN_INFO_RIGHTS"\n    ],\n    "nextTriggerSet": [],\n    "dcd": [],\n    "exceptionCUList": [],\n    "eventCUList": [],\n    "mindCUList": [],\n    "entityDesignRights": {},\n    "entityTransactionRights": {},\n    "attributeDesignRights": {},\n    "attributeTransactionRights": {},\n    "cuType": "BASIC",\n    "specialFeatureProperties": {},\n    "slotItemData": {},\n    "name": "{{SolutionName}}",\n    "displayName": "{{SolutionName}}",\n    "agents": [\n        {\n            "agentType": "human"\n        }\n    ],\n    "superOrdinateCUList": [],\n    "membershipList": [],\n    "isReserved": false,\n    "masterId": {{SolutionId1}},\n    "version": "2.0",\n    "status": "DRAFT",\n    "propertiesMap": {},\n    "cuSystemProperties": {},\n    "id": {{SolutionId2}},\n    "designTimeRights": [\n        {\n            "informationRight": true,\n            "decisionRight": true,\n            "executionRight": false,\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderType": "ROLE",\n            "rightHolderName": "{{RoleCCO}}",\n            "disableParentRoleAccess": false\n        }\n    ],\n    "txnTimeRights": [\n        {\n            "informationRight": true,\n            "decisionRight": false,\n            "executionRight": true,\n            "rightHolderId": {{CCORoleId}},\n            "rightHolderType": "ROLE",\n            "rightHolderName": "{{RoleCCO}}",\n            "disableParentRoleAccess": false\n        }\n    ]\n}',
+    headers: {
+      "accept-language": "en",
+      accept: "application/json, text/plain, */*",
+      authorization: "{{BearerToken}}",
+      "content-type": "application/json"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json().message).to.eq(
+          "GSI " +
+            pm.environment.get("SolutionName") +
+            " GSI Unit Id :" +
+            pm.environment.get("SolutionId2") +
+            " is successfully finished"
+        );
+        pm.expect(pm.response.json().result.status).to.eq("READY");
+        pm.expect(pm.response.json().result.version).to.eq("2.0");
+      });
+    }
+  });
+
+  postman[Request]({
+    name: "Diff GSI v1.0 vs v2.0",
+    id: "b558de02-3dc9-4760-b44b-764a8ad80232",
+    method: "GET",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/diff/GSI?draftId={{SolutionId2}}",
+    headers: {
+      accept: "application/json, text/plain, */*",
+      authorization: "{{BearerToken}}",
+      "accept-language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function () {
+        pm.expect(pm.response.code).to.eq(200);
+        pm.expect(pm.response.json()).to.include(
+          '{"status":"ADDED","oldValue":null,"newValue":"' +
+            pm.environment.get("CuName2") +
+            '"}'
+        );
+      });
     }
   });
 }

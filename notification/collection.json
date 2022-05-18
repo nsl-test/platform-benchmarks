@@ -1,0 +1,573 @@
+{
+	"info": {
+		"_postman_id": "18099852-efdd-4eee-868b-ed615166135d",
+		"name": "Notification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate Token (usercco) and Test Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set('BearerToken',pm.response.json().token_type+\" \"+pm.response.json().access_token);\r",
+							"pm.environment.set('RefreshToken',pm.response.json().refresh_token);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.clear();\r",
+							"\r",
+							"pm.variables.set('RandomNumber', (new Date()).toISOString().replace(/[^0-9]/g, \"\").slice(0, -3)+\"\"+Math.floor((Math.random() * 100000) + 1)); \r",
+							"\r",
+							"// Solution Development \r",
+							"\r",
+							"pm.variables.set('SolutionName','BasicSolution'+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('CCORoleId', pm.variables.get('CCORoleId'));\r",
+							"pm.variables.set('RoleCCO', pm.variables.get('RoleCCO'));\r",
+							"\r",
+							"pm.variables.set('CuName1','Student Details '+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('EntityName1','student'+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('AttributeName11','Full Name');\r",
+							"pm.variables.set('AttributeName12','Age');\r",
+							"\r",
+							"pm.variables.set('CuName2','Address '+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('EntityName2','contact'+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('AttributeName21','Address');\r",
+							"pm.variables.set('AttributeName22','Pin Code');\r",
+							"\r",
+							"// Solution Execution\r",
+							"\r",
+							"pm.variables.set('AttributeValue11', 'John '+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('AttributeValue12', pm.variables.get('RandomNumber'));\r",
+							"\r",
+							"pm.variables.set('AttributeValue21', 'California '+ pm.variables.get('RandomNumber'));\r",
+							"pm.variables.set('AttributeValue22', pm.variables.get('RandomNumber'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Accept-Language",
+						"type": "text",
+						"value": "en"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{TenantName}}"
+						},
+						{
+							"key": "grant_type",
+							"value": "password"
+						},
+						{
+							"key": "password",
+							"value": "{{Password}}"
+						},
+						{
+							"key": "username",
+							"value": "{{UserCCO}}"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
+					"host": [
+						"{{IamURL}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"{{TenantName}}",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create first Entity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(pm.variables.get('EntityName1')+\" is successfully saved\");\r",
+							"});\r",
+							"\r",
+							"pm.variables.set('EntityId1',pm.response.json().result.id);\r",
+							"pm.variables.set('AttributeId11',pm.response.json().result.nslAttributes[0].id);\r",
+							"pm.variables.set('AttributeId12',pm.response.json().result.nslAttributes[1].id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"nslAttributes\": [\r\n\t\t{\r\n\t\t\t\"name\": \"{{AttributeName11}}\",\r\n\t\t\t\"isReserved\": false,\r\n\t\t\t\"constraints\": [],\r\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\r\n\t\t\t\"attributeType\": {\r\n\t\t\t\t\"type\": \"string\",\r\n\t\t\t\t\"properties\": {\r\n\t\t\t\t\t\"sourceValues\": \"[]\"\r\n\t\t\t\t},\r\n\t\t\t\t\"uiElement\": \"text\"\r\n\t\t\t},\r\n\t\t\t\"id\": null\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"defaultValue\": null,\r\n\t\t\t\"name\": \"{{AttributeName12}}\",\r\n\t\t\t\"isReserved\": false,\r\n\t\t\t\"constraints\": [],\r\n\t\t\t\"attributeClassification\": \"ESSENTIAL\",\r\n\t\t\t\"attributeType\": {\r\n\t\t\t\t\"type\": \"number\",\r\n\t\t\t\t\"properties\": {\r\n\t\t\t\t\t\"sourceValues\": \"[]\"\r\n\t\t\t\t},\r\n\t\t\t\t\"uiElement\": \"number\"\r\n\t\t\t},\r\n\t\t\t\"id\": null\r\n\t\t}\r\n\t],\r\n\t\"entityClassification\": \"\",\r\n\t\"name\": \"{{EntityName1}}\",\r\n\t\"isMultiValue\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/Entity",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"core",
+						"Entity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Attributes to First Entity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"Successfully saved the UIAttribute \");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"cuId\": null,\r\n\t\"cuType\": null,\r\n\t\"tuples\": [],\r\n\t\"entityList\": [\r\n\t\t{\r\n\t\t\t\"entityId\": {{EntityId1}},\r\n\t\t\t\"tuples\": [],\r\n\t\t\t\"attributeList\": [\r\n\t\t\t\t{\r\n\t\t\t\t\t\"attributeId\": {{AttributeId11}},\r\n\t\t\t\t\t\"tuples\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\r\n\t\t\t\t\t\t\t\"value\": \"text\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t]\r\n\t\t\t\t},\r\n\t\t\t\t{\r\n\t\t\t\t\t\"attributeId\": {{AttributeId12}},\r\n\t\t\t\t\t\"tuples\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"key\": \"uiControl\",\r\n\t\t\t\t\t\t\t\"value\": \"number\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t]\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t]\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/core/UIAttribute",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"core",
+						"UIAttribute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create first CU",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"CU has been saved successfully\");\r",
+							"    pm.expect(pm.response.json().result.status).to.eq(\"DRAFT\");\r",
+							"});\r",
+							"pm.variables.set('CuId1',pm.response.json().result.id);\r",
+							"pm.variables.set('ItemId1',pm.response.json().result.layers[0].participatingItems[0].id);\r",
+							"pm.variables.set('ParticipatingItemId1',pm.response.json().result.layers[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"name\": \"{{CuName1}}\",\r\n\t\"agents\": [\r\n\t\t{\r\n\t\t\t\"agentType\": \"human\"\r\n\t\t}\r\n\t],\r\n\t\"cuType\": \"BASIC\",\r\n\t\"layers\": [\r\n\t\t{\r\n\t\t\t\"type\": \"physical\",\r\n\t\t\t\"label\": \"physical\",\r\n\t\t\t\"participatingItems\": [\r\n\t\t\t\t{\r\n\t\t\t\t\t\"item\": {\r\n\t\t\t\t\t\t\"TYPE\": \"GeneralEntity\",\r\n\t\t\t\t\t\t\"DATA\": {\r\n\t\t\t\t\t\t\t\"name\": \"{{EntityName1}}\",\r\n\t\t\t\t\t\t\t\"nslAttributes\": [\r\n\t\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName11}}\",\r\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\r\n\t\t\t\t\t\t\t\t\t\t\"type\": \"string\",\r\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\r\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\r\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\r\n\t\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\r\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\r\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\r\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId11}},\r\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\r\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"string\",\r\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Text\",\r\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"text\",\r\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\r\n\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\t\t\"name\": \"{{AttributeName12}}\",\r\n\t\t\t\t\t\t\t\t\t\"attributeType\": {\r\n\t\t\t\t\t\t\t\t\t\t\"type\": \"number\",\r\n\t\t\t\t\t\t\t\t\t\t\"nestedNslDataTypeProperties\": {},\r\n\t\t\t\t\t\t\t\t\t\t\"properties\": {\r\n\t\t\t\t\t\t\t\t\t\t\t\"sourceValues\": \"[]\"\r\n\t\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t\t},\r\n\t\t\t\t\t\t\t\t\t\"constraints\": [],\r\n\t\t\t\t\t\t\t\t\t\"attributeClassification\": \"ESSENTIAL\",\r\n\t\t\t\t\t\t\t\t\t\"isReserved\": false,\r\n\t\t\t\t\t\t\t\t\t\"id\": {{AttributeId12}},\r\n\t\t\t\t\t\t\t\t\t\"uiElement\": {\r\n\t\t\t\t\t\t\t\t\t\t\"dataType\": \"number\",\r\n\t\t\t\t\t\t\t\t\t\t\"name\": \"Number\",\r\n\t\t\t\t\t\t\t\t\t\t\"uiElement\": \"number\",\r\n\t\t\t\t\t\t\t\t\t\t\"isMulti\": false\r\n\t\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t],\r\n\t\t\t\t\t\t\t\"isReserved\": false,\r\n\t\t\t\t\t\t\t\"id\": {{EntityId1}}\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t],\r\n\t\"designTimeRights\": [\r\n\t\t{\r\n\t\t\t\"rightHolderId\": {{CCORoleId}},\r\n\t\t\t\"name\": \"{{RoleCCO}}\",\r\n\t\t\t\"rightHolderType\": \"ROLE\",\r\n\t\t\t\"informationRight\": true,\r\n\t\t\t\"decisionRight\": true\r\n\t\t}\r\n\t],\r\n\t\"txnTimeRights\": [\r\n\t\t{\r\n\t\t\t\"rightHolderId\": {{CCORoleId}},\r\n\t\t\t\"name\": \"{{RoleCCO}}\",\r\n\t\t\t\"rightHolderType\": \"ROLE\",\r\n\t\t\t\"informationRight\": true,\r\n\t\t\t\"decisionRight\": false,\r\n\t\t\t\"executionRight\": true\r\n\t\t}\r\n\t],\r\n\t\"id\": null,\r\n\t\"draftedCu\": false,\r\n\t\"nextTriggerSet\": [],\r\n\t\"dcd\": [],\r\n\t\"mindCUList\": [],\r\n\t\"exceptionCUList\": [],\r\n\t\"isAlternate\": false,\r\n\t\"index\": 1,\r\n\t\"activeCuIndex\": true,\r\n\t\"entitySaved\": true,\r\n\t\"createdEntityId\": {{EntityId1}},\r\n\t\"displayName\": \"{{CuName1}}\",\r\n\t\"description\": \"Change Unit Description\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/CU",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"core",
+						"CU"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create GSI-Draft",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"GSI has been saved successfully\");",
+							"    pm.expect(pm.response.json().result.status).to.eq(\"DRAFT\");",
+							"});",
+							"pm.variables.set('SolutionId1',pm.response.json().result.id);",
+							"pm.variables.set('LayerId1',pm.response.json().result.solutionLogic[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "en"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{SolutionName}}\",\n    \"displayName\": \"{{SolutionName}}\",\n    \"cuType\": \"GSI\",\n    \"agents\": [\n        {\n            \"agentType\": \"human\"\n        }\n    ],\n    \"subOrdinateCUList\": [],\n    \"superOrdinateCUList\": [],\n    \"layers\": null,\n    \"solutionLogic\": [\n        {\n    \"referencedChangeUnit\": {{CuId1}},\n\t\t\t\"id\": null,\n\t\t\t\"draftedCu\": false,\n\t\t\t\"name\": \"{{CuName1}}\",\n\t\t\t\"nextTriggerSet\": [],\n\t\t\t\"dcd\": [],\n\t\t\t\"mindCUList\": [],\n\t\t\t\"exceptionCUList\": [],\n\t\t\t\"cuType\": \"BASIC\",\n\t\t\t\"index\": 1,\n            \"designTimeRights\": [\n                {\n                    \"informationRight\": true,\n                    \"decisionRight\": true,\n                    \"executionRight\": false,\n                    \"rightHolderId\": {{CCORoleId}},\n                    \"rightHolderType\": \"ROLE\",\n                    \"rightHolderName\": \"{{RoleCCO}}\",\n                    \"disableParentRoleAccess\": false\n                }\n            ],\n            \"txnTimeRights\": [\n                {\n                    \"informationRight\": true,\n                    \"decisionRight\": false,\n                    \"executionRight\": true,\n                    \"rightHolderId\": {{CCORoleId}},\n                    \"rightHolderType\": \"ROLE\",\n                    \"rightHolderName\": \"{{RoleCCO}}\",\n                    \"disableParentRoleAccess\": false\n                }\n            ],\n            \"visited\": true\n        }\n    ],\n    \"designTimeRights\": [\n        {\n            \"rightHolderId\": {{CCORoleId}},\n            \"rightHolderName\": \"{{RoleCCO}}\",\n            \"name\": \"{{RoleCCO}}\",\n            \"informationRight\": true,\n            \"decisionRight\": true,\n            \"rightHolderType\": \"ROLE\"\n        }\n    ],\n    \"txnTimeRights\": [\n        {\n            \"executionRight\": true,\n            \"rightHolderId\": {{CCORoleId}},\n            \"rightHolderName\": \"{{RoleCCO}}\",\n            \"name\": \"{{RoleCCO}}\",\n            \"informationRight\": true,\n            \"decisionRight\": false,\n            \"rightHolderType\": \"ROLE\"\n        }\n    ],\n    \"id\": null\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/core/GSI-Draft",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"core",
+						"GSI-Draft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save GSI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){\r",
+							"    pm.expect(pm.response.code).to.eq(200);\r",
+							"    pm.expect(pm.response.json().message).to.eq(\"GSI has been saved successfully\");\r",
+							"    pm.expect(pm.response.json().result.status).to.eq(\"DRAFT\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{SolutionName}}\",\r\n    \"displayName\": \"{{SolutionName}}\",\r\n    \"cuType\": \"GSI\",\r\n    \"agents\": [\r\n        {\r\n            \"agentType\": \"human\"\r\n        }\r\n    ],\r\n    \"subOrdinateCUList\": [],\r\n    \"superOrdinateCUList\": [],\r\n    \"layers\": null,\r\n    \"solutionLogic\": [\r\n        {\r\n            \"index\": 1,\r\n            \"nextTriggerSet\": [],\r\n            \"referencedChangeUnit\": {{CuId1}},\r\n            \"dcd\": [],\r\n            \"exceptionCUList\": [],\r\n            \"eventCUList\": [],\r\n            \"mindCUList\": [],\r\n            \"entityDesignRights\": {},\r\n            \"entityTransactionRights\": {},\r\n            \"attributeDesignRights\": {},\r\n            \"attributeTransactionRights\": {},\r\n            \"cuType\": \"BASIC\",\r\n            \"specialFeatureProperties\": {},\r\n            \"slotItemData\": {},\r\n            \"name\": \"{{CuName1}}\",\r\n            \"displayName\": \"{{CuName1}}\",\r\n            \"description\": \"Change Unit Description\",\r\n            \"agents\": [\r\n                {\r\n                    \"agentType\": \"human\"\r\n                }\r\n            ],\r\n            \"superOrdinateCUList\": [],\r\n            \"membershipList\": [],\r\n            \"status\": \"DRAFT\",\r\n            \"propertiesMap\": {\r\n                \"specialFeatures\": [],\r\n                \"defaultValues\": []\r\n            },\r\n            \"cuSystemProperties\": {},\r\n            \"id\": {{LayerId1}},\r\n            \"designTimeRights\": [\r\n                {\r\n                    \"informationRight\": true,\r\n                    \"decisionRight\": true,\r\n                    \"executionRight\": false,\r\n                    \"rightHolderId\": {{CCORoleId}},\r\n                    \"rightHolderType\": \"ROLE\",\r\n                    \"rightHolderName\": \"{{RoleCCO}}\",\r\n                    \"disableParentRoleAccess\": false\r\n                }\r\n            ],\r\n            \"txnTimeRights\": [\r\n                {\r\n                    \"informationRight\": true,\r\n                    \"decisionRight\": false,\r\n                    \"executionRight\": true,\r\n                    \"rightHolderId\": {{CCORoleId}},\r\n                    \"rightHolderType\": \"ROLE\",\r\n                    \"rightHolderName\": \"{{RoleCCO}}\",\r\n                    \"disableParentRoleAccess\": false\r\n                }\r\n            ],\r\n            \"visited\": true\r\n        }\r\n    ],\r\n    \"designTimeRights\": [\r\n        {\r\n            \"rightHolderId\": {{CCORoleId}},\r\n            \"rightHolderName\": \"{{RoleCCO}}\",\r\n            \"name\": \"{{RoleCCO}}\",\r\n            \"informationRight\": true,\r\n            \"decisionRight\": true,\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    ],\r\n    \"txnTimeRights\": [\r\n        {\r\n            \"executionRight\": true,\r\n            \"rightHolderId\": {{CCORoleId}},\r\n            \"rightHolderName\": \"{{RoleCCO}}\",\r\n            \"name\": \"{{RoleCCO}}\",\r\n            \"informationRight\": true,\r\n            \"decisionRight\": false,\r\n            \"rightHolderType\": \"ROLE\"\r\n        }\r\n    ],\r\n    \"id\": {{SolutionId1}},\r\n    \"status\": \"DRAFT\",\r\n    \"version\": \"1.0\",\r\n    \"masterId\": {{SolutionId1}}\r\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/core/GSI",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"core",
+						"GSI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Finish GSI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"GSI \"+pm.variables.get(\"SolutionName\")+\" GSI Unit Id :\"+pm.variables.get(\"SolutionId1\")+\" is successfully finished\");",
+							"    pm.expect(pm.response.json().result.status).to.eq(\"READY\");",
+							"    pm.expect(pm.response.json().result.version).to.eq(\"1.0\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"constrainedToReportingTree\": false,\n  \"constrainedToTeam\": false,\n  \"rights\": [\n    \"TXN_INFO_RIGHTS\",\n    \"SOLUTIONS_DECISION_RIGHTS\",\n    \"EXECUTION_RIGHTS\"\n  ],\n  \"nextTriggerSet\": [],\n  \"dcd\": [],\n  \"exceptionCUList\": [],\n  \"eventCUList\": [],\n  \"mindCUList\": [],\n  \"entityDesignRights\": {},\n  \"entityTransactionRights\": {},\n  \"attributeDesignRights\": {},\n  \"attributeTransactionRights\": {},\n  \"cuType\": \"BASIC\",\n  \"specialFeatureProperties\": {},\n  \"slotItemData\": {},\n  \"name\": \"{{SolutionName}}\",\n  \"displayName\": \"{{SolutionName}}\",\n  \"agents\": [\n    {\n      \"agentType\": \"human\"\n    }\n  ],\n  \"superOrdinateCUList\": [],\n  \"membershipList\": [],\n  \"isReserved\": false,\n  \"status\": \"DRAFT\",\n  \"propertiesMap\": {},\n  \"cuSystemProperties\": {},\n  \"id\": {{SolutionId1}},\n  \"designTimeRights\": [\n    {\n      \"informationRight\": true,\n      \"decisionRight\": true,\n      \"executionRight\": false,\n      \"rightHolderId\": {{CCORoleId}},\n      \"rightHolderType\": \"ROLE\",\n      \"rightHolderName\": \"{{RoleCCO}}\",\n      \"disableParentRoleAccess\": false\n    }\n  ],\n  \"txnTimeRights\": [\n    {\n      \"informationRight\": true,\n      \"decisionRight\": false,\n      \"executionRight\": true,\n      \"rightHolderId\": {{CCORoleId}},\n      \"rightHolderType\": \"ROLE\",\n      \"rightHolderName\": \"{{RoleCCO}}\",\n      \"disableParentRoleAccess\": false\n    }\n  ],\n  \"masterId\": {{SolutionId1}}\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/solution-versioning/api/version/finish",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"solution-versioning",
+						"api",
+						"version",
+						"finish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Notification for approval",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code\", function(){",
+							"    pm.expect(pm.response.code).to.eq(200);",
+							"    pm.expect(pm.response.json().message).to.eq(\"Notification sent successfully\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept-language",
+						"value": "en"
+					},
+					{
+						"key": "authorization",
+						"value": "{{BearerToken}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"actionableContent\": {\n    \"target_type\": \"Gsi\",\n    \"target_id\": {{SolutionId1}},\n    \"target_name\": \"{{SolutionName}}\",\n    \"context_cu\": \"\",\n    \"context_gsi\": \"\",\n    \"approvals\": \"true\"\n  },\n  \"title\": \"Review gsi\",\n  \"targetUserId\": [\n    \"{{UserCCO1}}@nslhub.com\"\n  ],\n  \"notificationChannels\": [\n    \"PUSH\"\n  ],\n  \"content\": \"\"\n}"
+				},
+				"url": {
+					"raw": "https://{{TenantName}}.{{BaseURL}}/dsd-orch/v1/notifications/api/notification/send",
+					"protocol": "https",
+					"host": [
+						"{{TenantName}}",
+						"{{BaseURL}}"
+					],
+					"path": [
+						"dsd-orch",
+						"v1",
+						"notifications",
+						"api",
+						"notification",
+						"send"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
