@@ -2,9 +2,8 @@
 
 import "./libs/shim/core.js";
 import "./libs/shim/expect.js";
-import "./libs/shim/urijs.js";
 
-export let options = { maxRedirects: 4 };
+export let options = { maxRedirects: 4, iterations: 1};
 
 const Request = Symbol.for("request");
 postman[Symbol.for("initial")]({
@@ -130,33 +129,60 @@ postman[Symbol.for("initial")]({
     T3UserCCOId: 1424682699760,
     T3CCORoleId: 129071126100,
     TenantName3: "apiqa3ten0604",
-    REVIEW_WAITTIME: "5000"
+    REVIEW_WAITTIME: "5000",
+    UserCCOEncryptedPassword:
+      "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",
+    TenantAdminEncryptedPassword:
+      "DRvI9/JkLbPgrwPepaVkJwRN9Zts4u09mL6fOg3OwIg84c7XRkqwEVQx0tbfo42Kuiaiw3dbvMfd4eQUG9AXg6zdZtsrGnz+/+Ik5gdkSO3npvFCSq/6GEgQERPNEqNfwQODLphZfmkxr87LayYQ+3up+2Umi+4RG0pxVb8g3sM="
   }
 });
 
 export default function() {
   postman[Request]({
-    name: "Login as usercco",
-    id: "762eebe3-2a2f-4f96-b2f5-f2835454f47b",
+    name: "user login iam Copy",
+    id: "c38fb8c2-21d5-4e21-a17f-2d6749971ac9",
     method: "POST",
     address:
-      "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
-    data: {
-      client_id: "{{TenantName}}",
-      grant_type: "password",
-      password: "{{Password}}",
-      username: "{{UserCCO}}"
-    },
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
+    data:
+      '{\n    "userName": "{{UserCCO}}",\n    "encryptedPassword": "J8JAIlEDnLvsHzljoQJ4VcWCdcVNJTYzWlc7yZaTRcH5roLNs6trxwD+Ax/XCy3UvJzxSDNLVaa2a7YVcVddeHC6oXuFMf0pNxYWTGi4Tl+ha36Y0DPd4VBFeqvRfDvB2UnUSR+vfIJ56c8SNe0E644yjrCwxXWqAE2B0jTQgfA=",\n    "tenantName": "{{TenantName}}",\n    "clientId": "{{TenantName}}"\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
+      "Accept-Language": "en"
+    },
+    post(response) {
+      pm.test("Check status code", function() {
+        pm.expect(pm.response.code).to.eq(200);
+      });
+
+      pm.environment.set(
+        "BearerToken",
+        pm.response.json().result.token_type +
+          " " +
+          pm.response.json().result.access_token
+      );
+      pm.environment.set(
+        "RefreshToken",
+        pm.response.json()["result"]["refresh_token"]
+      );
+    }
+  });
+
+  postman[Request]({
+    name: "Create GSI-EnvDomainGSI_Market Place Copy",
+    id: "94a3e3ed-178a-413b-9ce7-081a59e4a7ae",
+    method: "POST",
+    address:
+      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/gsi",
+    data:
+      '{\r\n    "dsdId": null,\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "attributeDesignRights": [],\r\n    "attributeTransactionRights": [],\r\n    "changeUnits": [],\r\n    "condition": "",\r\n    "contextualId": [],\r\n    "cuType": "GSI",\r\n    "dcd": [],\r\n    "description": "",\r\n    "designTimeRights": [],\r\n    "displayName": "{{SolutionName}}",\r\n    "entityDesignRights": [],\r\n    "entityTransactionRights": [],\r\n    "exceptionCUList": [],\r\n    "gsiList": [],\r\n    "guid": "",\r\n    "index": 0,\r\n    "layers": [],\r\n    "membershipList": [],\r\n    "mindCUList": [],\r\n    "name": "{{SolutionName}}",\r\n    "nextTriggerSet": [],\r\n    "ontology": [],\r\n    "ownerId": null,\r\n    "reserved": false,\r\n    "reservedCUType": "",\r\n    "solutionLogic": [],\r\n    "space": "",\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "subOrdinateCUList": [],\r\n    "symbolicId": "",\r\n    "txnTimeRights": [],\r\n    "userId": "",\r\n    "author": {},\r\n    "keywords": [],\r\n    "isNameUpdated": true\r\n}',
+    headers: {
+      authorization: "{{BearerToken}}",
       "Accept-Language": "en"
     },
     pre() {
-      //pm.variables.clear();
-
+      //pm.variables.set('SolutionName','GSI_'+ pm.variables.get('RandomNumber'));
       pm.variables.set(
         "RandomNumber",
         new Date()
@@ -166,80 +192,10 @@ export default function() {
           "" +
           Math.floor(Math.random() * 100000 + 1)
       );
-
-      // Solution Development
-
-      pm.variables.set(
-        "BookName",
-        "BasicBook" + pm.variables.get("RandomNumber")
-      );
       pm.variables.set(
         "SolutionName",
-        "BasicSolution" + pm.variables.get("RandomNumber")
+        "GSI_" + pm.variables.get("RandomNumber")
       );
-      pm.variables.set("CCORoleId", pm.variables.get("CCORoleId"));
-      pm.variables.set("RoleCCO", pm.variables.get("RoleCCO"));
-
-      pm.variables.set(
-        "CuName1",
-        "Input1_BasicSolution " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set(
-        "EntityName1",
-        "enter_details1" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeName11", "Name");
-      pm.variables.set("AttributeName12", "Age");
-
-      pm.variables.set(
-        "CuName2",
-        "Input2_BasicSolution " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set(
-        "EntityName2",
-        "enter_details2" + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeName21", "Address");
-      pm.variables.set("AttributeName22", "Pin Code");
-
-      // Solution Execution
-
-      pm.variables.set(
-        "AttributeValue11",
-        "Ramya " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeValue12", pm.variables.get("RandomNumber"));
-
-      pm.variables.set(
-        "AttributeValue21",
-        "Hyderabad " + pm.variables.get("RandomNumber")
-      );
-      pm.variables.set("AttributeValue22", pm.variables.get("RandomNumber"));
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-      });
-
-      pm.environment.set(
-        "BearerToken",
-        pm.response.json().token_type + " " + pm.response.json().access_token
-      );
-      pm.environment.set("RefreshToken", pm.response.json().refresh_token);
-    }
-  });
-
-  postman[Request]({
-    name: "Create GSI-BasicSolution",
-    id: "27ccb3f3-43bf-4745-9c65-9b4ebb5313e9",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/gsi",
-    data:
-      '{\r\n    "dsdId": null,\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "attributeDesignRights": [],\r\n    "attributeTransactionRights": [],\r\n    "changeUnits": [],\r\n    "condition": "",\r\n    "contextualId": [],\r\n    "cuType": "GSI",\r\n    "dcd": [],\r\n    "description": "",\r\n    "designTimeRights": [],\r\n    "displayName": "{{SolutionName}}",\r\n    "entityDesignRights": [],\r\n    "entityTransactionRights": [],\r\n    "exceptionCUList": [],\r\n    "gsiList": [],\r\n    "guid": "",\r\n    "index": 0,\r\n    "layers": [],\r\n    "membershipList": [],\r\n    "mindCUList": [],\r\n    "name": "{{SolutionName}}",\r\n    "nextTriggerSet": [],\r\n    "ontology": [],\r\n    "ownerId": null,\r\n    "reserved": false,\r\n    "reservedCUType": "",\r\n    "solutionLogic": [],\r\n    "space": "",\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "subOrdinateCUList": [],\r\n    "symbolicId": "",\r\n    "txnTimeRights": [],\r\n    "userId": "",\r\n    "author": {},\r\n    "keywords": [],\r\n    "isNameUpdated": true\r\n}',
-    headers: {
-      Authorization: "{{BearerToken}}",
-      "Accept-Language": "en"
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -247,21 +203,16 @@ export default function() {
         pm.expect(pm.response.json().message).to.eq(
           pm.variables.get("SolutionName") + " is saved"
         );
-        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
-        pm.expect(pm.response.json().result.version).to.eq("1.0");
       });
 
-      pm.variables.set("SolutionId", pm.response.json().result.id);
-      pm.variables.set("SolutionDsdId", pm.response.json().result.dsdId);
-    },
-    auth(config, Var) {
-      config.headers.Authorization = "Bearer ";
+      //pm.variables.set('SolutionId',pm.response.json().result.id);
+      //pm.variables.set('SolutionDsdId',pm.response.json().result.dsdId);
     }
   });
 
   postman[Request]({
-    name: "Create first CU-(Input1_BasicSolution)",
-    id: "c5425eab-8efa-4202-b9ad-e2ed930d4fa8",
+    name: "Create first CU-(Input1_MarketSolution) Copy",
+    id: "6e80f380-1655-4faf-87b5-90df8139592e",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/change-unit",
@@ -269,12 +220,24 @@ export default function() {
       '{\r\n    "dsdId": null,\r\n    "name": "{{CuName1}}",\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "cuType": "BASIC",\r\n    "layers": [],\r\n    "gsiList": [],\r\n    "membershipList": [],\r\n    "isReserved": false,\r\n    "status": "",\r\n    "dsdStatus": "",\r\n    "designTimeRights": [],\r\n    "txnTimeRights": [],\r\n    "displayName": "",\r\n    "description": "",\r\n    "ontology": [],\r\n    "keywords": [],\r\n    "referencedChangeUnit": null,\r\n    "index": null,\r\n    "author": {},\r\n    "ownerId": null,\r\n    "slotItemProperties": {},\r\n    "tCUConditionalPotentiality": [],\r\n    "tCUConditionalPotentialityNames": [],\r\n    "reservedCUType": "",\r\n    "isNameUpdated": true,\r\n    "uiProperties": {}\r\n}',
     headers: {
       Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
+      authorization: "{{BearerToken}}",
       traceparent: "00-6635ffe94abbd976c5abdae91ec950b5-4519b868e16b030f-01",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
       "Content-Type": "application/json",
       "Accept-Language": "en"
+    },
+    pre() {
+      pm.variables.set(
+        "RandomNumber",
+        new Date()
+          .toISOString()
+          .replace(/[^0-9]/g, "")
+          .slice(0, -3) +
+          "" +
+          Math.floor(Math.random() * 100000 + 1)
+      );
+      pm.variables.set("CuName1", "BasicCU" + pm.variables.get("RandomNumber"));
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -285,22 +248,45 @@ export default function() {
         pm.expect(pm.response.json().result.status).to.eq("DRAFT");
         pm.expect(pm.response.json().result.version).to.eq("1.0");
       });
-      pm.variables.set("CuId1", pm.response.json().result.id);
-      pm.variables.set("CuDsdId1", pm.response.json().result.dsdId);
+      //pm.variables.set('CuId1',pm.response.json().result.id);
+      //pm.variables.set('CuDsdId1',pm.response.json().result.dsdId);
     }
   });
 
   postman[Request]({
-    name: "Create first Entity-(enter_details1)",
-    id: "926329ab-2319-42a7-9ad9-891212b0e9bc",
+    name: "Create first Entity-(enter_details1) Copy",
+    id: "2644eb32-c7ba-419f-b8cb-76527d9b0ba4",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/entity",
     data:
-      '{\r\n    "id": null,\r\n    "name": "{{EntityName1}}",\r\n    "isMultiValue": false,\r\n    "nslAttributes": [\r\n        {\r\n            "name": "{{AttributeName11}}",\r\n            "constraints": [],\r\n            "attributeType": {\r\n                "type": "string",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": {\r\n                    "name": "Text",\r\n                    "dataType": "string",\r\n                    "uiElement": "text",\r\n                    "isMulti": false,\r\n                    "properties": []\r\n                }\r\n            },\r\n            "isNameUpdated": true,\r\n            "dsdId": null\r\n        },\r\n        {\r\n            "defaultValue": null,\r\n            "name": "{{AttributeName12}}",\r\n            "constraints": [],\r\n            "attributeType": {\r\n                "type": "number",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": {\r\n                    "name": "Number",\r\n                    "dataType": "number",\r\n                    "uiElement": "number",\r\n                    "isMulti": false,\r\n                    "properties": []\r\n                }\r\n            },\r\n            "isNameUpdated": true,\r\n            "dsdId": null\r\n        }\r\n    ],\r\n    \r\n     "designTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": true,\r\n            "informationRight": true,\r\n            "executionRight": false\r\n        }\r\n    ],\r\n    "txnTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": false,\r\n            "informationRight": true,\r\n            "executionRight": true\r\n        }\r\n    ],\r\n    "keywords": [],\r\n    "ontology": [],\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "author": {\r\n        "name": "{{UserCCO}}"\r\n    },\r\n    "description": "",\r\n    "isNameUpdated": true,\r\n    "dsdId": null\r\n}',
+      '{\r\n    "id": null,\r\n    "name": "{{EntityName1}}",\r\n    "isMultiValue": false,\r\n    "nslAttributes": [\r\n        {\r\n            "name": "{{AttributeName11}}",\r\n            "constraints": [],\r\n            "attributeType": {\r\n                "type": "string",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": {\r\n                    "name": "Text",\r\n                    "dataType": "string",\r\n                    "uiElement": "text",\r\n                    "isMulti": false,\r\n                    "properties": []\r\n                }\r\n            },\r\n            "isNameUpdated": true,\r\n            "dsdId": null\r\n        },\r\n        {\r\n            "defaultValue": null,\r\n            "name": "{{AttributeName12}}",\r\n            "constraints": [],\r\n            "attributeType": {\r\n                "type": "number",\r\n                "properties": {},\r\n                "extendedProperties": {\r\n                    "sourceValues": []\r\n                },\r\n                "uiElement": {\r\n                    "name": "Number",\r\n                    "dataType": "number",\r\n                    "uiElement": "number",\r\n                    "isMulti": false,\r\n                    "properties": []\r\n                }\r\n            },\r\n            "isNameUpdated": true,\r\n            "dsdId": null\r\n        }\r\n    ],\r\n    "designTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": true,\r\n            "informationRight": true,\r\n            "executionRight": false\r\n        }\r\n    ],\r\n    "txnTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": false,\r\n            "informationRight": true,\r\n            "executionRight": true\r\n        }\r\n    ],\r\n    "keywords": [],\r\n    "ontology": [],\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "author": {\r\n        "name": "{{UserCCO}}"\r\n    },\r\n    "description": "",\r\n    "isNameUpdated": true,\r\n    "dsdId": null\r\n}',
     headers: {
-      Authorization: "{{BearerToken}}",
+      authorization: "{{BearerToken}}",
       "Accept-Language": "en"
+    },
+    pre() {
+      pm.variables.set(
+        "RandomNumber",
+        new Date()
+          .toISOString()
+          .replace(/[^0-9]/g, "")
+          .slice(0, -3) +
+          "" +
+          Math.floor(Math.random() * 100000 + 1)
+      );
+      pm.variables.set(
+        "EntityName1",
+        "BasicEntity" + pm.variables.get("RandomNumber")
+      );
+      pm.variables.set(
+        "AttributeName11",
+        "Attribute1_" + pm.variables.get("RandomNumber")
+      );
+      pm.variables.set(
+        "AttributeName12",
+        "Attribute2_" + pm.variables.get("RandomNumber")
+      );
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -331,201 +317,519 @@ export default function() {
         "AttributeDsdId12",
         pm.response.json().result.nslAttributes[1].dsdId
       );
-    },
-    auth(config, Var) {
-      config.headers.Authorization = "Bearer ";
     }
   });
 
   postman[Request]({
-    name: "Add Entity to First CU-(Input1_BasicSolution)",
-    id: "f4a7fc3a-7d73-41dc-a53a-a97983c1f9d0",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/change-unit?isFinal=true",
-    data:
-      '{\r\n    "dsdId": "{{CuDsdId1}}",\r\n    "id": {{CuId1}},\r\n    "name": "{{CuName1}}",\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "cuType": "BASIC",\r\n    "layers": [\r\n        {\r\n            "label": "physical",\r\n            "participatingItems": [\r\n                {\r\n                    "item": {\r\n                        "DATA": {\r\n                            "dsdId": "{{EntityDsdId1}}",\r\n                            "id": {{EntityId1}},\r\n                            "name": "{{EntityName1}}",\r\n                            "isReserved": false,\r\n                            "nslAttributes": [\r\n                                {\r\n                                    "dsdId": "{{AttributeDsdId11}}",\r\n                                    "id": {{AttributeId11}},\r\n                                    "attributeType": {\r\n                                        "type": "string",\r\n                                        "properties": {},\r\n                                        "uiElement": {\r\n                                            "name": "Text",\r\n                                            "dataType": "string",\r\n                                            "uiElement": "text",\r\n                                            "isMulti": false\r\n                                        },\r\n                                        "extendedProperties": {\r\n                                            "sourceValues": []\r\n                                        }\r\n                                    },\r\n                                    "constraints": [],\r\n                                    "isReserved": false,\r\n                                    "isInPotentiality": false,\r\n                                    "triggerConditionalPotentiality": false,\r\n                                    "ownerId": {{UserCCOId}},\r\n                                    "name": "{{AttributeName11}}",\r\n                                    "displayName": "{{AttributeName11}}",\r\n                                    "description": "{{AttributeName11}}",\r\n                                    "dsdStatus": "DRAFT",\r\n                                    "source": "CANVAS",\r\n                                    "status": "DRAFT",\r\n                                    "isNameUpdated": false,\r\n                                    "ontology": [\r\n                                        {\r\n                                            "id": "common",\r\n                                            "name": "common",\r\n                                            "displayName": "Common",\r\n                                            "level": 1\r\n                                        }\r\n                                    ],\r\n                                    "attachments": [],\r\n                                    "keywords": [],\r\n                                    "publisher": {\r\n                                        "id": "{{TenantName}}",\r\n                                        "name": "{{TenantName}}"\r\n                                    },\r\n                                    "author": {\r\n                                        "name": "{{UserCCO}}"\r\n                                    }\r\n                                },\r\n                                {\r\n                                    "dsdId": "{{AttributeDsdId12}}",\r\n                                    "id": {{AttributeId12}},\r\n                                    "attributeType": {\r\n                                        "type": "number",\r\n                                        "properties": {},\r\n                                        "uiElement": {\r\n                                            "name": "Number",\r\n                                            "dataType": "number",\r\n                                            "uiElement": "number",\r\n                                            "isMulti": false\r\n                                        },\r\n                                        "extendedProperties": {\r\n                                            "sourceValues": []\r\n                                        }\r\n                                    },\r\n                                    "constraints": [],\r\n                                    "isReserved": false,\r\n                                    "isInPotentiality": false,\r\n                                    "triggerConditionalPotentiality": false,\r\n                                    "ownerId": {{UserCCOId}},\r\n                                    "name": "{{AttributeName12}}",\r\n                                    "displayName": "{{AttributeName12}}",\r\n                                    "description": "{{AttributeName12}}",\r\n                                    "dsdStatus": "DRAFT",\r\n                                    "source": "CANVAS",\r\n                                    "status": "DRAFT",\r\n                                    "isNameUpdated": false,\r\n                                    "ontology": [\r\n                                        {\r\n                                            "id": "common",\r\n                                            "name": "common",\r\n                                            "displayName": "Common",\r\n                                            "level": 1\r\n                                        }\r\n                                    ],\r\n                                    "attachments": [],\r\n                                    "keywords": [],\r\n                                    "publisher": {\r\n                                        "id": "{{TenantName}}",\r\n                                        "name": "{{TenantName}}"\r\n                                    },\r\n                                    "author": {\r\n                                        "name": "{{UserCCO}}"\r\n                                    }\r\n                                }\r\n                            ],\r\n                            "attachments": [],\r\n                            "displayName": "{{EntityName1}}",\r\n                            "keywords": [],\r\n                            "masterId": {{EntityId1}},\r\n                            "ontology": [\r\n                                {\r\n                                    "id": "common",\r\n                                    "name": "common",\r\n                                    "displayName": "Common",\r\n                                    "level": 1\r\n                                }\r\n                            ],\r\n                            "publisher": {\r\n                                "id": "{{TenantName}}",\r\n                                "name": "{{TenantName}}"\r\n                            },\r\n                            "status": "DRAFT",\r\n                            "dsdStatus": "DRAFT",\r\n                            "version": "1.0",\r\n                            "ownerId": {{UserCCOId}},\r\n                            "author": {\r\n                                "name": "{{UserCCO}}"\r\n                            },\r\n                            "description": "{{EntityName1}}",\r\n                            "isNameUpdated": false\r\n                        },\r\n                        "TYPE": "GeneralEntity"\r\n                    }\r\n                }\r\n            ],\r\n            "type": "physical"\r\n        }\r\n    ],\r\n    "gsiList": [],\r\n    "membershipList": [],\r\n    "isReserved": false,\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "designTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": true,\r\n            "informationRight": true,\r\n            "executionRight": false\r\n        }\r\n    ],\r\n    "txnTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": false,\r\n            "informationRight": true,\r\n            "executionRight": true\r\n        }\r\n    ],\r\n    "displayName": "{{CuName1}}",\r\n    "description": "",\r\n    "ontology": [],\r\n    "keywords": [],\r\n    "attachments": [],\r\n    "nextTriggerSet": [],\r\n    "masterId": {{CuId1}},\r\n    "cuSystemProperties": {},\r\n    "author": {\r\n        "name": "{{UserCCO}}"\r\n    },\r\n    "ownerId": {{UserCCOId}},\r\n    "version": "1.0",\r\n    "reservedCUType": "",\r\n    "isNameUpdated": false,\r\n    "uiProperties": {}\r\n}',
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
-      traceparent: "00-6635ffe94abbd976c5abdae91ec950b5-4519b868e16b030f-01",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/json",
-      "Accept-Language": "en"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          pm.variables.get("CuName1") + " is saved"
-        );
-        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
-      });
-
-      pm.variables.set("CuId1", pm.response.json().result.id);
-      pm.variables.set("LayerId1", pm.response.json().result.layers[0].id);
-      pm.variables.set(
-        "ParticipatingItemId1",
-        pm.response.json().result.layers[0].participatingItems[0].id
-      );
-    }
-  });
-
-  postman[Request]({
-    name: "Add CUs to GSI-(BasicSolution)",
-    id: "b24c975f-b5cb-4900-8216-986d9756cbad",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/gsi",
-    data:
-      '{\r\n    "dsdId": "{{SolutionDsdId}}",\r\n    "id": {{SolutionId}},\r\n    "agents": [\r\n        {\r\n            "agentType": "human"\r\n        }\r\n    ],\r\n    "attributeDesignRights": {},\r\n    "attributeTransactionRights": {},\r\n    "cuType": "BASIC",\r\n    "dcd": [],\r\n    "description": "{{SolutionName}}",\r\n    "designTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": true,\r\n            "informationRight": true,\r\n            "executionRight": false\r\n        }\r\n    ],\r\n    "displayName": "{{SolutionName}}",\r\n    "entityDesignRights": {},\r\n    "entityTransactionRights": {},\r\n    "exceptionCUList": [],\r\n    "gsiList": [],\r\n    "layers": [],\r\n    "mindCUList": [],\r\n    "name": "{{SolutionName}}",\r\n    "nextTriggerSet": [],\r\n    "ontology": [\r\n        {\r\n            "id": "common",\r\n            "name": "common",\r\n            "displayName": "Common",\r\n            "level": 1\r\n        }\r\n    ],\r\n    "ownerId": {{UserCCOId}},\r\n    "solutionLogic": [\r\n        {\r\n            "dsdId": null,\r\n            "id": null,\r\n            "name": "{{CuName1}}",\r\n            "agents": [\r\n                {\r\n                    "agentType": "human"\r\n                }\r\n            ],\r\n            "displayName": "{{CuName1}}",\r\n            "description": "{{CuName1}}",\r\n            "ontology": [\r\n                {\r\n                    "id": "common",\r\n                    "name": "common",\r\n                    "displayName": "Common",\r\n                    "level": 1\r\n                }\r\n            ],\r\n            "index": 1,\r\n            "referencedChangeUnit": {{CuId1}},\r\n            "nextTriggerSet": [],\r\n            "reservedCUType": "",\r\n            "membershipList": [],\r\n            "isReserved": false,\r\n            "status": "DRAFT",\r\n            "designTimeRights": [\r\n                {\r\n                    "name": "{{RoleCCO}}",\r\n                    "rightHolderId": {{CCORoleId}},\r\n                    "rightHolderType": "ROLE",\r\n                    "rightHolderName": "{{RoleCCO}}",\r\n                    "decisionRight": true,\r\n                    "informationRight": true,\r\n                    "executionRight": false\r\n                }\r\n            ],\r\n            "txnTimeRights": [\r\n                {\r\n                    "name": "{{RoleCCO}}",\r\n                    "rightHolderId": {{CCORoleId}},\r\n                    "rightHolderType": "ROLE",\r\n                    "rightHolderName": "{{RoleCCO}}",\r\n                    "decisionRight": false,\r\n                    "informationRight": true,\r\n                    "executionRight": true\r\n                }\r\n            ],\r\n            "keywords": [],\r\n            "attachments": [],\r\n            "dcd": [],\r\n            "cuSystemProperties": {},\r\n            "specialFeatureProperties": {},\r\n            "ownerId": {{UserCCOId}},\r\n            "uiProperties": {},\r\n            "cuType": "BASIC",\r\n            "dsdReferencedChangeUnit": "{{CuDsdId1}}"\r\n        }\r\n    ],\r\n    "status": "DRAFT",\r\n    "dsdStatus": "DRAFT",\r\n    "txnTimeRights": [\r\n        {\r\n            "name": "{{RoleCCO}}",\r\n            "rightHolderId": {{CCORoleId}},\r\n            "rightHolderType": "ROLE",\r\n            "rightHolderName": "{{RoleCCO}}",\r\n            "decisionRight": false,\r\n            "informationRight": true,\r\n            "executionRight": true\r\n        }\r\n    ],\r\n    "masterId": {{SolutionId}},\r\n    "author": {\r\n        "name": "{{UserCCO}}"\r\n    },\r\n    "keywords": [\r\n        ""\r\n    ],\r\n    "version": "1.0",\r\n    "isNameUpdated": false\r\n}',
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
-      traceparent: "00-6635ffe94abbd976c5abdae91ec950b5-4519b868e16b030f-01",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/json",
-      "Accept-Language": "en"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          pm.variables.get("SolutionName") + " is saved"
-        );
-        pm.expect(pm.response.json().result.status).to.eq("DRAFT");
-        pm.expect(pm.response.json().result.version).to.eq("1.0");
-      });
-      pm.variables.set(
-        "TriggerCuDsdId1",
-        pm.response.json().result.solutionLogic[0].dsdId
-      );
-      pm.variables.set(
-        "SolutionJson",
-        JSON.stringify(pm.response.json().result)
-      );
-    }
-  });
-
-  postman[Request]({
-    name: "Finish GSI-(BasicSolution)",
-    id: "324574c1-1e57-4c94-9593-0b0c8ed8bcfa",
+    name: "Finish GSI-(EnvDomainGSI_Market Place) Copy",
+    id: "37d1eb8c-be5d-4d80-afa2-70c9b2b20ea1",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/finish/gsi",
     data: "{{SolutionJson}}",
     headers: {
       Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
+      authorization: "{{BearerToken}}",
       traceparent: "00-6635ffe94abbd976c5abdae91ec950b5-4519b868e16b030f-01",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
       "Content-Type": "application/json",
       "Accept-Language": "en"
     },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          pm.variables.get("SolutionName") + " is saved"
-        );
-
-        pm.expect(pm.response.json().result.status).to.eq("READY");
-        pm.expect(pm.response.json().result.version).to.eq("1.0");
-      });
-    }
-  });
-
-  postman[Request]({
-    name: "Send Notification to Reviewer",
-    id: "671b249c-6502-4901-a7f0-af73b8ea6ca6",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/v1/notifications/api/notification/send",
-    data:
-      '{\n  "actionableContent": {\n    "target_type": "Gsi",\n    "target_id": {{SolutionId}},\n    "target_name": "{{SolutionName}}",\n    "context_cu": "",\n    "context_gsi": "",\n    "approvals": "true"\n  },\n  "title": "Review gsi",\n  "targetUserId": [\n    "{{UserCCO1}}@nslhub.com"\n  ],\n  "notificationChannels": [\n    "PUSH"\n  ],\n  "content": ""\n}',
-    headers: {
-      "accept-language": "en",
-      authorization: "{{BearerToken}}",
-      "content-type": "application/json",
-      accept: "application/json, text/plain, */*"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          "Notification sent successfully"
-        );
-      });
-    }
-  });
-
-  postman[Request]({
-    name: "Login as usercco1",
-    id: "96bb2faf-5017-4b91-aab3-e38c8ac6cf18",
-    method: "POST",
-    address:
-      "{{IamURL}}/auth/realms/{{TenantName}}/protocol/openid-connect/token",
-    data: {
-      client_id: "{{TenantName}}",
-      grant_type: "password",
-      password: "{{Password}}",
-      username: "{{UserCCO1}}"
-    },
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept-Language": "en"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-      });
-
-      pm.environment.set(
-        "BearerToken",
-        pm.response.json().token_type + " " + pm.response.json().access_token
+    pre() {
+      pm.variables.set(
+        "RandomNumber",
+        new Date()
+          .toISOString()
+          .replace(/[^0-9]/g, "")
+          .slice(0, -3) +
+          "" +
+          Math.floor(Math.random() * 100000 + 1)
       );
-      pm.environment.set("RefreshToken", pm.response.json().refresh_token);
-    }
-  });
-
-  postman[Request]({
-    name: "Approve the GSI-(BasicSolution)",
-    id: "8c817350-c3d2-4798-bb3c-9c14e943ff2b",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/approve/gsi/{{SolutionId}}",
-    data:
-      '{\r\n    "id": {{SolutionId}},\r\n    "dsdId": "{{SolutionDsdId}}",\r\n    "name": "{{SolutionName}}"\r\n}',
-    headers: {
-      "accept-language": "en",
-      authorization: "{{BearerToken}}",
-      "content-type": "application/json",
-      accept: "application/json, text/plain, */*"
+      pm.variables.set(
+        "SolutionName",
+        "EnvDomainGSI_Market Place" + pm.variables.get("RandomNumber")
+      );
+      pm.variables.set(
+        "SolutionJson",
+        JSON.stringify({"dsdId":"1170598365171","id":"1170598365171","agents":[{"agentType":"human"}],"attributeDesignRights":{},"attributeTransactionRights":{},"allowPreviouCUView":false,"condition":"","cuType":"GSI","dcd":[],"description":"","designTimeRights":[{"informationRight":true,"decisionRight":true,"executionRight":false,"rightHolderId":1841833683818,"rightHolderType":"ROLE","rightHolderName":"CCO","disableParentRoleAccess":false}],"displayName":"kdjshd","entityDesignRights":{},"entityTransactionRights":{},"exceptionCUList":[],"gsiList":[],"index":0,"layers":null,"mindCUList":[],"name":"kdjshd","nextTriggerSet":[],"ontology":[{"id":"common","name":"common","displayName":"Common","level":1,"isValidated":false}],"ownerId":322589991331,"solutionLogic":[{"dsdId":"565730609355","id":"565730609355","name":"jkhfkj","agents":[{"agentType":"human"}],"cuType":"BASIC","layers":[{"participatingItems":[{"id":1611652082671,"isMultiValue":false,"item":{"DATA":{"dsdId":"1946317282233","id":1946317282233,"name":"efje","isMultiValue":false,"isReserved":false,"nslAttributes":[{"dsdId":"1358929089845","id":1358929089845,"attributeType":{"type":"string","properties":{},"uiElement":{"name":"Text","dataType":"string","uiElement":"text","isMulti":false},"extendedProperties":{"sourceValues":[]}},"constraints":[],"isReserved":false,"isInPotentiality":false,"triggerConditionalPotentiality":false,"ownerId":322589991331,"canDownload":false,"naqResultsForBET":{"hasChildrenErrors":false},"name":"NAme","displayName":"NAme","source":"CANVAS","status":"DRAFT","isNameUpdated":true,"ontology":[],"attachments":[],"keywords":[],"minAge":0,"maxAge":0,"editable":false,"approvalStatus":"UnAssigned"}],"attachments":[],"displayName":"efje","keywords":[],"masterId":1946317282233,"ontology":[],"status":"DRAFT","version":"1.0","ownerId":322589991331,"isNameUpdated":true,"source":"CANVAS","dsdMetadataId":"7c512dad-16af-45d1-a079-ba8dc7d0eb2e"},"TYPE":"GeneralEntity"}}],"type":"physical"}],"displayName":"jkhfkj","description":"jkhfkj","ontology":[{"id":"common","name":"common","displayName":"Common","level":1,"isValidated":false}],"index":1,"dsdReferencedChangeUnit":"1505560541819","referencedChangeUnit":1505560541819,"masterId":1505560541819,"nextTriggerSet":[],"reservedCUType":"","membershipList":[],"isReserved":false,"status":"DRAFT","designTimeRights":[{"informationRight":true,"decisionRight":true,"executionRight":false,"rightHolderId":1841833683818,"rightHolderType":"ROLE","rightHolderName":"CCO","disableParentRoleAccess":false}],"txnTimeRights":[{"informationRight":true,"decisionRight":false,"executionRight":true,"rightHolderId":1841833683818,"rightHolderType":"ROLE","rightHolderName":"CCO","disableParentRoleAccess":false}],"keywords":[],"attachments":[],"dcd":[],"mindCUList":[],"exceptionCUList":[],"cuSystemProperties":{},"source":"UserCreated","tCUConditionalPotentiality":[],"tCUConditionalPotentialityNames":[],"ownerId":322589991331,"uiProperties":{},"pathwaysCountFromCurrentCU":0,"version":"1.0","isParallel":false,"attributeMapping":{}}],"status":"DRAFT","txnTimeRights":[{"informationRight":true,"decisionRight":false,"executionRight":true,"rightHolderId":1841833683818,"rightHolderType":"ROLE","rightHolderName":"CCO","disableParentRoleAccess":false}],"masterId":1170598365171,"author":{"name":"usercco"},"keywords":[""],"version":"1.0","isNameUpdated":false,"source":"UserCreated","dsdMetadataId":"018bbb6e-c825-4db5-ad13-e2d9bf6f4b05","isParallel":false})
+      );
+      // pm.variables.set('SolutionJson', JSON.stringify(
+      //     {
+      //         "solutionLogic": [{
+      //             "index": 1,
+      //             "dcd": [],
+      //             "nextTriggerSet": [{
+      //                 "index": 2,
+      //                 "nextCUId": 1280074356587,
+      //                 "dsdNextCUId": "1280074356587",
+      //                 "nextCUName": "Input2_MarketSolution 2022051109365322963",
+      //                 "isParallel": false
+      //             }],
+      //             "entityDesignRights": {},
+      //             "referencedChangeUnit": 1173968168886,
+      //             "attributeDesignRights": {},
+      //             "dsdReferencedChangeUnit": "1173968168886",
+      //             "isParallel": false,
+      //             "specialFeatureProperties": {},
+      //             "exceptionCUList": [],
+      //             "entityTransactionRights": {},
+      //             "pathwaysCountFromCurrentCU": 0,
+      //             "eventCUList": [],
+      //             "cuType": "BASIC",
+      //             "attributeTransactionRights": {},
+      //             "mindCUList": [],
+      //             "dsdId": "1456227387926",
+      //             "id": 1456227387926,
+      //             "layers": [{
+      //                 "id": 1842423239068,
+      //                 "ownerId": 1721286790780,
+      //                 "participatingItems": [{
+      //                     "id": 1047915311732,
+      //                     "ownerId": 1721286790780,
+      //                     "isMultiValue": false,
+      //                     "item": {
+      //                         "TYPE": "GeneralEntity",
+      //                         "DATA": {
+      //                             "dsdId": "837460640556",
+      //                             "id": 837460640556,
+      //                             "nslAttributes": [{
+      //                                 "dsdId": "359810019938",
+      //                                 "id": 359810019938,
+      //                                 "attributeType": {
+      //                                     "type": "string",
+      //                                     "properties": {},
+      //                                     "extendedProperties": {
+      //                                         "sourceValues": []
+      //                                     }
+      //                                 },
+      //                                 "constraints": [],
+      //                                 "isReserved": false,
+      //                                 "isInPotentiality": false,
+      //                                 "triggerConditionalPotentiality": false,
+      //                                 "ownerId": 1721286790780,
+      //                                 "naqResultsForBET": {
+      //                                     "hasChildrenErrors": false
+      //                                 },
+      //                                 "name": "Name",
+      //                                 "source": "CANVAS",
+      //                                 "status": "DRAFT",
+      //                                 "isNameUpdated": false,
+      //                                 "ontology": [],
+      //                                 "attachments": [],
+      //                                 "keywords": [],
+      //                                 "minAge": 0,
+      //                                 "maxAge": 0,
+      //                                 "editable": false,
+      //                                 "approvalStatus": "UnAssigned"
+      //                             }, {
+      //                                 "dsdId": "1733369839991",
+      //                                 "id": 1733369839991,
+      //                                 "attributeType": {
+      //                                     "type": "number",
+      //                                     "properties": {},
+      //                                     "extendedProperties": {
+      //                                         "sourceValues": []
+      //                                     }
+      //                                 },
+      //                                 "constraints": [],
+      //                                 "isReserved": false,
+      //                                 "isInPotentiality": false,
+      //                                 "triggerConditionalPotentiality": false,
+      //                                 "ownerId": 1721286790780,
+      //                                 "naqResultsForBET": {
+      //                                     "hasChildrenErrors": false
+      //                                 },
+      //                                 "name": "Age",
+      //                                 "source": "CANVAS",
+      //                                 "status": "DRAFT",
+      //                                 "isNameUpdated": false,
+      //                                 "ontology": [],
+      //                                 "attachments": [],
+      //                                 "keywords": [],
+      //                                 "minAge": 0,
+      //                                 "maxAge": 0,
+      //                                 "editable": false,
+      //                                 "approvalStatus": "UnAssigned"
+      //                             }],
+      //                             "isReserved": false,
+      //                             "ownerId": 1721286790780,
+      //                             "naqResultsForBET": {
+      //                                 "hasChildrenErrors": false
+      //                             },
+      //                             "name": "enter_details12022051109365322963",
+      //                             "displayName": "enter_details12022051109365322963",
+      //                             "source": "CANVAS",
+      //                             "masterId": 837460640556,
+      //                             "version": "1.0",
+      //                             "status": "DRAFT",
+      //                             "isNameUpdated": false,
+      //                             "ontology": [],
+      //                             "attachments": [],
+      //                             "keywords": [],
+      //                             "minAge": 0,
+      //                             "maxAge": 0,
+      //                             "editable": false,
+      //                             "approvalStatus": "UnAssigned"
+      //                         }
+      //                     },
+      //                     "isInPotentiality": false,
+      //                     "triggerConditionalPotentiality": false
+      //                 }],
+      //                 "naqResultsForBET": {
+      //                     "hasChildrenErrors": false
+      //                 },
+      //                 "type": "physical"
+      //             }],
+      //             "gsiList": [],
+      //             "agents": [{
+      //                 "agentType": "human"
+      //             }],
+      //             "membershipList": [],
+      //             "isReserved": false,
+      //             "reservedCUType": "",
+      //             "propertiesMap": {
+      //                 "specialFeatures": [],
+      //                 "currentDateTime": [],
+      //                 "optionalAlternative": [],
+      //                 "defaultValues": [],
+      //                 "currentDate": [],
+      //                 "currency": []
+      //             },
+      //             "cuSystemProperties": {},
+      //             "ownerId": 1721286790780,
+      //             "designTimeRights": [{
+      //                 "informationRight": true,
+      //                 "decisionRight": true,
+      //                 "executionRight": false,
+      //                 "rightHolderId": 1702376418153,
+      //                 "rightHolderType": "ROLE",
+      //                 "rightHolderName": "CCO",
+      //                 "disableParentRoleAccess": false
+      //             }],
+      //             "txnTimeRights": [{
+      //                 "informationRight": true,
+      //                 "decisionRight": false,
+      //                 "executionRight": true,
+      //                 "rightHolderId": 1702376418153,
+      //                 "rightHolderType": "ROLE",
+      //                 "rightHolderName": "CCO",
+      //                 "disableParentRoleAccess": false
+      //             }],
+      //             "attributeMapping": {},
+      //             "naqResultsForBET": {
+      //                 "hasChildrenErrors": false
+      //             },
+      //             "name": "Input1_MarketSolution 2022051109365322963",
+      //             "displayName": "Input1_MarketSolution 2022051109365322963",
+      //             "description": "Input1_MarketSolution 2022051109365322963",
+      //             "source": "CANVAS",
+      //             "masterId": 1173968168886,
+      //             "version": "1.0",
+      //             "status": "DRAFT",
+      //             "isNameUpdated": false,
+      //             "ontology": [{
+      //                 "id": "common",
+      //                 "name": "common",
+      //                 "displayName": "Common",
+      //                 "level": 1,
+      //                 "isValidated": false
+      //             }],
+      //             "attachments": [],
+      //             "keywords": [],
+      //             "minAge": 0,
+      //             "maxAge": 0,
+      //             "editable": false,
+      //             "approvalStatus": "UnAssigned"
+      //         }, {
+      //             "index": 2,
+      //             "dcd": [],
+      //             "nextTriggerSet": [],
+      //             "entityDesignRights": {},
+      //             "referencedChangeUnit": 644620849611,
+      //             "attributeDesignRights": {},
+      //             "dsdReferencedChangeUnit": "644620849611",
+      //             "isParallel": false,
+      //             "specialFeatureProperties": {},
+      //             "exceptionCUList": [],
+      //             "entityTransactionRights": {},
+      //             "pathwaysCountFromCurrentCU": 0,
+      //             "eventCUList": [],
+      //             "cuType": "BASIC",
+      //             "attributeTransactionRights": {},
+      //             "mindCUList": [],
+      //             "dsdId": "1280074356587",
+      //             "id": 1280074356587,
+      //             "layers": [{
+      //                 "id": 918409815300,
+      //                 "ownerId": 1721286790780,
+      //                 "participatingItems": [{
+      //                     "id": 1872638709228,
+      //                     "ownerId": 1721286790780,
+      //                     "isMultiValue": false,
+      //                     "item": {
+      //                         "TYPE": "GeneralEntity",
+      //                         "DATA": {
+      //                             "dsdId": "321844603197",
+      //                             "id": 321844603197,
+      //                             "nslAttributes": [{
+      //                                 "dsdId": "928468226498",
+      //                                 "id": 928468226498,
+      //                                 "attributeType": {
+      //                                     "type": "string",
+      //                                     "properties": {},
+      //                                     "extendedProperties": {
+      //                                         "sourceValues": []
+      //                                     }
+      //                                 },
+      //                                 "constraints": [],
+      //                                 "isReserved": false,
+      //                                 "isInPotentiality": false,
+      //                                 "triggerConditionalPotentiality": false,
+      //                                 "ownerId": 1721286790780,
+      //                                 "naqResultsForBET": {
+      //                                     "hasChildrenErrors": false
+      //                                 },
+      //                                 "name": "Address",
+      //                                 "source": "CANVAS",
+      //                                 "status": "DRAFT",
+      //                                 "isNameUpdated": false,
+      //                                 "ontology": [],
+      //                                 "attachments": [],
+      //                                 "keywords": [],
+      //                                 "minAge": 0,
+      //                                 "maxAge": 0,
+      //                                 "editable": false,
+      //                                 "approvalStatus": "UnAssigned"
+      //                             }, {
+      //                                 "dsdId": "502794668582",
+      //                                 "id": 502794668582,
+      //                                 "attributeType": {
+      //                                     "type": "number",
+      //                                     "properties": {},
+      //                                     "extendedProperties": {
+      //                                         "sourceValues": []
+      //                                     }
+      //                                 },
+      //                                 "constraints": [],
+      //                                 "isReserved": false,
+      //                                 "isInPotentiality": false,
+      //                                 "triggerConditionalPotentiality": false,
+      //                                 "ownerId": 1721286790780,
+      //                                 "naqResultsForBET": {
+      //                                     "hasChildrenErrors": false
+      //                                 },
+      //                                 "name": "Pin Code",
+      //                                 "source": "CANVAS",
+      //                                 "status": "DRAFT",
+      //                                 "isNameUpdated": false,
+      //                                 "ontology": [],
+      //                                 "attachments": [],
+      //                                 "keywords": [],
+      //                                 "minAge": 0,
+      //                                 "maxAge": 0,
+      //                                 "editable": false,
+      //                                 "approvalStatus": "UnAssigned"
+      //                             }],
+      //                             "isReserved": false,
+      //                             "ownerId": 1721286790780,
+      //                             "naqResultsForBET": {
+      //                                 "hasChildrenErrors": false
+      //                             },
+      //                             "name": "enter_details22022051109365322963",
+      //                             "displayName": "enter_details22022051109365322963",
+      //                             "source": "CANVAS",
+      //                             "masterId": 321844603197,
+      //                             "version": "1.0",
+      //                             "status": "DRAFT",
+      //                             "isNameUpdated": false,
+      //                             "ontology": [],
+      //                             "attachments": [],
+      //                             "keywords": [],
+      //                             "minAge": 0,
+      //                             "maxAge": 0,
+      //                             "editable": false,
+      //                             "approvalStatus": "UnAssigned"
+      //                         }
+      //                     },
+      //                     "isInPotentiality": false,
+      //                     "triggerConditionalPotentiality": false
+      //                 }],
+      //                 "naqResultsForBET": {
+      //                     "hasChildrenErrors": false
+      //                 },
+      //                 "type": "physical"
+      //             }],
+      //             "gsiList": [],
+      //             "agents": [{
+      //                 "agentType": "human"
+      //             }],
+      //             "membershipList": [],
+      //             "isReserved": false,
+      //             "reservedCUType": "",
+      //             "propertiesMap": {
+      //                 "specialFeatures": [],
+      //                 "currentDateTime": [],
+      //                 "optionalAlternative": [],
+      //                 "defaultValues": [],
+      //                 "currentDate": [],
+      //                 "currency": []
+      //             },
+      //             "cuSystemProperties": {},
+      //             "ownerId": 1721286790780,
+      //             "designTimeRights": [{
+      //                 "informationRight": true,
+      //                 "decisionRight": true,
+      //                 "executionRight": false,
+      //                 "rightHolderId": 1702376418153,
+      //                 "rightHolderType": "ROLE",
+      //                 "rightHolderName": "CCO",
+      //                 "disableParentRoleAccess": false
+      //             }],
+      //             "txnTimeRights": [{
+      //                 "informationRight": true,
+      //                 "decisionRight": false,
+      //                 "executionRight": true,
+      //                 "rightHolderId": 1702376418153,
+      //                 "rightHolderType": "ROLE",
+      //                 "rightHolderName": "CCO",
+      //                 "disableParentRoleAccess": false
+      //             }],
+      //             "attributeMapping": {},
+      //             "naqResultsForBET": {
+      //                 "hasChildrenErrors": false
+      //             },
+      //             "name": "Input2_MarketSolution 2022051109365322963",
+      //             "displayName": "Input2_MarketSolution 2022051109365322963",
+      //             "description": "Input2_MarketSolution 2022051109365322963",
+      //             "source": "CANVAS",
+      //             "masterId": 644620849611,
+      //             "version": "1.0",
+      //             "status": "DRAFT",
+      //             "isNameUpdated": false,
+      //             "ontology": [{
+      //                 "id": "common",
+      //                 "name": "common",
+      //                 "displayName": "Common",
+      //                 "level": 1,
+      //                 "isValidated": false
+      //             }],
+      //             "attachments": [],
+      //             "keywords": [],
+      //             "minAge": 0,
+      //             "maxAge": 0,
+      //             "editable": false,
+      //             "approvalStatus": "UnAssigned"
+      //         }],
+      //         "constrainedToReportingTree": false,
+      //         "constrainedToTeam": false,
+      //         "allowPreviouCUView": false,
+      //         "createdAt": "2022-05-11T09:36:56.487Z",
+      //         "modifiedAt": "2022-05-11T09:36:56.487Z",
+      //         "dcd": [],
+      //         "nextTriggerSet": [],
+      //         "entityDesignRights": {},
+      //         "attributeDesignRights": {},
+      //         "isParallel": false,
+      //         "exceptionCUList": [],
+      //         "entityTransactionRights": {},
+      //         "pathwaysCountFromCurrentCU": 0,
+      //         "eventCUList": [],
+      //         "cuType": "GSI",
+      //         "attributeTransactionRights": {},
+      //         "mindCUList": [],
+      //         "dsdId": "1977694880380",
+      //         "id": 1977694880380,
+      //         "layers": [],
+      //         "gsiList": [],
+      //         "agents": [{
+      //             "agentType": "human"
+      //         }],
+      //         "isReserved": false,
+      //         "cuSystemProperties": {},
+      //         "ownerId": 1721286790780,
+      //         "designTimeRights": [{
+      //             "informationRight": true,
+      //             "decisionRight": true,
+      //             "executionRight": false,
+      //             "rightHolderId": 1702376418153,
+      //             "rightHolderType": "ROLE",
+      //             "rightHolderName": "CCO",
+      //             "disableParentRoleAccess": false
+      //         }],
+      //         "txnTimeRights": [{
+      //             "informationRight": true,
+      //             "decisionRight": false,
+      //             "executionRight": true,
+      //             "rightHolderId": 1702376418153,
+      //             "rightHolderType": "ROLE",
+      //             "rightHolderName": "CCO",
+      //             "disableParentRoleAccess": false
+      //         }],
+      //         "tenant": {
+      //             "id": "apisolutions0604",
+      //             "name": "apisolutions0604"
+      //         },
+      //         "dsdMetadataId": "cc2ca337-2068-4810-a6f4-92de6728df59",
+      //         "naqResultsForBET": {
+      //             "hasChildrenErrors": false
+      //         },
+      //         "name": "{{SolutionName}}",
+      //         "displayName": "EnvDomainGSI_Market Place2022051109365322963",
+      //         "description": "EnvDomainGSI_Market Place2022051109365322963",
+      //         "source": "CANVAS",
+      //         "masterId": 1977694880380,
+      //         "version": "1.0",
+      //         "status": "DRAFT",
+      //         "isNameUpdated": false,
+      //         "ontology": [{
+      //             "id": "common",
+      //             "name": "common",
+      //             "displayName": "Common",
+      //             "level": 1,
+      //             "isValidated": false
+      //         }],
+      //         "attachments": [],
+      //         "keywords": [""],
+      //         "publisher": {
+      //             "id": "apisolutions0604",
+      //             "name": "apisolutions0604"
+      //         },
+      //         "author": {
+      //             "name": "usercco"
+      //         },
+      //         "minAge": 0,
+      //         "maxAge": 0,
+      //         "editable": false,
+      //         "approvalStatus": "UnAssigned"
+      //     }));
     },
     post(response) {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
+        // pm.expect(pm.response.json().result.status).to.eq("READY");
+        // pm.expect(pm.response.json().result.version).to.eq("1.0");
       });
     }
   });
 
   postman[Request]({
-    name: "Get Solution Details - SOLUTION_INFO_RIGHTS",
-    id: "25edc32d-ea3c-4257-99c1-e0fdd3bfdd9a",
+    name: "Get Solution Details - SOLUTION_INFO_RIGHTS Copy",
+    id: "0ab3aa49-bf53-4767-bf95-9928467ecb2f",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/gsi/matching?isPublished=&limit=36&ontology=&page=1&publisherIdOrName=&query={{SolutionName}}&userRights=SOLUTIONS_INFO_RIGHTS",
     headers: {
       Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
+      authorization: "{{BearerToken}}",
       "Content-Type": "application/json",
       "Accept-Language": "en"
+    },
+    pre() {
+      pm.variables.set(
+        "SolutionName",
+        "AdvanceSeachByValueSolution2022051106071780025"
+      );
     },
     post(response) {
       pm.test("Check status code", function() {
@@ -534,124 +838,29 @@ export default function() {
           "fetching GSI details with search criteria is successful"
         );
       });
-      pm.variables.set(
-        "ApprovedSolutionJson",
-        JSON.stringify(pm.response.json().result)
-      );
 
-      // var expectedStatus = "APPROVED";
-      // var maxNumberOfTries = 20;
-      // var sleepBetweenTries = 2000;
+      // // var expectedStatus = "APPROVED";
+      // // var maxNumberOfTries = 20;
+      // // var sleepBetweenTries = 2000;
 
-      // if (!pm.environment.get("collection_tries")) {
-      //     pm.environment.set("collection_tries", 1);
-      // }
-      // var status  = pm.response.json().result.data[0].status;
+      // // if (!pm.environment.get("collection_tries")) {
+      // //     pm.environment.set("collection_tries", 1);
+      // // }
+      // // var status  = pm.response.json().result.data[0].status;
 
-      // if ((status != expectedStatus) && (pm.environment.get("collection_tries") < maxNumberOfTries)) {
-      //      var tries = parseInt(pm.environment.get("collection_tries"), 10);
+      // // if ((status != expectedStatus) && (pm.environment.get("collection_tries") < maxNumberOfTries)) {
+      // //      var tries = parseInt(pm.environment.get("collection_tries"), 10);
 
-      //       pm.environment.set("collection_tries", tries + 1);
-      //      setTimeout(function() {}, sleepBetweenTries);
-      //      postman.setNextRequest(request.id);
-      //  } else {
-      //      pm.environment.unset("collection_tries");
+      // //       pm.environment.set("collection_tries", tries + 1);
+      // //      setTimeout(function() {}, sleepBetweenTries);
+      // //      postman.setNextRequest(request.id);
+      // //  } else {
+      // //      pm.environment.unset("collection_tries");
 
-      //      pm.test("Status is " + expectedStatus, function () {
-      //           pm.expect( pm.response.json().result.data[0].status).to.eq(expectedStatus);
-      //           pm.expect( pm.response.json().result.data[0].version ).to.eq("1.0");
-      //      });
-
-      // }
-    }
-  });
-
-  postman[Request]({
-    name: "Get Solution Details-(BasicSolution) After Approval Copy",
-    id: "993f3a80-dafe-4100-87b0-1338bde4006b",
-    method: "GET",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/gsi/{{SolutionDsdId}}",
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      Authorization: "{{BearerToken}}",
-      traceparent: "00-6635ffe94abbd976c5abdae91ec950b5-4519b868e16b030f-01",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
-      "Content-Type": "application/json",
-      "Accept-Language": "en"
-    },
-    post(response) {
-      pm.test("Check status code", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          "fetching GSI is successful"
-        );
-      });
-
-      pm.variables.set(
-        "ApprovedSolutionJson",
-        JSON.stringify(pm.response.json().result)
-      );
-
-      // var expectedStatus = "APPROVED";
-      // var maxNumberOfTries = 20;
-      // var sleepBetweenTries = 2000;
-
-      // if (!pm.environment.get("collection_tries")) {
-      //     pm.environment.set("collection_tries", 1);
-      // }
-      // var status  = pm.response.json().result.status;
-
-      // if ((status != expectedStatus) && (pm.environment.get("collection_tries") < maxNumberOfTries)) {
-      //     setTimeout(function() {}, sleepBetweenTries);
-      //      var tries = parseInt(pm.environment.get("collection_tries"), 10);
-
-      //       pm.environment.set("collection_tries", tries + 1);
-
-      //      postman.setNextRequest(request.id);
-      //  } else {
-      //      pm.environment.unset("collection_tries");
-
-      //      pm.test("Status is " + expectedStatus, function () {
-      //           pm.expect(pm.response.json().result.status).to.eq(expectedStatus);
-      //           pm.expect(pm.response.json().result.version).to.eq("1.0");
-      //      });
-      // }
-    }
-  });
-
-  postman[Request]({
-    name: "Publish the GSI-(BasicSolution)",
-    id: "ffd45c83-75c2-4f25-b1e8-441cc3aa6dd2",
-    method: "POST",
-    address:
-      "https://{{TenantName}}.{{BaseURL}}/dsd-orch/dsd-bets-store/tenant/publish/gsi",
-    data: "{{ApprovedSolutionJson}}",
-    headers: {
-      "accept-language": "en",
-      authorization: "{{BearerToken}}",
-      "content-type": "application/json",
-      accept: "application/json, text/plain, */*"
-    },
-    post(response) {
-      pm.test("Verify basic solution is published successfully", function() {
-        pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json().message).to.eq(
-          "GSI " +
-            pm.variables.get("SolutionName") +
-            " GSI Unit Id :" +
-            pm.variables.get("SolutionId") +
-            " is successfully published"
-        );
-        pm.expect(pm.response.json().result.status).to.eq("PUBLISHED");
-        pm.expect(pm.response.json().result.version).to.eq("1.0");
-        pm.expect(pm.response.json().result.masterId).to.eq(
-          pm.variables.get("SolutionId")
-        );
-      });
-
-      // setTimeout(() => {}, pm.environment.get('WaitTime'));
+      //     //  pm.test("Status is " + expectedStatus, function () {
+      //     //       pm.expect( pm.response.json().result.data[0].status).to.eq(expectedStatus);
+      //     //       pm.expect( pm.response.json().result.data[0].version ).to.eq("1.0");
+      //     //  });
     }
   });
 }
