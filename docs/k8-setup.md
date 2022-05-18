@@ -1,3 +1,10 @@
+Use this guide if you want to build a kubernetes cluster on your own, else one can use different utilities like
+1. Minikube (https://minikube.sigs.k8s.io/docs/start/)
+2. RKE2 (https://docs.rke2.io/)
+3. Microk8s (https://ubuntu.com/kubernetes/install)
+
+Most of the above packages also install the required binaries too.
+
 ## Web Links - https://youtu.be/n4zxKk2an3U
 
 ### containerd
