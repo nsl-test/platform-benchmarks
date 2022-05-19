@@ -28,9 +28,9 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
     volumes:
-      - ./grafana/config-datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
-      - ./grafana/config-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./deploy/grafana/config-datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./deploy/grafana/config-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards
 
   k6:
     image: ghcr.io/nsl-test/xk6:v0.6

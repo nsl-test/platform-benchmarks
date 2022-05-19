@@ -3,6 +3,14 @@ kind: Kustomization
 resources:
   - github.com/grafana/k6-operator//config/default
   - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.22
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: k6-dashboard
+    files:
+      - grafana/dashboards/default.json
 helmCharts:
   - name: grafana
     includeCRDs: false
@@ -22,6 +30,20 @@ helmCharts:
         dashboards:
           enabled: true
           searchNamespace: ALL
+      datasources:
+        datasources.yaml:
+          apiVersion: 1
+          datasources:
+          - name: Prometheus
+            type: prometheus
+            url: http://prometheus-server
+            access: proxy
+            isDefault: true
+            basicAuth: false
+            jsonData:
+              tlsAuth: false
+              tlsAuthWithCACert: false
+            editable: false
     releaseName: grafana
     repo: https://grafana.github.io/helm-charts
   - name: prometheus
