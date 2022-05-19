@@ -51,22 +51,6 @@ helmCharts:
                 tlsAuth: false
                 tlsAuthWithCACert: false
               editable: false
-  # - name: victoria-metrics-single
-  #   repo: https://victoriametrics.github.io/helm-charts/
-  #   releaseName: prometheus
-  #   includeCRDs: false
-  #   namespace: k6-operator-system
-  #   valuesInline:
-  #     nameOverride: prometheus
-  #     server:
-  #       retentionPeriod: 2d
-  #       extraArgs:
-  #         maxInsertRequestSize: 10MB
-  #       persistentVolume:
-  #         size: 5Gi
-  #         storageClass: local-path
-  #       statefulSet:
-    #         enabled: false
   - name: prometheus
     includeCRDs: false
     namespace: k6-operator-system
