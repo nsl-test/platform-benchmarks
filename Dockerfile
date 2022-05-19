@@ -23,4 +23,4 @@ COPY iam/libs /home/k6/libs
 
 USER 12345
 WORKDIR /home/k6
-ENTRYPOINT ["k6"]
+ENTRYPOINT ["scuttle", "k6"]

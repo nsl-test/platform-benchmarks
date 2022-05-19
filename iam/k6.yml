@@ -9,6 +9,7 @@ spec:
     configMap: 
       name: iam-test
       file: k6-script.js
+      mountPath: /home/k6/
   runner:
     image: ghcr.io/nsl-test/xk6:v0.6
     env:
@@ -17,6 +18,6 @@ spec:
       - name: K6_OUT
         value: output-prometheus-remote
       - name: K6_VUS
-        value: 1
+        value: "1"
       - name: K6_ITERATIONS
-        value: 1
+        value: "1"
