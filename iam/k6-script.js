@@ -182,7 +182,7 @@ export default function() {
 
   postman[Request]({
     name: "Login as usercco",
-    id: "59237d0a-ef20-44db-9e76-02021be41794",
+    id: "08663626-e247-4f21-b92b-c667c6bdc913",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -213,7 +213,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Book Tree By Id",
-    id: "ec31a37d-bf62-4843-802b-6d7a4f97e33b",
+    id: "164b73fa-2df4-4bdc-ab0b-9b739f67d5d6",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookTreeById?id={{BookId}}&roleId={{RoleId}}&searchCriteria=",
@@ -244,7 +244,7 @@ export default function() {
 
   postman[Request]({
     name: "Fetch by username",
-    id: "0192e4fc-e1b0-4407-a371-416acd296c33",
+    id: "74d4a076-2c6d-4fb4-aaaf-6e962b36f7c2",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getAllUsersBySearchTerm?pageNumber=0&pageSize=10&searchTerm={{UserName}}&isActive=false",
@@ -262,7 +262,7 @@ export default function() {
 
   postman[Request]({
     name: "Update Local Role & Attact to Book",
-    id: "d1af96aa-52b9-4850-9d3d-f770d13e6389",
+    id: "1657c146-e978-4d0a-98f4-736f3ce465e0",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/createRoleAndAttachToBooks?bklist={{BookId}}",
@@ -304,7 +304,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Role Details - Local Role",
-    id: "04e34527-46f9-48e1-a486-fbe724f7e9f2",
+    id: "99257d49-97a3-4256-a24c-71e66e73bc5c",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getB2cRoles?pageNumber=0&pageSize=10",
@@ -355,7 +355,7 @@ export default function() {
 
   postman[Request]({
     name: "Save Irdr's",
-    id: "be3630b3-8441-4a17-b33f-a1716dec0c55",
+    id: "bd649bd1-c773-4251-ae8f-8179f0ed8c6c",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/saveIRDRs",
@@ -381,7 +381,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Book Role Tree",
-    id: "cfed52f5-8a51-42d8-9ea1-53d92e540ae9",
+    id: "a541c056-b60e-48b2-b565-a0891683068d",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getBookRoleTree/{{BookId}}",
@@ -398,19 +398,27 @@ export default function() {
     post(response) {
       pm.test("Check status code", function() {
         pm.expect(pm.response.code).to.eq(200);
-        pm.expect(pm.response.json()[0].name).to.eq(
-          pm.variables.get("RoleName")
-        );
-        pm.expect(pm.response.json()[0].id + "").to.eq(
-          pm.variables.get("RoleId")
-        );
+
+        let isValid = false;
+        pm.response.json().forEach(roleName => {
+          if (
+            roleName.id == pm.variables.get("RoleId") &&
+            roleName.name == pm.variables.get("RoleName")
+          ) {
+            pm.variables.set("TagId", roleName.tagId);
+            pm.variables.set("CreatedAt", roleName.createdAt);
+            pm.variables.set("UpdatedAt", roleName.updatedAt);
+            isValid = true;
+          }
+        });
+        pm.expect(isValid).to.eq(true);
       });
     }
   });
 
   postman[Request]({
     name: "Get B2C Shared Notifications",
-    id: "d8ca1ae5-5c0f-440c-85bf-4b739a6a2f7a",
+    id: "366278f3-b1d3-4710-8adb-6334139979e5",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/b2c/getB2CSharedNotifications",
@@ -433,7 +441,7 @@ export default function() {
 
   postman[Request]({
     name: "Add User To Space -> Send Invitation",
-    id: "79fcdc2a-40df-4ad6-b2b1-6808dc75fbdc",
+    id: "ff155928-bb4e-4252-b95a-16722de28133",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/addUserstoSpace",
@@ -456,7 +464,7 @@ export default function() {
 
   postman[Request]({
     name: "CCA Role ID Getting",
-    id: "11915666-434a-4610-bb18-44f6c6fee8c5",
+    id: "507e1dab-c6cd-404d-8c15-39b40793bb6e",
     method: "POST",
     address:
       "https://{{TenantName2}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/getAllRoles?pageNumber=0&pageSize=10",
@@ -487,7 +495,7 @@ export default function() {
 
   postman[Request]({
     name: "Get All Assigned Users - 0 User - For OrgUnits",
-    id: "28606202-d3b7-4e2d-9075-37681ef24a63",
+    id: "53b3ca14-13cd-4f48-badd-513c9a45a2cf",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/page/matching/assignedusers?orgUnitId={{OrgUnitId}}&pageNo=0&pageSize=10&searchCriteria=s",
@@ -510,7 +518,7 @@ export default function() {
 
   postman[Request]({
     name: "UpdateEnableUser",
-    id: "a9889e26-a446-4a95-83f0-c89a732885b0",
+    id: "7ac1b9fb-5bc5-4e79-b751-15f55183ce2c",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/update/user?type=graph&userId={{UserId1}}",
@@ -542,7 +550,7 @@ export default function() {
 
   postman[Request]({
     name: "getActiveUser GET",
-    id: "a54f3e42-bd51-46ac-87b9-45679dd6b939",
+    id: "37830b02-af93-4e95-986f-5afff53d5339",
     method: "GET",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/user/getActiveUser",
@@ -591,7 +599,7 @@ export default function() {
 
   postman[Request]({
     name: "Login as tenant admin",
-    id: "d04f6b28-857f-49a5-8d80-fd534b8e79ea",
+    id: "f4cf3761-6166-41d7-8b99-4d977c3b9337",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/login/v2/login-action",
@@ -622,7 +630,7 @@ export default function() {
 
   postman[Request]({
     name: "Create role",
-    id: "426a34d0-adff-4306-81b7-8b266caaaf0c",
+    id: "373d2218-dc3f-4aba-9a87-568dddb62d44",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/roles/save",
@@ -675,7 +683,7 @@ export default function() {
 
   postman[Request]({
     name: "Get Root OrgUnit Details",
-    id: "2a477f94-3c06-4363-845d-0a63c6997b8a",
+    id: "40349ae7-4f83-453a-a1aa-ecf5a3d9cba7",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/getAllOrgUnits?pageNumber=0&pageSize=10&searchCriteria=root",
@@ -704,7 +712,7 @@ export default function() {
 
   postman[Request]({
     name: "Add User to OrgUnit",
-    id: "be31e091-ff08-4615-b936-a89e7691c245",
+    id: "9f7c0e8b-6411-4fe0-9b56-07b4e37ee48f",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/users?orgUnitId={{OrgUnitId}}",
@@ -762,7 +770,7 @@ export default function() {
 
   postman[Request]({
     name: "Create Org Unit",
-    id: "41dc4135-5d3a-4b9c-ad82-f3208b989ecf",
+    id: "ec270df0-2f24-4e69-92b2-d113016aecd9",
     method: "POST",
     address:
       "https://{{TenantName}}.{{BaseURL}}/dsd-orch/nsl-iam/api/orgUnits/save",
