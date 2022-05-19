@@ -20,3 +20,4 @@ spec:
       - name: K6_VUS
         value: 1
       - name: K6_ITERATIONS
+        value: 1
