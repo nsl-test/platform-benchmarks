@@ -34,7 +34,7 @@ helmCharts:
         datasources.yaml:
           apiVersion: 1
           datasources:
-          - name: Prometheus
+          - name: prometheus
             type: prometheus
             url: http://prometheus-server
             access: proxy
