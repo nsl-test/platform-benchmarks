@@ -70,7 +70,15 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
 
 # Install Nerdctl
 wget https://github.com/containerd/nerdctl/releases/download/v0.19.0/nerdctl-0.19.0-linux-amd64.tar.gz
-tar Cxzvvf /usr/local/bin nerdctl-0.19.0-linux-amd64.tar.gz
+tar Cxzvf /usr/local/bin nerdctl-0.19.0-linux-amd64.tar.gz
+
+# Install and configure buildkit
+wget https://github.com/moby/buildkit/releases/download/v0.10.3/buildkit-v0.10.3.linux-amd64.tar.gz
+tar Cxvzf /usr/local buildkit-v0.10.3.linux-amd64.tar.gz 
+wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service
+wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket
+cp buildkit.service buildkit.socket /etc/systemd/system/
+systemctl enable --now buildkit.service
 
 # Run a Docker like command with Nerdctl
 nerdctl run --rm -it alpine
@@ -145,3 +153,4 @@ kubectl taint nodes $k8s_master node-role.kubernetes.io/control-plane:NoSchedule
 
 
 ```
+
