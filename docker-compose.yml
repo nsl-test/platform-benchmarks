@@ -32,8 +32,8 @@ services:
       - ./grafana/config-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
       - ./grafana/dashboards:/var/lib/grafana/dashboards
 
-  k6-login:
-    image: ghcr.io/nsl-test/xk6:v0.3
+  k6:
+    image: ghcr.io/nsl-test/xk6:v0.6
     networks:
       - k6
     ports:
@@ -41,23 +41,3 @@ services:
     environment:
       - K6_PROMETHEUS_REMOTE_URL=http://prometheus:9090/api/v1/write
       - K6_OUT=output-prometheus-remote
-
-  k6-fetch:
-    image: ghcr.io/nsl-test/xk6:v0.3
-    networks:
-      - k6
-    ports:
-      - "6565:6565"
-    environment:
-      - K6_PROMETHEUS_REMOTE_URL=http://prometheus:9090/api/v1/write
-      - K6_OUT=output-prometheus-remote
-
-  k6-changeName:
-    image: ghcr.io/nsl-test/xk6:v0.3
-    networks:
-      - k6
-    ports:
-      - "6565:6565"
-    environment:
-      - K6_PROMETHEUS_REMOTE_URL=http://prometheus:9090/api/v1/write
-      - K6_OUT=output-prometheus-remote    

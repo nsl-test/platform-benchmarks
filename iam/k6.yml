@@ -1,7 +1,8 @@
+# kubectl create configmap iam --from-file iam/k6-scripts.js
 apiVersion: k6.io/v1alpha1
 kind: K6
 metadata:
-  name: k6-sample
+  name: iam
   namespace: k6-operator-system
 spec:
   parallelism: 1
@@ -10,8 +11,12 @@ spec:
       name: iam-test
       file: k6-script.js
   runner:
-    image: ghcr.io/nsl-test/xk6:v0.4
+    image: ghcr.io/nsl-test/xk6:v0.6
     env:
       - name: K6_PROMETHEUS_REMOTE_URL
         value: http://prometheus-server/api/v1/write
-  arguments: --out output-prometheus-remote
+      - name: K6_OUT
+        value: output-prometheus-remote
+      - name: K6_VUS
+        value: 1
+      - name: K6_ITERATIONS
