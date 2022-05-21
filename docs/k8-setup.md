@@ -113,7 +113,7 @@ containerd config default | sudo tee /etc/containerd/config.toml
 # If using ubuntu 22.04 You need to enable the SystemdCgroup(=true) flag inside the " [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]"
 
 # Initialise kubeadm with a pod-network-cidr
-kubeadm init --pod-network-cidr=10.10.0.0/16
+kubeadm init --pod-network-cidr=10.23.0.0/16
 
 # Configure kubeadm with a kubeconfig
 export KUBECONFIG=/etc/kubernetes/admin.conf
@@ -131,7 +131,7 @@ vim /etc/cni/net.d/10-bridge.conf ; watch kubectl get nodes -o wide
     "hairpinMode": true,
     "ipam": {
         "type": "host-local",
-        "subnet": "10.10.0.0/16"
+        "subnet": "10.23.0.0/16"
     }
 }
 

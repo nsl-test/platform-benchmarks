@@ -9,9 +9,9 @@ export const options = {
       vus: 500,
       duration: '30s',
     },
-    neww: {
+    new1: {
       executor: 'constant-vus',
-      exec: 'neww',
+      exec: 'new2',
       vus: 500,
       duration: '30s',
     },
@@ -107,12 +107,39 @@ const Q3 = {
   }
 }
 
-export function neww() {
+const Q4 = {
+  "explain": true,
+  "query": {
+    "bool": {
+      "must": {
+        "constant_score": {
+          "filter": {
+            "match": {
+              "Name": "Dhoni"
+            }
+          }
+        }
+      },
+      "filter": {
+        "match": {
+          "entity": "Scoredetails_Reserved_Report2022041111505441962"
+        }
+      }
+    }
+  }
+}
+
+export function new1() {
   http.request('GET','https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com/nsl_txn_eql_entity_record_apiqa0504/_search', JSON.stringify(Q3), {
     headers: { 'Content-Type': 'application/json' },
   });
 }
 
+export function new2() {
+  http.request('GET','https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com/nsl_txn_eql_entity_record_apiqa0504v4/_search', JSON.stringify(Q4), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 export function old(req) {
   http.request('GET','https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com/nsl_txn_eql_entity_record_apiqa0504/_search', JSON.stringify(Q2), {

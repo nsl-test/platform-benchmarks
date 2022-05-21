@@ -21,7 +21,6 @@ helmCharts:
       rbac:
         pspEnabled: false
         pspUseAppArmor: false
-        namespaced: true
       testFramework:
         enabled: false
       adminPassword: "strongpassword"
