@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wiremock
+  labels:
+    type: wiremock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: wiremock
+  template:
+    metadata:
+      labels:
+        type: wiremock
+    spec:
+      containers:
+        - name: wiremock
+          image: rbillon59/wiremock-loadtest:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: wiremock-mapping
+              mountPath: /home/wiremock/mappings
+          resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "1024m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1024m"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /__admin
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      volumes:
+        - name: wiremock-mapping
+          configMap:
+            name: wiremock-mapping
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wiremock-svc
+  labels:
+    type: wiremock
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    type: wiremock
+  type: ClusterIP
+---
+  
+apiVersion: k6.io/v1alpha1mo
+kind: K6
+metadata:
+  name: wiremock
+  namespace: load
+spec:
+  parallelism: 1
+  script:
+    configMap: 
+      name: wiremock
+      file: k6-script.js
+      mountPath: /home/k6/
+  runner:
+    image: ghcr.io/nsl-test/xk6:v0.6
+    env:
+      - name: K6_PROMETHEUS_REMOTE_URL
+        value: http://prometheus-server.k6-operator-system/api/v1/write
+      - name: K6_OUT
+        value: output-prometheus-remote
+  scuttle:
+    enabled: "true"

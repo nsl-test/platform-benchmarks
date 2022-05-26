@@ -24,24 +24,23 @@ build:
  		--with github.com/mostafa/xk6-kafka@latest \
  		--with github.com/szkiba/xk6-jose@latest \
 		--with github.com/ydarias/xk6-nats@latest
-##	xk6 build --with github.com/grafana/xk6-redis=/Users/rverma/dev/xk6-redis
-
-image:
-#	aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 660124699787.dkr.ecr.ap-south-1.amazonaws.com
-	docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/nsl-test/xk6:v0.4 . --push   
 
 ## format: Applies Go formatting to code.
 format:
 	go fmt ./...
 
+image:
+	docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/nsl-test/xk6:v0.7 . --push   
 
 gen:
 	@postman-to-k6 $(var)/collection.json -e env/qa3.json -o $(var)/k6-script.js
 
 deploy: 
 ##	go install sigs.k8s.io/kustomize/kustomize/v4@latest
-	@kustomize build deploy | kubectl apply -f -
+	@kustomize build deploy --enable-helm | kubectl apply -f -
 
 ##	
 .PHONY: build clean format help gen deploy
 
+cm:
+	@kubectl create configmap $(var) --from-file $(var)/k6-script.js -o yaml --dry-run=client | kubectl apply -f -	
