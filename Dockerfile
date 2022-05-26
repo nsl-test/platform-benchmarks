@@ -8,7 +8,7 @@ ARG TARGETARCH
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go install go.k6.io/xk6/cmd/xk6@latest
 RUN xk6 build --with github.com/grafana/xk6-output-prometheus-remote@latest \
-    --with github.com/grafana/xk6-sql@latest \
+    --with github.com/rverma-nsl/xk6-sql@latest \
     --with github.com/mostafa/xk6-kafka@latest \
     --with github.com/szkiba/xk6-jose@latest --output /tmp/k6
 
