@@ -27,6 +27,6 @@ jobs:
       - name: Commit Updated Postman Collection IDs
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Updated Postman Collection ID
+          commit_message: "[ci skip] Updated Postman Collection ID"
 
           
