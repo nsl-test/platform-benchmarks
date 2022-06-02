@@ -25,11 +25,11 @@ spec:
               mountPath: /home/wiremock/mappings
           resources:
             requests:
-              memory: "1024Mi"
-              cpu: "1024m"
+              memory: "1Gi"
+              cpu: "1"
             limits:
-              memory: "1024Mi"
-              cpu: "1024m"
+              memory: "1Gi"
+              cpu: "6"
           livenessProbe:
             tcpSocket:
               port: 8080
@@ -59,24 +59,24 @@ spec:
   type: ClusterIP
 ---
   
-apiVersion: k6.io/v1alpha1mo
-kind: K6
-metadata:
-  name: wiremock
-  namespace: load
-spec:
-  parallelism: 1
-  script:
-    configMap: 
-      name: wiremock
-      file: k6-script.js
-      mountPath: /home/k6/
-  runner:
-    image: ghcr.io/nsl-test/xk6:v0.6
-    env:
-      - name: K6_PROMETHEUS_REMOTE_URL
-        value: http://prometheus-server.k6-operator-system/api/v1/write
-      - name: K6_OUT
-        value: output-prometheus-remote
-  scuttle:
-    enabled: "true"
+# apiVersion: k6.io/v1alpha1
+# kind: K6
+# metadata:
+#   name: wiremock
+#   namespace: load
+# spec:
+#   parallelism: 1
+#   script:
+#     configMap: 
+#       name: wiremock
+#       file: k6-script.js
+#       mountPath: /home/k6/
+#   runner:
+#     image: ghcr.io/nsl-test/xk6:v0.6
+#     env:
+#       - name: K6_PROMETHEUS_REMOTE_URL
+#         value: http://prometheus-server.k6-operator-system/api/v1/write
+#       - name: K6_OUT
+#         value: output-prometheus-remote
+#   scuttle:
+#     enabled: "true"

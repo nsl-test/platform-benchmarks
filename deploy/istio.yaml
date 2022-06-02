@@ -33,6 +33,22 @@ spec:
       enableCRDTemplates: false
       validationURL: ""
     defaultRevision: ""
+    meshConfig:
+      defaultConfig:
+        proxyMetadata:
+          ISTIO_META_DNS_CAPTURE: "true"
+        proxyStatsMatcher:
+          inclusionPrefixes:
+          - thrift
+          - dubbo
+          - kafka
+          - meta_protocol
+          inclusionRegexps:
+          - .*dubbo.*
+          - .*thrift.*
+          - .*kafka.*
+          - .*zookeeper.*
+          - .*meta_protocol.*    
     gateways:
       istio-egressgateway:
         autoscaleEnabled: true

@@ -16,7 +16,7 @@ export let options = {
 };
 
 export default function () {
-    const result = http.get('http://wiremock-svc/static');
+    const result = http.get('http://10.104.211.212/static');
     check(result, {
         'http response status code is 200': result.status === 200,
     });
