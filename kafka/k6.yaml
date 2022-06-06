@@ -1,13 +1,13 @@
 apiVersion: k6.io/v1alpha1
 kind: K6
 metadata:
-  name: iam
+  name: es
   namespace: load
 spec:
   parallelism: 1
   script:
     configMap: 
-      name: iam
+      name: es
       file: k6-script.js
       mountPath: /home/k6/
   runner:
@@ -17,9 +17,5 @@ spec:
         value: http://prometheus-server.k6-operator-system/api/v1/write
       - name: K6_OUT
         value: output-prometheus-remote
-      - name: K6_VUS
-        value: "1"
-      - name: K6_ITERATIONS
-        value: "1"
   scuttle:
     enabled: "true"

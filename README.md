@@ -32,9 +32,16 @@ $ ./docker-run.sh <module_name>
 1. Follow docs to install [k8 and required utils](docs/k8-setup.md)
 2. Install operator [k6 operator](https://k6.io/blog/running-distributed-tests-on-k8s/)
 3. Install in-cluster [grafana and prometheus](docs/grafana-setup.md)
-4. Run the test on k8 cluster
+4. Install istio 
 ```
-$ kubectl create configmap iam --from-file iam/k6-scripts.js
+$ brew install istioctl
+$ istioctl install --set profile=minimal
+```
+5. Run the test on k8 cluster
+```
+$ kubectl create ns load
+$ kubectl label namespace test istio-injection=enabled --overwrite
+$ kubectl create configmap iam --from-file iam/k6-script.js -o yaml --dry-run | kubectl apply -f -
 $ kubectl apply -f iam/k6.yaml
 ```
 

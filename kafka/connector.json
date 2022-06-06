@@ -1,0 +1,18 @@
+
+{
+  "name": "kafka-connect-dynamodb",
+  "config": {
+    "connector.class": "dynamok.sink.DynamoDbSinkConnector",
+    "tasks.max": "1",
+    "topics": "TransRequest",
+    "table.format": "TransRequest=test",
+    "region": "ap-south-1",
+    "ignore.record.key": true,
+    "broker": "broker:29092",
+    "error.kafka.topic": "dynamo-sink-error",
+    "transforms": "trans",
+    "transforms.trans.type": "com.nsl.kafka.smt.TransactionTransformer",
+    "kafka.attributes": ""
+  }
+}
+
