@@ -80,4 +80,4 @@ services:
       KAFKA_DEBUG: true
       JAVA_DEBUG_PORT: "*:8888"
     volumes:
-      - /home/adminuser251/nsl/kafka-connect-dynamodb/connect/target/components/packages/dynamok-connect-0.1.0/dynamok-connect-0.1.0/lib:/usr/share/java/kafka-connect-dynamo
+      - /home/adminuser251/nsl/nslds/dynamo-smt/target/components/packages/nsl-dynamo-smt-0.0.1-SNAPSHOT/nsl-dynamo-smt-0.0.1-SNAPSHOT/lib:/usr/share/java/kafka-connect-dynamo

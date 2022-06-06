@@ -11,7 +11,7 @@
     "broker": "broker:29092",
     "error.kafka.topic": "dynamo-sink-error",
     "transforms": "trans",
-    "transforms.trans.type": "dynamok.transformers.TransactionTransformer",
+    "transforms.trans.type": "com.nsl.kafka.smt.TransactionTransformer",
     "kafka.attributes": ""
   }
 }
