@@ -26,8 +26,9 @@ spec:
     enablePrometheusMerge: true
     outboundTrafficPolicy:
       mode: REGISTRY_ONLY
+    accessLogFile: /dev/stdout
   profile: minimal
-  tag: 1.13.4
+  tag: 1.14.0
   values:
     base:
       enableCRDTemplates: false
@@ -152,7 +153,6 @@ spec:
         ENABLE_LEGACY_FSGROUP_INJECTION: false
       image: pilot
       keepaliveMaxServerConnectionAge: 30m
-      replicaCount: 1
       traceSampling: 1
     telemetry:
       enabled: true
