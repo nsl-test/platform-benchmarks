@@ -57,6 +57,11 @@ spec:
       route:
         - destination:
             host: reviews
+      fault:
+        delay:
+          fixedDelay: 1s
+          percentage:
+            value: 100
     - route:
         - destination:
             host: reviews

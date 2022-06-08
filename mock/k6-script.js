@@ -16,7 +16,7 @@ export let options = {
 };
 
 export default function () {
-    const result = http.get('http://productpage.load.svc.cluster.local:9080/reviews/100');
+    const result = http.get('http://productpage:9080/reviews/100');
     check(result, {
         'http response status code is 200': result.status === 200,
         'id matches': result.body["id"] === "100"
