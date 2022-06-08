@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { Rate } from 'k6/metrics';
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 
 const failRate = new Rate('failed_requests');
 
@@ -16,10 +16,10 @@ export let options = {
 };
 
 export default function () {
-    const result = http.get('http://10.104.211.212/static');
+    const result = http.get('http://productpage.load.svc.cluster.local:9080/reviews/100');
     check(result, {
         'http response status code is 200': result.status === 200,
+        'id matches': result.body["id"] === "100"
     });
     failRate.add(result.status !== 200);
-    sleep(1);
 }

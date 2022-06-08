@@ -1,0 +1,25 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/reviews/.*"
+  },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 50,
+    "jsonBody": {
+      "id": "{{request.pathSegments.[1]}}",
+      "podname": "reviews-mock",
+      "clustername": "null",
+      "reviews": [
+        {
+          "reviewer": "Reviewer1",
+          "text": "Mock An extremely entertaining play by Shakespeare. The slapstick humour is refreshing!"
+        },
+        {
+          "reviewer": "Reviewer2",
+          "text": "Mock Absolutely fun and entertaining. The play lacks thematic depth when compared to other plays by Shakespeare."
+        }
+      ]
+    }
+  }
+}

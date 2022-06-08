@@ -39,8 +39,13 @@ deploy:
 ##	go install sigs.k8s.io/kustomize/kustomize/v4@latest
 	@kustomize build deploy --enable-helm | kubectl apply -f -
 
-##	
-.PHONY: build clean format help gen deploy
 
 cm:
 	@kubectl create configmap $(var) --from-file $(var)/k6-script.js -o yaml --dry-run=client | kubectl apply -f -	
+
+mock:
+	@kubectl create configmap wiremock-mapping --from-file mock/mappings/static.json -o yaml --dry-run=client | kubectl apply -f -	
+
+
+##	
+.PHONY: build clean format help gen deploy	cm mock
