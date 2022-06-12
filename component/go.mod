@@ -1,4 +1,4 @@
-module platform_api_tests/component
+module platform-benchmarks/component
 
 go 1.18
 
