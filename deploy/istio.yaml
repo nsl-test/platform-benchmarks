@@ -28,7 +28,7 @@ spec:
       mode: REGISTRY_ONLY
     accessLogFile: /dev/stdout
   profile: minimal
-  tag: 1.14.0
+  tag: 1.14.1
   values:
     base:
       enableCRDTemplates: false

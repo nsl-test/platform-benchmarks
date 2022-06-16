@@ -50,8 +50,8 @@ cd /tmp
 apt update
 
 # Get latest containerd from soucre
-wget https://github.com/containerd/containerd/releases/download/v1.6.4/containerd-1.6.4-linux-amd64.tar.gz
-tar Cxzvf /usr/local containerd-1.6.4-linux-amd64.tar.gz 
+wget https://github.com/containerd/containerd/releases/download/v1.6.6/containerd-1.6.6-linux-amd64.tar.gz
+tar Cxzvf /usr/local containerd-1.6.6-linux-amd64.tar.gz 
 
 # Install containerd as service
 wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -O /etc/systemd/system/containerd.service
@@ -60,7 +60,7 @@ systemctl enable --now containerd
 systemctl status containerd
 
 # Install Runc
-wget https://github.com/opencontainers/runc/releases/download/v1.1.2/runc.amd64
+wget https://github.com/opencontainers/runc/releases/download/v1.1.3/runc.amd64
 install -m 755 runc.amd64 /usr/local/sbin/runc
 
 # Install CNI
@@ -114,6 +114,14 @@ containerd config default | sudo tee /etc/containerd/config.toml
 
 # Initialise kubeadm with a pod-network-cidr
 kubeadm init --pod-network-cidr=10.23.0.0/16
+
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+networking:
+  podSubnet: 10.23.0.0/16
+apiServer:
+  extraArgs:
+    enable-admission-plugins: "NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook"
 
 # Configure kubeadm with a kubeconfig
 export KUBECONFIG=/etc/kubernetes/admin.conf
