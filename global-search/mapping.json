@@ -1,0 +1,195 @@
+{
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "type": {
+                    "type": "keyword"
+                },
+                "gsi": {
+                    "properties": {
+                        "name": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "displayName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "description": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "masterId": {
+                            "type": "long"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        },
+                        "status": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "long"
+                        },
+                        "tenantId": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "ownerId": {
+                            "type": "long"
+                        },
+                        "userId": {
+                            "type": "long"
+                        },
+                        "orgUnitId": {
+                            "type": "long"
+                        },
+                        "rawData": {
+                            "type": "text"
+                        },
+                        "ontology": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "book": {
+                    "properties": {
+                        "name": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "displayName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "masterId": {
+                            "type": "long"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        },
+                        "status": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "long"
+                        },
+                        "tenantId": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "rawData": {
+                            "type": "text"
+                        },
+                        "ontology": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "entity": {
+                    "properties": {
+                        "name": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "displayName": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "masterId": {
+                            "type": "long"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        },
+                        "status": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "long"
+                        },
+                        "tenantId": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "ownerId": {
+                            "type": "long"
+                        },
+                        "rawData": {
+                            "type": "text"
+                        },
+                        "ontology": {
+                            "type": "text"
+                        },
+                        "nslAttributes": {
+                            "properties": {
+                                "id": {
+                                    "type": "long"
+                                },
+                                "name": {
+                                    "type": "text",
+                                    "fields": {
+                                        "keyword": {
+                                            "type": "keyword",
+                                            "ignore_above": 256
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
