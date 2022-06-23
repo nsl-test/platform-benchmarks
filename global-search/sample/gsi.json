@@ -1,14 +1,20 @@
 {
-    "name": "HealthCare Solution for Contextualization",
-    "displayName": "HealthCare Solution for Contextualization",
-    "description": "HealthCare Solution for Contextualization",
-    "masterId": 539199488966,
-    "version": "1.0",
-    "status": "DRAFT",
-    "id": 539199488966,
-    "ownerId": 2967580947,
-    "tenantId": "Blueocean",
-    "userId": 2967580947,
-    "orgUnitId": 579055042826,
-    "ontology":""
+    "recordType": "GSI",
+    "name": "Sample Gsi",
+    "schemaId": "schmea-001",
+    "data": {
+        "_dname": "Repair",
+        "_ont": [
+            "manufaturing",
+            "health"
+        ]
+    },
+    "ir": [
+        {
+            "_oid": 11
+        },
+        {
+            "_ro": "sales"
+        }
+    ]
 }

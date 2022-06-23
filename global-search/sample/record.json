@@ -1,9 +1,19 @@
 {
-    "name": "Verify Leads",
-    "displayName": "Verify Leads",
-    "id": 596591880967,
-    "masterId": 2032210215279,
-    "status": "PUBLISHED",
-    "version": "1.0",
-    "ontology":""
+    "recordType": "Records",
+    "name": "SampleGe",
+    "schemaId": "schmea-004",
+    "data": {
+        "id": "record_id",
+        "age": 11,
+        "email": "book@gmail.com",
+        "name": "sample ge record value"
+    },
+    "ir": [
+        {
+            "_oid": 11
+        },
+        {
+            "_ro": "sales"
+        }
+    ]
 }

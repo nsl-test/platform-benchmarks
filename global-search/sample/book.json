@@ -1,12 +1,13 @@
 {
-    "recordType": "GE",
-    "name": "Sample ge",
-    "schemaId": "schmea-003",
+    "recordType": "BOOK",
+    "name": "Sample book",
+    "schemaId": "schmea-002",
     "data": {
         "_dname": "Repair",
-        "age": "number",
-        "email": "text",
-        "name": "text"
+        "_ont": [
+            "manufaturing",
+            "health"
+        ]
     },
     "ir": [
         {
