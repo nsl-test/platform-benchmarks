@@ -3,6 +3,8 @@
 // https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com
 DELETE /tn01_gs
 
+GET /
+
 PUT /tn01_gs
 {
     "settings": {
@@ -51,6 +53,20 @@ PUT /tn01_gs
                     },
                     "_loc": {
                         "type": "geo_point"
+                    },
+                    "_fields": {
+                        "type": "nested",
+                        "properties": {
+                            "name": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -115,27 +131,36 @@ POST tn01_gs/_doc/book-001?routing=BOOK
     ]
 }
 
-// POST tn01_gs/_doc/ge-001?routing=GE
-// {
-//   "recordType": "GE",
-//   "name": "SampleGe",
-//   "schemaId": "schmea-003",
-//   "data": {
-//       "_dname": "Sample GE",
-
-//       "age": "number",
-//       "email": "text" ,
-//       "name": "text"
-//   },
-//   "ir": [
-//       {
-//           "_oid": 11
-//       },
-//       {
-//           "_ro": "sales"
-//       }
-//   ]
-// }
+POST tn01_gs/_doc/ge-001?routing=GE
+{
+    "recordType": "GE",
+    "name": "SampleGe",
+    "schemaId": "schmea-003",
+    "data": {
+        "_fields": [
+            {
+                "name": "id"
+            },
+            {
+                "name": "age"
+            },
+            {
+                "name": "email"
+            },
+            {
+                "name": "name"
+            }
+        ]
+    },
+    "ir": [
+        {
+            "_oid": 11
+        },
+        {
+            "_ro": "sales"
+        }
+    ]
+}
 
 GET /tn01_gs/_mapping
 
@@ -170,7 +195,10 @@ PUT /tn01_gs/_mapping
     }
 }
 
-POST /tn01_gs/_doc?routing=SampleGe
+DELETE /tn01_gs/_doc/F3fWo4EBGfmRM6QRwQVN?routing=SampleGe
+
+
+POST /tn01_gs/_doc/SampleGe-record_id?routing=SampleGe
 {
   "recordType": "Records",
   "name": "SampleGe",
@@ -191,32 +219,29 @@ POST /tn01_gs/_doc?routing=SampleGe
     ]
 }
 
-DELETE /tn01_gs/_doc/FXclkIEBGfmRM6QR-wU0?routing=SampleGe
-
 GET /tn01_gs/_search
 {
     "query": {
-        "match_all": {}
-    }
-}
-
-GET /tn01_gs/_search
-{
-    "query": {
-        "match" : {
-            "data.name": "value"
+        "multi_match": {
+            "query": "sample",
+            "fields": []
         }
     }
 }
 
-GET /tn01_gs/_search
+GET /tn01_gs/_search?size=0
 {
     "query": {
         "bool": {
             "must": [
                 {
-                    "match": {
-                        "data.name": "value"
+                    "multi_match": {
+                        "query": "sample",
+                        "lenient": true,
+                        "fields": [
+                            "name",
+                            "data.*"
+                        ]
                     }
                 }
             ],
@@ -229,11 +254,6 @@ GET /tn01_gs/_search
                                 "should": [
                                     {
                                         "match": {
-                                            "ir._oid": 11
-                                        }
-                                    },
-                                    {
-                                        "match": {
                                             "ir._ro": "sales"
                                         }
                                     }
@@ -243,6 +263,28 @@ GET /tn01_gs/_search
                     }
                 }
             ]
+        }
+    },
+    "aggs": {
+        "top_sites": {
+            "terms": {
+                "field": "recordType",
+                "order": {
+                    "top_hit": "desc"
+                }
+            },
+            "aggs": {
+                "top_tags_hits": {
+                    "top_hits": {}
+                },
+                "top_hit": {
+                    "max": {
+                        "script": {
+                            "source": "_score"
+                        }
+                    }
+                }
+            }
         }
     }
 }

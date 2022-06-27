@@ -1,5 +1,5 @@
 {
-    "took": 1919,
+    "took": 7,
     "timed_out": false,
     "_shards": {
         "total": 3,
@@ -9,37 +9,149 @@
     },
     "hits": {
         "total": {
-            "value": 1,
+            "value": 3,
             "relation": "eq"
         },
-        "max_score": 0.2876821,
-        "hits": [
-            {
-                "_index": "tn01_gs",
-                "_type": "_doc",
-                "_id": "FndBkIEBGfmRM6QRywWQ",
-                "_score": 0.2876821,
-                "_routing": "SampleGe",
-                "_source": {
-                    "recordType": "Records",
-                    "name": "SampleGe",
-                    "schemaId": "schmea-004",
-                    "data": {
-                        "id": "record_id",
-                        "age": 11,
-                        "email": "book@gmail.com",
-                        "name": "sample ge record value"
+        "max_score": null,
+        "hits": []
+    },
+    "aggregations": {
+        "top_sites": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "GSI",
+                    "doc_count": 1,
+                    "top_hit": {
+                        "value": 0.6099695563316345
                     },
-                    "ir": [
-                        {
-                            "_oid": 11
-                        },
-                        {
-                            "_ro": "sales"
+                    "top_tags_hits": {
+                        "hits": {
+                            "total": {
+                                "value": 1,
+                                "relation": "eq"
+                            },
+                            "max_score": 0.60996956,
+                            "hits": [
+                                {
+                                    "_index": "tn01_gs",
+                                    "_id": "gsi-001",
+                                    "_score": 0.60996956,
+                                    "_routing": "GSI",
+                                    "_source": {
+                                        "recordType": "GSI",
+                                        "name": "Sample Gsi",
+                                        "schemaId": "schmea-001",
+                                        "data": {
+                                            "_dname": "Repair",
+                                            "_ont": [
+                                                "manufaturing",
+                                                "health"
+                                            ]
+                                        },
+                                        "ir": [
+                                            {
+                                                "_oid": 11
+                                            },
+                                            {
+                                                "_ro": "sales"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
                         }
-                    ]
+                    }
+                },
+                {
+                    "key": "BOOK",
+                    "doc_count": 1,
+                    "top_hit": {
+                        "value": 0.28768208622932434
+                    },
+                    "top_tags_hits": {
+                        "hits": {
+                            "total": {
+                                "value": 1,
+                                "relation": "eq"
+                            },
+                            "max_score": 0.2876821,
+                            "hits": [
+                                {
+                                    "_index": "tn01_gs",
+                                    "_id": "book-001",
+                                    "_score": 0.2876821,
+                                    "_routing": "BOOK",
+                                    "_source": {
+                                        "recordType": "BOOK",
+                                        "name": "Sample book",
+                                        "schemaId": "schmea-002",
+                                        "data": {
+                                            "_dname": "Repair",
+                                            "_ont": [
+                                                "manufaturing",
+                                                "health"
+                                            ]
+                                        },
+                                        "ir": [
+                                            {
+                                                "_oid": 11
+                                            },
+                                            {
+                                                "_ro": "sales"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "Records",
+                    "doc_count": 1,
+                    "top_hit": {
+                        "value": 0.28768208622932434
+                    },
+                    "top_tags_hits": {
+                        "hits": {
+                            "total": {
+                                "value": 1,
+                                "relation": "eq"
+                            },
+                            "max_score": 0.2876821,
+                            "hits": [
+                                {
+                                    "_index": "tn01_gs",
+                                    "_id": "SampleGe-record_id",
+                                    "_score": 0.2876821,
+                                    "_routing": "SampleGe",
+                                    "_source": {
+                                        "recordType": "Records",
+                                        "name": "SampleGe",
+                                        "schemaId": "schmea-004",
+                                        "data": {
+                                            "id": "record_id",
+                                            "age": 11,
+                                            "email": "book@gmail.com",
+                                            "name": "sample ge record value"
+                                        },
+                                        "ir": [
+                                            {
+                                                "_oid": 11
+                                            },
+                                            {
+                                                "_ro": "sales"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
-            }
-        ]
+            ]
+        }
     }
 }
