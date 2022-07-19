@@ -9,7 +9,7 @@ on:
         
 jobs:
   build:
-    name: Build xk6-kafka
+    name: Build xk6-image
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -38,4 +38,4 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ghcr.io/nsl-test/xk6:v0.4
+          tags: ghcr.io/nsl-test/xk6:v0.7

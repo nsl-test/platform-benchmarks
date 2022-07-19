@@ -146,3 +146,9 @@ export function old(req) {
     headers: { 'Content-Type': 'application/json' },
   });
 }
+
+export function test() {
+  http.request('GET', 'https://vpc-elasticsearch-qa3-1-n4rliz2iqsjphfpiw5lbfcpjom.ap-south-1.es.amazonaws.com/nsl_txn_eql_entity_record_apiqa0504/_search', JSON.stringify(Q1), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+}

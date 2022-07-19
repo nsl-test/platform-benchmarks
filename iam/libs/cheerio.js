@@ -5745,7 +5745,7 @@ module.exports={
   "_resolved": "https://registry.npmjs.org/cheerio/-/cheerio-1.0.0-rc.6.tgz",
   "_shasum": "a5ae81ab483aeefa1280c325543c601145506240",
   "_spec": "cheerio@1.0.0-rc.6",
-  "_where": "/home/adminuser194/.nvm/versions/node/v14.19.1/lib/node_modules/@apideck/postman-to-k6",
+  "_where": "/Users/rverma/.nvm/versions/node/v14.19.1/lib/node_modules/@apideck/postman-to-k6",
   "author": {
     "name": "Matt Mueller",
     "email": "mattmuelle@gmail.com",

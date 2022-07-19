@@ -21946,7 +21946,7 @@ module.exports={
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.5.4.tgz",
   "_shasum": "da37cebd31e79a1367e941b592ed1fbebd58abbb",
   "_spec": "elliptic@^6.5.3",
-  "_where": "/home/adminuser194/.nvm/versions/node/v14.19.1/lib/node_modules/@apideck/postman-to-k6/node_modules/browserify-sign",
+  "_where": "/Users/rverma/.nvm/versions/node/v14.19.1/lib/node_modules/@apideck/postman-to-k6/node_modules/browserify-sign",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"

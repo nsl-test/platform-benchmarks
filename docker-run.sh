@@ -19,16 +19,13 @@ MODULE_NAME="$1"
 shift
 SCRIPT_NAME=$MODULE_NAME/k6-script.js
 TAG_NAME="$(basename -s .js $SCRIPT_NAME)-$(date +%s)"
-PROMETHEUS="${PROMETHEUS:-127.0.0.1:9090}"
 
 if command -v nerdctl &> /dev/null
 then
-    nerdctl run --rm --network=k8s -e K6_PROMETHEUS_FLUSH_PERIOD=3s -e K6_PROMETHEUS_REMOTE_URL=http://$PROMETHEUS/api/v1/write \
-    -e K6_OUT=output-prometheus-remote -v $(pwd)/$SCRIPT_NAME:/home/k6/k6-script.js ghcr.io/nsl-test/xk6:v0.6 \
+    nerdctl run --rm -e K6_PROMETHEUS_FLUSH_PERIOD=3s -e K6_PROMETHEUS_REMOTE_URL=https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push \
+    -e K6_PROMETHEUS_USER=$CORTEX_TENANT_ID -e K6_PROMETHEUS_PASSWORD=$CORTEX_API_KEY -e K6_OUT=output-prometheus-remote -v $(pwd)/$SCRIPT_NAME:/home/k6/k6-script.js ghcr.io/nsl-test/xk6:v0.6 \
     run /home/k6/k6-script.js --tag testid=$TAG_NAME "$@"
     exit
 else
     docker compose run -T --rm  k6 run -<$SCRIPT_NAME --tag testid=$TAG_NAME "$@"
 fi
-
-
