@@ -23,7 +23,8 @@ build:
  		--with github.com/grafana/xk6-sql@latest \
  		--with github.com/mostafa/xk6-kafka@latest \
  		--with github.com/szkiba/xk6-jose@latest \
-		--with github.com/ydarias/xk6-nats@latest
+		--with github.com/ydarias/xk6-nats@latest \
+		--with github.com/b1uema/xk6-mongo@latest 
 
 ## format: Applies Go formatting to code.
 format:
