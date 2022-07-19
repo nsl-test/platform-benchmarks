@@ -206,3 +206,9 @@ No. Since k6 uses Goja to run JavaScript, and it is not compatible with browsers
 ### 3. What adjustments did you make to the script to make it work?
 
 First, I removed the pre-script containing pm.sendRequest, because it is not supported by the converter. Then, I replaced the jsonData.hasOwnProperty syntax with the equivalent k6 syntax for extracting JSON response information: response.json("selector").
+
+## Pro tips
+1. Switch to linux/wsl if you are not there already. Install docker
+2. Watch [Getting started with API Load Testing](https://www.youtube.com/watch?v=r-Jte8Y8zag&ab_channel=NickChapsas)
+3. Watch [Postman for load testing using k6, with Tim Haselaars (k6 Office Hours #43)](https://www.youtube.com/watch?v=Be66Db4wHLA&ab_channel=k6)
+4. Learn promql https://valyala.medium.com/promql-tutorial-for-beginners-9ab455142085
