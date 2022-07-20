@@ -6,7 +6,7 @@ const failRate = new Rate('failed_requests');
 
 export let options = {
     stages: [
-        { target: 200, duration: '30s' },
+        { target: 20, duration: '30s' },
         { target: 0, duration: '30s' },
     ],
     thresholds: {

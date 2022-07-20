@@ -7,11 +7,11 @@ spec:
   parallelism: 1
   script:
     configMap: 
-      name: wiremock
+      name: mock
       file: k6-script.js
       mountPath: /home/k6/
   runner:
-    image: ghcr.io/nsl-test/xk6:v0.6
+    image: ghcr.io/nsl-test/xk6:v0.7
     env:
       - name: K6_PROMETHEUS_REMOTE_URL
         value: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
