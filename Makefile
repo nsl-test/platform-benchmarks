@@ -42,7 +42,7 @@ deploy:
 
 
 cm:
-	@kubectl create configmap $(var) --from-file $(var)/k6-script.js -o yaml --dry-run=client | kubectl apply -f -	
+	@kubectl create -n load configmap $(var) --from-file $(var)/k6-script.js -o yaml --dry-run=client | kubectl apply -f -	
 
 mock:
 	@kubectl create configmap wiremock-mapping --from-file mock/mappings/static.json -o yaml --dry-run=client | kubectl apply -f -	

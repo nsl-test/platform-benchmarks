@@ -16,10 +16,9 @@ export let options = {
 };
 
 export default function () {
-    const result = http.get('http://productpage:9080/reviews/100');
+    const result = http.get('http://10.99.177.245:9080/productpage?u=normal');
     check(result, {
         'http response status code is 200': result.status === 200,
-        'id matches': result.body["id"] === "100"
     });
     failRate.add(result.status !== 200);
 }
