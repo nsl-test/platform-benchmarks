@@ -36,10 +36,12 @@ image:
 gen:
 	@postman-to-k6 $(var)/collection.json -e env/qa3.json -o $(var)/k6-script.js
 
+run:
+	@./k6 run -e K6_PROMETHEUS_REMOTE_URL=http://localhost:9090/api/v1/write -e K6_OUT=output-prometheus-remote $(var)/k6-script.js --tag testid=$(var)-$$(date +%s)
+	
 deploy: 
 ##	go install sigs.k8s.io/kustomize/kustomize/v4@latest
 	@kustomize build deploy --enable-helm | kubectl apply -f -
-
 
 cm:
 	@kubectl create -n load configmap $(var) --from-file $(var)/k6-script.js -o yaml --dry-run=client | kubectl apply -f -	
