@@ -25,7 +25,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": 2,
-  "iteration": 1658460079819,
+  "iteration": 1658460646285,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -304,7 +304,7 @@
           },
           "custom": {
             "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisPlacement": "left",
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -345,7 +345,20 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Response Time"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
@@ -361,14 +374,19 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "editorMode": "builder",
           "exemplar": true,
-          "expr": "sum(rate(k6_http_reqs{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\"}[$interval]))",
+          "expr": "rate(k6_http_reqs{testid=~\"$testid\", url=~\"$url\", scenario=~\"$scenario\"}[$interval])",
           "hide": false,
           "instant": false,
           "interval": "10s",
@@ -376,12 +394,31 @@
           "refId": "A"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "editorMode": "builder",
           "exemplar": true,
-          "expr": "sum(k6_http_req_failed{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"false\"}) by (error)",
+          "expr": "rate(k6_http_req_failed{testid=~\"$testid\", url=~\"$url\", scenario=~\"$scenario\", expected_response=\"false\"}[$interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "Failed requests",
+          "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "k6_http_req_duration_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "legendFormat": "Response Time",
+          "range": true,
+          "refId": "C"
         }
       ],
       "title": "Requests rate",
@@ -1262,15 +1299,15 @@
         "auto_count": 30,
         "auto_min": "10s",
         "current": {
-          "selected": false,
-          "text": "1s",
-          "value": "1s"
+          "selected": true,
+          "text": "5m",
+          "value": "5m"
         },
         "hide": 0,
         "name": "interval",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "1s",
             "value": "1s"
           },
@@ -1320,7 +1357,7 @@
             "value": "4m"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "5m",
             "value": "5m"
           },
@@ -1351,6 +1388,6 @@
   "timezone": "",
   "title": "PRW output of k6",
   "uid": "5cQoNs67k",
-  "version": 113,
+  "version": 116,
   "weekStart": ""
 }
