@@ -6,12 +6,13 @@ const failRate = new Rate('failed_requests');
 
 export let options = {
     stages: [
-        { target: 20, duration: '30s' },
-        { target: 0, duration: '30s' },
+        { duration: '1m', target: 20 },
+        { duration: '3m', target: 20 },
+        { duration: '1m', target: 0 },
     ],
     thresholds: {
-        failed_requests: ['rate<=0'],
-        http_req_duration: ['p(95)<500'],
+        http_req_failed: ['rate<0.02'], // http errors should be less than 2%
+        http_req_duration: ['p(95)<2000'], // 95% requests should be below 2s
     },
 };
 

@@ -24,7 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1657476390215,
+  "id": 2,
+  "iteration": 1658459744666,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -78,7 +79,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 20,
+        "h": 18,
         "w": 9,
         "x": 0,
         "y": 1
@@ -94,7 +95,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "8.5.3",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "exemplar": true,
@@ -106,25 +107,187 @@
         }
       ],
       "title": "Virtual Users (VUs)",
-      "transformations": [
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 11,
+        "x": 9,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 37,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "9.0.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
         {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "isNotNull",
-                  "options": {}
-                },
-                "fieldName": "k6_vus"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
+          "exemplar": true,
+          "expr": "k6_vus{testid=~\"$testid\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Actual VUs",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_vus_max{testid=~\"$testid\"}",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Max VUs possible",
+          "refId": "B"
         }
       ],
-      "type": "table"
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "VUs / Max VUs",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:81",
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:82",
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed responses"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(k6_http_req_duration_p95{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"true\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Successful responses",
+          "queryType": "randomWalk",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(k6_http_req_duration_p95{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"false\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Failed responses",
+          "queryType": "randomWalk",
+          "refId": "B"
+        }
+      ],
+      "title": "Response time (95th)",
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -182,12 +345,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
+        "h": 9,
+        "w": 11,
         "x": 9,
-        "y": 1
+        "y": 10
       },
-      "id": 14,
+      "id": 16,
       "options": {
         "legend": {
           "calcs": [],
@@ -202,15 +365,213 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "k6_vus",
+          "expr": "sum(rate(k6_http_reqs{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\"}[$interval]))",
           "hide": false,
+          "instant": false,
+          "interval": "10s",
+          "legendFormat": "Total requests rate",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(k6_http_req_failed{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"false\"}) by (error)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Failed requests",
+          "refId": "B"
+        }
+      ],
+      "title": "Requests rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-green",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed responses"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 20,
+        "y": 10
+      },
+      "id": 33,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(k6_http_req_duration_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"true\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Successful responses",
+          "queryType": "randomWalk",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(k6_http_req_duration_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",expected_response=\"false\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Failed responses",
+          "queryType": "randomWalk",
+          "refId": "B"
+        }
+      ],
+      "title": "Response time (avg)",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 32,
+      "panels": [],
+      "title": "HTTP",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 43,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Field"
+          }
+        ]
+      },
+      "pluginVersion": "9.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "count by (url) (k6_http_reqs{testid=~\"$testid\",scenario=~\"$scenario\",method=~\"$method\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Virtual users (VUs)",
-      "type": "timeseries"
+      "title": "Requests by URL",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": false,
+            "reducers": [
+              "count"
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Count": "Requests",
+              "Field": "URL"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "aliasColors": {},
@@ -224,18 +585,19 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 10,
+        "h": 9,
         "w": 12,
-        "x": 9,
-        "y": 11
+        "x": 12,
+        "y": 20
       },
       "hiddenSeries": false,
-      "id": 37,
+      "id": 41,
       "legend": {
         "avg": false,
         "current": false,
         "max": false,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": false
@@ -247,7 +609,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.5.3",
+      "pluginVersion": "9.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -258,25 +620,47 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "k6_vus",
-          "hide": false,
+          "expr": "sum(k6_http_req_blocked_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",method=~\"$method\"})",
           "interval": "",
-          "legendFormat": "Actual VUs",
+          "legendFormat": "Blocked",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "k6_vus_max",
-          "format": "time_series",
+          "expr": "sum(k6_http_req_waiting_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",method=~\"$method\"})",
           "hide": false,
           "interval": "",
-          "legendFormat": "Max VUs possible",
+          "legendFormat": "Waiting",
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(k6_http_req_ending_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",method=~\"$method\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Sending",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(k6_http_req_receiving_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",method=~\"$method\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Receiving",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(k6_http_tls_handshaking_avg{testid=~\"$testid\",url=~\"$url\",scenario=~\"$scenario\",method=~\"$method\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "TLS handshaking",
+          "refId": "E"
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "VUs / Max VUs",
+      "title": "HTTP breakdown",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -290,13 +674,11 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:81",
           "format": "short",
           "logBase": 1,
           "show": true
         },
         {
-          "$$hashKey": "object:82",
           "format": "short",
           "logBase": 1,
           "show": true
@@ -316,12 +698,149 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 29
       },
       "id": 35,
       "panels": [],
       "title": "Scenario level metrics",
       "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 36,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "9.0.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_avg{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "avg",
+          "queryType": "randomWalk",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_max{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "max",
+          "queryType": "randomWalk",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_min{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "min",
+          "queryType": "randomWalk",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_med{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "median",
+          "queryType": "randomWalk",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_p90{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "90 percentile",
+          "queryType": "randomWalk",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "k6_iteration_duration_p95{testid=~\"$testid\",scenario=~\"$scenario\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "95 percentile",
+          "queryType": "randomWalk",
+          "refId": "F"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Iteration duration",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "datasource": {
@@ -380,10 +899,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 39
       },
       "id": 18,
       "options": {
@@ -404,7 +923,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "rate(k6_data_received{scenario=\"$scenario\"}[$interval])",
+          "expr": "rate(k6_data_received{testid=~\"$testid\",scenario=~\"$scenario\"}[$interval])",
           "interval": "",
           "legendFormat": "Received",
           "refId": "A"
@@ -415,7 +934,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "rate(k6_data_sent{scenario=\"$scenario\"}[$interval])",
+          "expr": "rate(k6_data_sent{testid=~\"$testid\",scenario=~\"$scenario\"}[$interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "Sent",
@@ -453,10 +972,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 11,
+        "h": 9,
+        "w": 12,
         "x": 12,
-        "y": 22
+        "y": 39
       },
       "id": 6,
       "options": {
@@ -474,11 +993,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.5.3",
+      "pluginVersion": "9.0.3",
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(k6_iterations{scenario=\"$scenario\"}[$interval])",
+          "expr": "rate(k6_iterations{testid=~\"$testid\",scenario=~\"$scenario\"}[$interval])",
           "interval": "",
           "legendFormat": "",
           "queryType": "randomWalk",
@@ -503,10 +1022,10 @@
         "uid": "$datasource"
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 30
+        "y": 48
       },
       "heatmap": {},
       "hideZeroBuckets": false,
@@ -520,7 +1039,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "k6_iteration_duration_avg{scenario=\"$scenario\"}",
+          "expr": "k6_iteration_duration_avg{testid=~\"$testid\",scenario=~\"$scenario\"}",
           "format": "time_series",
           "interval": "",
           "legendFormat": "",
@@ -559,10 +1078,10 @@
         "uid": "$datasource"
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 48
       },
       "heatmap": {},
       "hideZeroBuckets": false,
@@ -576,7 +1095,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "k6_iteration_duration_max{scenario=\"$scenario\"}",
+          "expr": "k6_iteration_duration_max{testid=~\"$testid\",scenario=~\"$scenario\"}",
           "interval": "",
           "legendFormat": "",
           "queryType": "randomWalk",
@@ -598,788 +1117,9 @@
         "show": true
       },
       "yBucketBound": "auto"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 38
-      },
-      "hiddenSeries": false,
-      "id": 36,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_avg{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "avg",
-          "queryType": "randomWalk",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_max{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "max",
-          "queryType": "randomWalk",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_min{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "min",
-          "queryType": "randomWalk",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_med{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "median",
-          "queryType": "randomWalk",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_p90{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "90 percentile",
-          "queryType": "randomWalk",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "k6_iteration_duration_p95{scenario=\"$scenario\"}",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "95 percentile",
-          "queryType": "randomWalk",
-          "refId": "F"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Iteration duration",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ms",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 48
-      },
-      "id": 32,
-      "panels": [],
-      "title": "HTTP",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 49
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(k6_http_reqs{url=~\"$url\",scenario=\"$scenario\"}[$interval]))",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "Total requests rate",
-          "queryType": "randomWalk",
-          "refId": "A"
-        }
-      ],
-      "title": "RPS",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "dark-red",
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 49
-      },
-      "id": 25,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_failed{url=~\"$url\",scenario=\"$scenario\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Failed requests",
-          "refId": "B"
-        }
-      ],
-      "title": "Failed requests rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "dark-green",
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Failed responses"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 57
-      },
-      "id": 33,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avg(k6_http_req_duration_avg{url=~\"$url\",scenario=\"$scenario\",expected_response=\"true\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Successful responses",
-          "queryType": "randomWalk",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "avg(k6_http_req_duration_avg{url=~\"$url\",scenario=\"$scenario\",expected_response=\"false\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Failed responses",
-          "queryType": "randomWalk",
-          "refId": "B"
-        }
-      ],
-      "title": "Response time (avg)",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "dark-green",
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Failed responses"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 57
-      },
-      "id": 10,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avg(k6_http_req_duration_p95{url=~\"$url\",scenario=\"$scenario\",expected_response=\"true\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Successful responses",
-          "queryType": "randomWalk",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "avg(k6_http_req_duration_p95{url=~\"$url\",scenario=\"$scenario\",expected_response=\"false\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Failed responses",
-          "queryType": "randomWalk",
-          "refId": "B"
-        }
-      ],
-      "title": "Response time (95th)",
-      "type": "gauge"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 57
-      },
-      "hiddenSeries": false,
-      "id": 41,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_blocked_avg{url=~\"$url\",scenario=\"$scenario\",method=~\"$method\"})",
-          "interval": "",
-          "legendFormat": "Blocked",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_waiting_avg{url=~\"$url\",scenario=\"$scenario\",method=~\"$method\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Waiting",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_ending_avg{url=~\"$url\",scenario=\"$scenario\",method=~\"$method\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Sending",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_receiving_avg{url=~\"$url\",scenario=\"$scenario\",method=~\"$method\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Receiving",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_tls_handshaking_avg{url=~\"$url\",scenario=\"$scenario\",method=~\"$method\"})",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "TLS handshaking",
-          "refId": "E"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "HTTP breakdown",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "displayMode": "auto",
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 12,
-        "x": 0,
-        "y": 63
-      },
-      "id": 43,
-      "options": {
-        "footer": {
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "frameIndex": 1,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Field"
-          }
-        ]
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "count by (url) (k6_http_reqs{scenario=\"$scenario\",method=~\"$method\"})",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "title": "Requests by URL",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "labelsToFields": false,
-            "reducers": [
-              "count"
-            ]
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Count": "Requests",
-              "Field": "URL"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 65
-      },
-      "id": 20,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(k6_http_req_failed{url=~\"$url\",scenario=\"$scenario\",expected_response=\"false\"}) by (error)",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "queryType": "randomWalk",
-          "refId": "C"
-        }
-      ],
-      "title": "Errors",
-      "transformations": [],
-      "type": "piechart"
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 74
-      },
-      "id": 30,
-      "panels": [],
-      "title": "default",
-      "type": "row"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -1403,9 +1143,8 @@
         "type": "datasource"
       },
       {
-        "allValue": "http.*",
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -1413,25 +1152,53 @@
           "type": "prometheus",
           "uid": "$datasource"
         },
-        "definition": "label_values(url)",
+        "definition": "testid",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Test ID",
+        "multi": false,
+        "name": "testid",
+        "options": [],
+        "query": {
+          "query": "k6_http_reqs",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": ".*testid=\"(.*?)\".*",
+        "skipUrlSync": false,
+        "sort": 2,
+        "type": "query"
+      },
+      {
+        "allValue": "http.*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
+        "definition": "url",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "url",
         "options": [],
         "query": {
-          "query": "label_values(url)",
+          "query": "k6_http_reqs{testid=~\"$testid\"}",
           "refId": "StandardVariableQuery"
         },
-        "refresh": 1,
-        "regex": "",
+        "refresh": 2,
+        "regex": ".*url=\"(.*?)\".*",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "All",
           "value": "$__all"
         },
@@ -1439,14 +1206,41 @@
           "type": "prometheus",
           "uid": "$datasource"
         },
-        "definition": "label_values(scenario)",
+        "definition": "scenario",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "scenario",
         "options": [],
         "query": {
-          "query": "label_values(scenario)",
+          "query": "k6_http_reqs{testid=~\"$testid\"}",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": ".*scenario=\"(.*?)\".*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$datasource"
+        },
+        "definition": "label_values(method)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "method",
+        "options": [],
+        "query": {
+          "query": "label_values(method)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -1461,19 +1255,19 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "5s",
-          "value": "5s"
+          "text": "1s",
+          "value": "1s"
         },
         "hide": 0,
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1s",
             "value": "1s"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "5s",
             "value": "5s"
           },
@@ -1535,47 +1329,20 @@
         ],
         "query": "1s,5s,10s,20s,30s,1m,1m30s,2m,3m,4m,5m,10m,30m",
         "queryValue": "",
-        "refresh": 2,
+        "refresh": 0,
         "skipUrlSync": false,
         "type": "interval"
-      },
-      {
-        "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "$datasource"
-        },
-        "definition": "label_values(method)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": false,
-        "name": "method",
-        "options": [],
-        "query": {
-          "query": "label_values(method)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-1h",
-    "to": "now"
+    "from": "2022-07-22T00:45:00.000Z",
+    "to": "2022-07-22T00:51:00.000Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "PRW output of k6",
   "uid": "5cQoNs67k",
-  "version": 2,
+  "version": 112,
   "weekStart": ""
 }
